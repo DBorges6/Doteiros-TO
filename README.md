@@ -6,7 +6,8 @@ Os dados vêm das páginas públicas de visão geral do Dotabuff, e as duplas v�
 **Site:** https://dborges6.github.io/Doteiros-TO/doteiros-TO/
 
 Ou abra `doteiros-TO/index.html` num navegador (ele carrega `doteiros-TO/data/dashboard_data.js`).
-No servidor, o dashboard fica em `/doteiros-TO/` (maiúsculas e minúsculas fazem diferença no endereço).
+No servidor, o dashboard abre na página principal e também em `/doteiros-TO/` (maiúsculas e minúsculas fazem diferença no endereço).
+Edite sempre `doteiros-TO/index.html`: o `index.html` da raiz é gerado a partir dele pelo `build_data.py`.
 Os dados são atualizados automaticamente todo dia às 10h.
 
 ## Atualizar

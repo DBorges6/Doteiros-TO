@@ -157,3 +157,11 @@ out = {"generatedAt": int(time.time()), "players": players, "heroes": hero_imgs,
 js = "window.DASH = " + json.dumps(out, ensure_ascii=False, separators=(",", ":")) + ";"
 open(os.path.join(ROOT, "doteiros-TO", "data", "dashboard_data.js"), "w", encoding="utf-8").write(js)
 print("ok", len(js) // 1024, "KB", len(hero_imgs), "heróis")
+
+# Cópia do dashboard na raiz do site (página principal do domínio), apontando
+# para os mesmos dados de doteiros-TO/. A fonte é sempre doteiros-TO/index.html.
+page = open(os.path.join(ROOT, "doteiros-TO", "index.html"), encoding="utf-8").read()
+src = '<script src="data/dashboard_data.js"'
+assert src in page, "caminho dos dados não encontrado em doteiros-TO/index.html"
+open(os.path.join(ROOT, "index.html"), "w", encoding="utf-8").write(page.replace(src, '<script src="doteiros-TO/data/dashboard_data.js"'))
+print("index.html da raiz atualizado")
