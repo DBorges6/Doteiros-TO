@@ -6,7 +6,7 @@ Os dados vêm das páginas públicas de visão geral do Dotabuff, e as duplas v�
 **Site:** https://dborges6.github.io/Doteiros-TO/
 
 Ou abra o `index.html` num navegador (ele carrega `data/dashboard_data.js`).
-Os dados são atualizados automaticamente a cada 3 dias.
+Os dados são atualizados automaticamente todo dia às 10h.
 
 ## Atualizar
 
