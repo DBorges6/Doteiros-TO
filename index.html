@@ -1,0 +1,869 @@
+<meta charset="utf-8">
+<title>Taverna do Ancient</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap">
+<style>
+:root{
+  color-scheme: dark;
+  --bg:#0d1112; --bg2:#10161700;
+  --panel:#141b1c; --panel2:#1a2324; --panel3:#212c2d;
+  --line:#263133; --line2:#34423f;
+  --ink:#ece5d3; --ink2:#aab1a9; --mute:#728079;
+  --gold:#e2a93b; --gold2:#f4cd6e; --goldDim:#e2a93b22;
+  --rad:#7dbf5a; --radDim:#7dbf5a22;
+  --dire:#d4523e; --direDim:#d4523e22;
+  --sup:#5bb0c3; --core:#e38b3d;
+  --display:"Cinzel", "Trajan Pro", Georgia, serif;
+  --body:"Barlow", "Segoe UI", system-ui, sans-serif;
+  --cond:"Barlow Condensed", "Arial Narrow", "Segoe UI", sans-serif;
+  --r:10px;
+}
+*{box-sizing:border-box}
+html,body{background:var(--bg);color:var(--ink)}
+body{font-family:var(--body);font-size:15px;line-height:1.45;margin:0;
+  background:
+    radial-gradient(1200px 500px at 85% -10%, #e2a93b14, transparent 60%),
+    radial-gradient(900px 480px at -10% 10%, #7dbf5a0d, transparent 60%),
+    var(--bg);}
+a{color:inherit}
+button,select,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:4px}
+.wrap{max-width:1320px;margin:0 auto;padding-inline:20px}
+.num{font-variant-numeric:tabular-nums}
+
+/* ---------- Update strip ---------- */
+.updbar{background:linear-gradient(90deg,#2a2413,#1a1f17);border-bottom:1px solid #e2a93b40;font-family:var(--cond);letter-spacing:.04em;font-size:14px;color:var(--ink2)}
+.updbar .wrap{display:flex;align-items:center;gap:10px 18px;flex-wrap:wrap;padding-block:8px}
+.updbar b{color:var(--gold2);font-weight:700}
+.updbar .dot{width:8px;height:8px;border-radius:50%;background:var(--rad);box-shadow:0 0 0 3px #7dbf5a33;flex:none}
+.updbar.stale .dot{background:var(--dire);box-shadow:0 0 0 3px #d4523e33}
+.updbar .nxt{margin-left:auto;color:var(--mute)}
+@media (max-width:560px){.updbar .nxt{margin-left:0}}
+
+/* ---------- Top bar ---------- */
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:#0d1112e6;backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.topbar .wrap{display:flex;align-items:center;gap:18px;height:54px}
+.brand{font-family:var(--display);font-weight:800;letter-spacing:.06em;font-size:16px;white-space:nowrap;color:var(--gold2)}
+.brand small{font-family:var(--cond);color:var(--mute);letter-spacing:.12em;font-weight:600;margin-left:8px;font-size:12px}
+.nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;margin-left:auto}
+.nav::-webkit-scrollbar{display:none}
+.nav a{font-family:var(--cond);text-transform:uppercase;letter-spacing:.1em;font-size:13px;font-weight:600;color:var(--ink2);text-decoration:none;padding:7px 10px;border-radius:6px;white-space:nowrap}
+.nav a:hover{color:var(--ink);background:var(--panel2)}
+
+/* ---------- Hero ---------- */
+.hero{padding-block:44px 26px;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:36px;align-items:end}
+.eyebrow{font-family:var(--cond);text-transform:uppercase;letter-spacing:.22em;font-size:12.5px;color:var(--gold);font-weight:700}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(34px,5.4vw,64px);line-height:1.02;margin:10px 0 14px;letter-spacing:.01em;text-wrap:balance}
+h1 em{font-style:normal;color:var(--gold2)}
+.lede{color:var(--ink2);max-width:58ch;margin:0;font-size:16px}
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.kpi{background:var(--panel);padding:14px 16px}
+.kpi b{display:block;font-family:var(--cond);font-size:30px;font-weight:700;line-height:1.05}
+.kpi span{font-family:var(--cond);text-transform:uppercase;letter-spacing:.12em;font-size:11.5px;color:var(--mute);font-weight:600}
+.kpi i{font-style:normal;color:var(--ink2);font-size:13px;display:block;margin-top:2px}
+
+/* ---------- Sections ---------- */
+section.block{padding-block:34px}
+.sec-head{display:flex;align-items:end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+h2{font-family:var(--display);font-weight:800;font-size:clamp(22px,2.6vw,30px);margin:4px 0 0;letter-spacing:.02em;text-wrap:balance}
+.sec-sub{color:var(--ink2);margin:6px 0 0;max-width:70ch;font-size:14.5px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r)}
+
+/* controls */
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.seg{display:inline-flex;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:3px}
+.seg button{background:none;border:0;padding:6px 12px;border-radius:6px;cursor:pointer;font-family:var(--cond);font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:13px;color:var(--ink2)}
+.seg button[aria-pressed="true"]{background:var(--panel3);color:var(--gold2)}
+.seg button:hover{color:var(--ink)}
+.sel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:7px 30px 7px 10px;font-family:var(--cond);font-weight:600;font-size:14px;letter-spacing:.03em;appearance:none;cursor:pointer;
+  background-image:linear-gradient(45deg,transparent 50%,var(--gold) 50%),linear-gradient(135deg,var(--gold) 50%,transparent 50%);background-position:calc(100% - 15px) 55%,calc(100% - 10px) 55%;background-size:5px 5px;background-repeat:no-repeat}
+.sel option{background:var(--panel)}
+.search{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:7px 10px;min-width:0;width:170px}
+.check{display:inline-flex;align-items:center;gap:7px;color:var(--ink2);font-size:14px;cursor:pointer}
+.check input{accent-color:var(--gold)}
+
+/* ---------- Podium ---------- */
+.podium{display:grid;grid-template-columns:1fr 1.12fr 1fr;gap:14px;align-items:end;margin-bottom:18px}
+.pod{position:relative;background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:var(--r);padding:18px 16px 16px;text-align:center;cursor:pointer;transition:transform .15s ease,border-color .15s}
+.pod:hover{transform:translateY(-3px);border-color:var(--line2)}
+.pod.p1{padding-top:26px;border-color:#e2a93b66;background:linear-gradient(180deg,#2a2413,var(--panel) 70%)}
+.pod .place{position:absolute;top:10px;left:12px;font-family:var(--display);font-weight:800;font-size:22px;color:var(--mute)}
+.pod.p1 .place{color:var(--gold2)}
+.pod .av{width:72px;height:72px;border-radius:50%;border:2px solid var(--line2);object-fit:cover;background:var(--panel3)}
+.pod.p1 .av{width:88px;height:88px;border-color:var(--gold)}
+.pod .nm{font-family:var(--display);font-weight:800;font-size:18px;margin-top:8px}
+.pod .val{font-family:var(--cond);font-size:28px;font-weight:700;color:var(--gold2);line-height:1.1}
+.pod .lab{font-family:var(--cond);text-transform:uppercase;letter-spacing:.12em;font-size:11.5px;color:var(--mute)}
+
+/* ---------- Table ---------- */
+.tscroll{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--panel)}
+table.rank{border-collapse:collapse;width:100%;min-width:1180px}
+.rank th{font-family:var(--cond);text-transform:uppercase;letter-spacing:.1em;font-size:12px;font-weight:700;color:var(--mute);text-align:left;padding:12px 12px;border-bottom:1px solid var(--line);white-space:nowrap;position:sticky;top:0;background:var(--panel)}
+.rank th.sortable{cursor:pointer;user-select:none}
+.rank th.sortable:hover{color:var(--ink)}
+.rank th.on{color:var(--gold2)}
+.rank th .arr{display:inline-block;width:10px;margin-left:3px}
+.rank td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+.rank tr:last-child td{border-bottom:0}
+.rank tbody tr{cursor:pointer;transition:background .12s}
+.rank tbody tr:hover{background:var(--panel2)}
+.rank tr.unq td{opacity:.55}
+.pos{font-family:var(--display);font-weight:800;font-size:18px;color:var(--mute);width:34px;text-align:center}
+.pos.g1{color:var(--gold2)} .pos.g2{color:#c9d1d3} .pos.g3{color:#d08a55}
+.who{display:flex;align-items:center;gap:10px;min-width:190px}
+.who img{width:38px;height:38px;border-radius:50%;object-fit:cover;background:var(--panel3);flex:none}
+.who b{display:block;font-weight:600;font-size:15.5px}
+.who small{color:var(--mute);font-size:12.5px}
+.medal{position:relative;width:40px;height:40px;flex:none;display:inline-block}
+.medal img{position:absolute;inset:0;width:100%;height:100%}
+.medal-wrap{display:flex;align-items:center;gap:8px;white-space:nowrap}
+.medal-wrap small{font-family:var(--cond);font-size:13px;color:var(--ink2);font-weight:600}
+.big{font-family:var(--cond);font-weight:700;font-size:18px}
+.w{color:var(--rad)} .l{color:var(--dire)}
+.wrcell{min-width:130px}
+.wrbar{height:6px;background:var(--panel3);border-radius:4px;position:relative;margin-top:5px;overflow:hidden}
+.wrbar i{position:absolute;left:0;top:0;bottom:0;border-radius:4px;background:var(--gold)}
+.wrbar::after{content:"";position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:var(--ink2);opacity:.55}
+.form{display:flex;gap:2px}
+.form i{width:8px;height:18px;border-radius:2px;display:block}
+.form i.W{background:var(--rad)} .form i.L{background:var(--dire);opacity:.85}
+.sub{color:var(--mute);font-size:12.5px;font-family:var(--cond);letter-spacing:.03em}
+.hcell{display:flex;align-items:center;gap:9px;white-space:nowrap}
+.hcell img{width:54px;height:30px;border-radius:4px;object-fit:cover;flex:none;background:var(--panel3)}
+.chip{display:inline-flex;align-items:center;gap:5px;font-family:var(--cond);font-weight:600;font-size:12.5px;letter-spacing:.05em;text-transform:uppercase;padding:3px 8px;border-radius:999px;border:1px solid var(--line2);color:var(--ink2);white-space:nowrap}
+.chip.sup{color:var(--sup);border-color:#5bb0c355}
+.chip.core{color:var(--core);border-color:#e38b3d55}
+.chip.lock{color:var(--mute)}
+.chip.hot{color:var(--rad);border-color:#7dbf5a55}
+.chip.cold{color:var(--dire);border-color:#d4523e55}
+.rolebar{display:flex;height:5px;border-radius:3px;overflow:hidden;margin-top:6px;width:110px;gap:2px}
+.rolebar .s{background:var(--sup)} .rolebar .c{background:var(--core)}
+.kda{font-family:var(--cond);font-weight:600;font-size:15px;white-space:nowrap}
+.kda .k{color:var(--rad)} .kda .d{color:var(--dire)} .kda .a{color:var(--ink2)}
+.note{color:var(--mute);font-size:13px;margin-top:10px}
+
+/* ---------- Awards ---------- */
+.awards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.award{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:grid;grid-template-columns:auto 1fr;gap:4px 14px;align-items:center;cursor:pointer;transition:border-color .15s,transform .15s}
+.award:hover{border-color:var(--line2);transform:translateY(-2px)}
+.award .ttl{grid-column:1/-1;font-family:var(--display);font-weight:800;font-size:16.5px;color:var(--gold2);letter-spacing:.02em}
+.award .desc{grid-column:1/-1;color:var(--mute);font-size:13px;margin-bottom:8px}
+.award .avs{display:flex}
+.award .avs img{width:46px;height:46px;border-radius:50%;border:2px solid var(--panel);object-fit:cover;background:var(--panel3)}
+.award .avs img+img{margin-left:-14px}
+.award .who2 b{font-weight:600;font-size:16px;display:block}
+.award .who2 span{font-family:var(--cond);font-size:22px;font-weight:700;color:var(--ink)}
+.award .quip{grid-column:1/-1;color:var(--ink2);font-size:13.5px;margin-top:8px;border-top:1px dashed var(--line2);padding-top:8px}
+
+/* ---------- Bars (comparador) ---------- */
+.bars{display:grid;gap:7px;padding:16px}
+.brow{display:grid;grid-template-columns:170px minmax(0,1fr) 92px;gap:12px;align-items:center;cursor:pointer;border-radius:6px;padding:3px 4px}
+.brow:hover{background:var(--panel2)}
+.brow .bn{display:flex;align-items:center;gap:8px;min-width:0}
+.brow .bn img{width:26px;height:26px;border-radius:50%;object-fit:cover;flex:none}
+.brow .bn span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.track{position:relative;height:18px}
+.track .fill{position:absolute;left:0;top:2px;bottom:2px;border-radius:0 4px 4px 0;background:var(--gold);transition:width .45s cubic-bezier(.2,.8,.2,1)}
+.track .ref{position:absolute;top:-3px;bottom:-3px;width:1px;background:var(--ink2);opacity:.6}
+.brow .bv{font-family:var(--cond);font-weight:700;font-size:16px;text-align:right}
+.brow.me .fill{background:var(--gold2)}
+.brow.na .bv{color:var(--mute);font-weight:500}
+
+/* ---------- Duel ---------- */
+.duel{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:14px;align-items:center;padding:18px}
+.dside{display:flex;align-items:center;gap:12px}
+.dside.right{flex-direction:row-reverse;text-align:right}
+.dside img{width:64px;height:64px;border-radius:50%;object-fit:cover;border:2px solid var(--line2)}
+.dside .sel{max-width:100%}
+.score{font-family:var(--display);font-weight:800;font-size:40px;color:var(--gold2);text-align:center;line-height:1}
+.score small{display:block;font-family:var(--cond);font-size:12px;letter-spacing:.14em;color:var(--mute);margin-top:4px}
+.drows{padding:4px 18px 18px;display:grid;gap:4px}
+.drow{display:grid;grid-template-columns:70px minmax(0,1fr) 150px minmax(0,1fr) 70px;gap:10px;align-items:center;padding:5px 0;border-top:1px solid var(--line)}
+.drow .lbl{text-align:center;font-family:var(--cond);text-transform:uppercase;letter-spacing:.08em;font-size:12.5px;color:var(--ink2);font-weight:600}
+.drow .v{font-family:var(--cond);font-weight:700;font-size:17px}
+.drow .v.r{text-align:right}
+.drow .v.win{color:var(--gold2)}
+.dbar{height:10px;background:var(--panel3);border-radius:4px;position:relative;overflow:hidden}
+.dbar i{position:absolute;top:0;bottom:0;border-radius:4px;background:var(--line2);transition:width .45s}
+.dbar.lft i{right:0} .dbar.rgt i{left:0}
+.dbar i.win{background:var(--gold)}
+.verdict{margin:0 18px 18px;padding:12px 14px;border-radius:8px;background:var(--goldDim);color:var(--gold2);font-size:14.5px}
+
+/* ---------- Heroes ---------- */
+.hgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.hcard{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.hcard .pic{position:relative;aspect-ratio:16/9;max-width:100%;background:var(--panel3)}
+.hcard .pic img{width:100%;height:100%;object-fit:cover;display:block}
+.hcard .pic b{position:absolute;left:10px;bottom:6px;font-family:var(--display);font-weight:800;font-size:16px;text-shadow:0 1px 6px #000}
+.hcard .pic span{position:absolute;right:8px;top:8px;background:#0d1112cc;padding:2px 8px;border-radius:999px;font-family:var(--cond);font-weight:700;font-size:13px}
+.hcard .ppl{padding:10px 12px;display:grid;gap:5px}
+.hp{display:grid;grid-template-columns:22px 1fr auto;gap:8px;align-items:center;font-size:13.5px}
+.hp img{width:22px;height:22px;border-radius:50%;object-fit:cover}
+.hp .sub{font-size:12.5px}
+
+/* ---------- Chemistry ---------- */
+.chem{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.pair{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px;display:grid;gap:10px}
+.pair .ph{display:flex;align-items:center;gap:10px}
+.pair .duo{display:flex}
+.pair .duo img{width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid var(--panel)}
+.pair .duo img+img{margin-left:-12px}
+.pair .pn{font-weight:600}
+.pair .pstats{display:flex;justify-content:space-between;font-family:var(--cond);font-size:14px;color:var(--ink2)}
+.pair .pstats b{font-size:20px;color:var(--ink)}
+.wl{display:flex;height:8px;border-radius:4px;overflow:hidden;gap:2px}
+.wl .w{background:var(--rad)} .wl .l{background:var(--dire)}
+.tag{font-family:var(--cond);text-transform:uppercase;letter-spacing:.1em;font-size:11px;font-weight:700;padding:2px 7px;border-radius:4px;background:var(--goldDim);color:var(--gold2);margin-left:auto;white-space:nowrap}
+.tag.bad{background:var(--direDim);color:#f08a78}
+
+/* ---------- Activity ---------- */
+.act{display:grid;gap:10px;padding:16px}
+.arow{display:grid;grid-template-columns:150px minmax(0,1fr) 110px;gap:12px;align-items:center}
+.cal{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,11px);gap:3px;overflow-x:auto}
+.cal i{width:11px;height:11px;border-radius:2px;background:var(--panel3);display:block}
+
+/* ---------- Feed ---------- */
+.feed{display:grid;gap:6px}
+.match{display:grid;grid-template-columns:64px minmax(0,1.4fr) 90px 110px 120px minmax(0,1fr);gap:12px;align-items:center;background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--line2);border-radius:8px;padding:8px 12px}
+.match.W{border-left-color:var(--rad)} .match.L{border-left-color:var(--dire)}
+.match img.h{width:64px;height:36px;border-radius:4px;object-fit:cover}
+.match .mp{display:flex;align-items:center;gap:8px;min-width:0}
+.match .mp img{width:26px;height:26px;border-radius:50%;object-fit:cover}
+.match .res{font-family:var(--cond);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:13px}
+.match .together{font-size:12.5px;color:var(--gold2)}
+
+/* ---------- Modal ---------- */
+.overlay{position:fixed;inset:0;background:#05080acc;z-index:50;display:flex;justify-content:flex-end}
+.drawer{width:min(720px,100%);height:100%;overflow-y:auto;background:var(--bg);border-left:1px solid var(--line);padding:22px 22px calc(40px + env(safe-area-inset-bottom,0px))}
+.dhead{display:flex;gap:16px;align-items:center}
+.dhead img.av{width:84px;height:84px;border-radius:50%;object-fit:cover;border:2px solid var(--gold)}
+.dhead h3{font-family:var(--display);font-weight:800;font-size:28px;margin:0}
+.close{margin-left:auto;align-self:flex-start;background:var(--panel2);border:1px solid var(--line);border-radius:8px;width:38px;height:38px;cursor:pointer;font-size:20px;line-height:1}
+.dgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-top:18px}
+.dgrid div{background:var(--panel);padding:10px 12px}
+.dgrid b{display:block;font-family:var(--cond);font-size:22px;font-weight:700}
+.dgrid span{font-family:var(--cond);text-transform:uppercase;letter-spacing:.1em;font-size:11px;color:var(--mute)}
+.drawer h4{font-family:var(--cond);text-transform:uppercase;letter-spacing:.16em;font-size:13px;color:var(--gold);margin:24px 0 10px}
+.mini{width:100%;border-collapse:collapse;font-size:14px}
+.mini td,.mini th{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left}
+.mini th{font-family:var(--cond);text-transform:uppercase;letter-spacing:.08em;font-size:11.5px;color:var(--mute)}
+.aliases{display:flex;flex-wrap:wrap;gap:6px}
+
+#tip{position:fixed;z-index:60;pointer-events:none;background:#0a0e0f;border:1px solid var(--line2);color:var(--ink);padding:7px 10px;border-radius:6px;font-size:13px;max-width:280px;box-shadow:0 6px 24px #0008}
+footer{color:var(--mute);font-size:13px;padding-block:30px 50px;border-top:1px solid var(--line);margin-top:30px}
+footer p{margin:4px 0;max-width:90ch}
+
+@media (max-width:900px){
+  .hero{grid-template-columns:1fr;padding-top:28px}
+  .brand small{display:none}
+  .match{grid-template-columns:56px minmax(0,1fr) 80px;}
+  .match .hide-m{display:none}
+  .drow{grid-template-columns:52px minmax(0,1fr) 96px minmax(0,1fr) 52px}
+  .arow{grid-template-columns:110px minmax(0,1fr)}
+  .arow .sub{display:none}
+}
+@media (max-width:560px){
+  .wrap{padding-inline:16px}
+  .podium{grid-template-columns:1fr;}
+  .pod.p1{order:-1}
+  .brow{grid-template-columns:110px minmax(0,1fr) 70px;gap:8px}
+  .duel{grid-template-columns:1fr;text-align:center}
+  .dside,.dside.right{flex-direction:column;text-align:center}
+  .dgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .search{width:100%}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="updbar" id="updbar" role="status">
+  <div class="wrap"><span class="dot" aria-hidden="true"></span><span>Última atualização: <b id="updWhen">—</b></span><span class="nxt" id="updNext"></span></div>
+</div>
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand">TAVERNA DO ANCIENT<small>DOTA 2 · 14 JOGADORES</small></div>
+    <nav class="nav" aria-label="Seções">
+      <a href="#ranking">Ranking</a>
+      <a href="#premios">Prêmios</a>
+      <a href="#duelo">Duelo</a>
+      <a href="#comparar">Comparar</a>
+      <a href="#herois">Heróis</a>
+      <a href="#quimica">Duplas</a>
+      <a href="#partidas">Partidas</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <div>
+      <div class="eyebrow" id="stamp">Dados do Dotabuff</div>
+      <h1>Quem carrega<br>e quem é <em>carregado</em>.</h1>
+      <p class="lede">O placar oficial da galera: partidas, vitórias, medalhas, heróis de estimação e as duplas que dão certo (ou não). Clique em qualquer jogador para abrir a ficha completa.</p>
+    </div>
+    <div class="kpis" id="kpis"></div>
+  </section>
+
+  <section class="block" id="ranking">
+    <div class="sec-head">
+      <div>
+        <div class="eyebrow">Classificação geral</div>
+        <h2>O Ranking da Taverna</h2>
+        <p class="sec-sub">Clique no título de qualquer coluna para ordenar do maior para o menor (e clique de novo para inverter). O pódio acompanha a coluna escolhida.</p>
+      </div>
+      <div class="controls">
+        <div class="seg" role="group" aria-label="Filtrar por função" id="roleSeg">
+          <button type="button" data-role="all" aria-pressed="true">Todos</button>
+          <button type="button" data-role="sup" aria-pressed="false">Suportes</button>
+          <button type="button" data-role="core" aria-pressed="false">Cores</button>
+        </div>
+        <input class="search" id="q" type="search" placeholder="Buscar jogador" aria-label="Buscar jogador">
+        <label class="check"><input type="checkbox" id="showPriv" checked> Perfis privados</label>
+      </div>
+    </div>
+    <div class="podium" id="podium"></div>
+    <div class="tscroll"><table class="rank" id="rankTable"><thead></thead><tbody></tbody></table></div>
+    <p class="note">Partidas, vitórias e taxa de vitória vêm das estatísticas gerais do Dotabuff (todos os modos, Turbo incluído). "Últimas 15" usa as 15 partidas mais recentes de cada um. Perfis privados (só o registro parcial do Dotabuff) e quem tem menos de 100 partidas ficam no fim da lista, esmaecidos.</p>
+  </section>
+
+  <section class="block" id="premios">
+    <div class="sec-head">
+      <div>
+        <div class="eyebrow">Destaques e elogios</div>
+        <h2>Prêmios da Taverna</h2>
+        <p class="sec-sub">Troféus calculados a partir dos números reais. Os perfis privados só concorrem nas categorias que dá pra medir.</p>
+      </div>
+    </div>
+    <div class="awards" id="awards"></div>
+  </section>
+
+  <section class="block" id="duelo">
+    <div class="sec-head">
+      <div>
+        <div class="eyebrow">Mano a mano</div>
+        <h2>Duelo 1x1</h2>
+        <p class="sec-sub">Escolha dois jogadores. Cada linha vale um ponto para quem estiver melhor.</p>
+      </div>
+      <div class="controls">
+        <button class="seg" type="button" id="randDuel" style="padding:7px 12px;cursor:pointer;font-family:var(--cond);font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:13px;color:var(--gold2)">Sortear duelo</button>
+      </div>
+    </div>
+    <div class="panel" id="duelBox"></div>
+  </section>
+
+  <section class="block" id="comparar">
+    <div class="sec-head">
+      <div>
+        <div class="eyebrow">Todos contra todos</div>
+        <h2>Comparador</h2>
+        <p class="sec-sub">Escolha uma estatística e veja todo mundo lado a lado.</p>
+      </div>
+      <div class="controls">
+        <select class="sel" id="metricSel" aria-label="Estatística"></select>
+        <div class="seg" role="group" aria-label="Ordem" id="orderSeg">
+          <button type="button" data-o="desc" aria-pressed="true">Maior → menor</button>
+          <button type="button" data-o="asc" aria-pressed="false">Menor → maior</button>
+        </div>
+      </div>
+    </div>
+    <div class="panel"><div class="bars" id="bars"></div></div>
+  </section>
+
+  <section class="block" id="herois">
+    <div class="sec-head">
+      <div>
+        <div class="eyebrow">Pool de heróis</div>
+        <h2>Heróis da Galera</h2>
+        <p class="sec-sub">Somando o top 10 de heróis de cada jogador na carreira. Troque para "Agora" para ver o que está sendo jogado nas últimas 15 partidas.</p>
+      </div>
+      <div class="seg" role="group" aria-label="Período dos heróis" id="heroSeg">
+        <button type="button" data-h="career" aria-pressed="true">Carreira</button>
+        <button type="button" data-h="now" aria-pressed="false">Agora</button>
+      </div>
+    </div>
+    <div class="hgrid" id="heroGrid"></div>
+  </section>
+
+  <section class="block" id="quimica">
+    <div class="sec-head">
+      <div>
+        <div class="eyebrow">Química do grupo</div>
+        <h2>Duplas e Rivalidades</h2>
+        <p class="sec-sub">Partidas em que dois da galera estavam no mesmo time. Conta o histórico público do OpenDota mais as últimas partidas do Dotabuff.</p>
+      </div>
+      <div class="seg" role="group" aria-label="Ordenar duplas" id="chemSeg">
+        <button type="button" data-c="games" aria-pressed="true">Mais partidas</button>
+        <button type="button" data-c="best" aria-pressed="false">Melhor taxa</button>
+        <button type="button" data-c="worst" aria-pressed="false">Pior taxa</button>
+      </div>
+    </div>
+    <div class="chem" id="chem"></div>
+  </section>
+
+  <section class="block" id="grind">
+    <div class="sec-head">
+      <div>
+        <div class="eyebrow">Últimos 3 meses</div>
+        <h2>Calendário do Grind</h2>
+        <p class="sec-sub">Dias com partidas no calendário de atividade do Dotabuff (o Dotabuff não conta Turbo aqui). Verde é dia de lucro, vermelho é dia de prejuízo.</p>
+      </div>
+    </div>
+    <div class="panel"><div class="act" id="act"></div></div>
+  </section>
+
+  <section class="block" id="partidas">
+    <div class="sec-head">
+      <div>
+        <div class="eyebrow">Feed</div>
+        <h2>Últimas Partidas</h2>
+        <p class="sec-sub">As partidas mais recentes de todo mundo, em ordem. Quando dois ou mais da galera estavam na mesma partida, aparece "juntos".</p>
+      </div>
+      <div class="controls">
+        <select class="sel" id="feedSel" aria-label="Jogador"></select>
+        <div class="seg" role="group" aria-label="Resultado" id="feedSeg">
+          <button type="button" data-f="all" aria-pressed="true">Todas</button>
+          <button type="button" data-f="W" aria-pressed="false">Vitórias</button>
+          <button type="button" data-f="L" aria-pressed="false">Derrotas</button>
+        </div>
+      </div>
+    </div>
+    <div class="feed" id="feed"></div>
+  </section>
+</main>
+
+<footer class="wrap">
+  <p id="foot1"></p>
+  <p>Fontes: páginas públicas de visão geral do Dotabuff (pt.dotabuff.com) e API pública do OpenDota, usadas para as duplas. Imagens de heróis e medalhas: Valve/OpenDota.</p>
+</footer>
+
+<div class="overlay" id="overlay" hidden><div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="dName"></div></div>
+<div id="tip" hidden></div>
+
+<script src="data/dashboard_data.js" charset="utf-8"></script>
+<script>
+(function(){
+const D = window.DASH, NOW = D.generatedAt, HERO = D.heroes;
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const num = s => s == null || s === "" ? 0 : parseFloat(String(s).replace(/,/g,"").replace("%",""));
+const fmt = (v, d=0) => v == null || isNaN(v) ? "—" : v.toLocaleString("pt-BR", {minimumFractionDigits:d, maximumFractionDigits:d});
+const pct = (v, d=1) => v == null || isNaN(v) ? "—" : fmt(v, d) + "%";
+const LANES = {safelane:"Safe lane", offlane:"Offlane", midlane:"Mid", roaming:"Roaming", jungle:"Selva"};
+const heroName = s => (HERO[s] && HERO[s].name) || s;
+const heroImg = s => (HERO[s] && HERO[s].img) || "";
+const ago = ts => {
+  const d = (NOW - ts) / 86400;
+  if (d < 1) return "hoje";
+  if (d < 2) return "ontem";
+  if (d < 31) return Math.floor(d) + " dias atrás";
+  if (d < 365) return Math.floor(d/30) + (Math.floor(d/30) === 1 ? " mês atrás" : " meses atrás");
+  const y = Math.floor(d/365); return y + (y === 1 ? " ano atrás" : " anos atrás");
+};
+const dur = s => { s = Math.round(s); const h = Math.floor(s/3600), m = Math.floor(s%3600/60), x = s%60; return (h ? h + ":" + String(m).padStart(2,"0") : m) + ":" + String(x).padStart(2,"0"); };
+const streakTxt = s => { const n = Math.abs(s); return n + (s > 0 ? (n === 1 ? " vitória seguida" : " vitórias seguidas") : (n === 1 ? " derrota seguida" : " derrotas seguidas")); };
+const scoreM = m => (m.k + m.a) / Math.max(1, m.d) + m.k * 0.04 + (m.won ? .5 : 0);
+
+/* ---------- enrich ---------- */
+const P = D.players.map(p => {
+  const g = {}; p.general.forEach(r => { if (!(r[0] in g)) g[r[0]] = [num(r[1]), num(r[2])]; });
+  const r = p.recent, n = r.length, sum = f => r.reduce((s,m) => s + f(m), 0);
+  const K = sum(m=>m.k), De = sum(m=>m.d), A = sum(m=>m.a);
+  let streak = 0;
+  if (n) { const w = r[0].won; for (const m of r) { if (m.won === w) streak++; else break; } if (!w) streak = -streak; }
+  const top = p.heroes[0] || null;
+  const minG = top ? Math.max(15, top.matches * .08) : 0;
+  const pool = p.heroes.filter(h => h.matches >= minG);
+  const pet = pool.length > 1 ? [...pool].sort((a,b)=>b.wr-a.wr)[0] : null;
+  const cursed = pool.length > 1 ? [...pool].sort((a,b)=>a.wr-b.wr)[0] : null;
+  const ranked = g["MM classificado"] || null;
+  const q = {
+    ...p,
+    wr: p.total ? p.wins / p.total * 100 : null,
+    rankVal: p.rankTier ? p.rankTier * 10 + p.rankStar : null,
+    rankedN: ranked ? ranked[0] : null, rankedWr: ranked && ranked[0] >= 10 ? ranked[1] : null,
+    radWr: g.Radiant ? g.Radiant[1] : null, direWr: g.Dire ? g.Dire[1] : null,
+    n, w15: n ? sum(m=>m.won) : null, wr15: n ? sum(m=>m.won) / n * 100 : null,
+    k: n ? K/n : null, d: n ? De/n : null, a: n ? A/n : null, kda: n ? (K + A) / Math.max(1, De) : null,
+    dur: n ? sum(m=>m.dur) / n : null,
+    turbo: n ? r.filter(m => m.mode === "Turbo").length / n * 100 : null,
+    solo: n ? r.filter(m => m.party === 1).length / n * 100 : null,
+    stack: n ? r.filter(m => m.party > 1).length / n * 100 : null,
+    streak: n ? streak : null,
+    best: n ? r.reduce((b,m) => scoreM(m) > scoreM(b) ? m : b) : null,
+    worst: n ? r.reduce((b,m) => (m.d > b.d || (m.d === b.d && m.k < b.k)) ? m : b) : null,
+    maxK: n ? Math.max(...r.map(m=>m.k)) : null,
+    top, topN: top ? top.matches : null,
+    oneTrick: top && p.total ? top.matches / p.total * 100 : null,
+    pet, cursed,
+    sup: p.roles.Suporte ? p.roles.Suporte.pct : (p.roles.Core ? 100 - p.roles.Core.pct : null),
+    core: p.roles.Core ? p.roles.Core.pct : (p.roles.Suporte ? 100 - p.roles.Suporte.pct : null),
+    lane: p.lanes[0] ? p.lanes[0][0] : null,
+    daysAway: (NOW - p.lastMatch) / 86400,
+    variety: n ? new Set(r.map(m=>m.slug)).size : null,
+    lvl: n ? sum(m => m.lvl || 0) / Math.max(1, r.filter(m=>m.lvl).length) : null,
+    rankedAct: p.activity.reduce((s,a)=>s + a[1] + a[2], 0),
+    qualified: !p.private && p.total >= 100,
+  };
+  q.bestScore = q.best ? scoreM(q.best) : null;
+  q.mainRole = q.sup == null ? null : (q.sup >= 50 ? "sup" : "core");
+  return q;
+});
+const byNick = Object.fromEntries(P.map(p => [p.nick, p]));
+const pub = P.filter(p => !p.private);
+
+/* ---------- small renderers ---------- */
+const medal = p => {
+  const base = D.medals["t" + (p.rankTier || 0)];
+  const star = p.rankTier ? D.medals["s" + p.rankStar] : null;
+  return `<span class="medal" data-tip="${esc(p.rank === "Not Calibrated" ? "Sem calibração" : p.rank)}">${base ? `<img src="${base}" alt="">` : ""}${star ? `<img src="${star}" alt="">` : ""}</span>`;
+};
+const rankLabel = p => p.rank === "Not Calibrated" ? "Sem medalha" : p.rank;
+const formStrip = p => p.n ? `<div class="form" data-tip="Da mais recente (esquerda) para a mais antiga">${p.recent.map(m => `<i class="${m.won ? "W" : "L"}"></i>`).join("")}</div>` : `<span class="chip lock">${lockSvg} privado</span>`;
+const lockSvg = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>`;
+const kdaHtml = (k,d,a,dec=1) => `<span class="kda"><span class="k">${fmt(k,dec)}</span> / <span class="d">${fmt(d,dec)}</span> / <span class="a">${fmt(a,dec)}</span></span>`;
+const roleChip = p => p.mainRole ? `<span class="chip ${p.mainRole}">${p.mainRole === "sup" ? "Suporte" : "Core"} ${fmt(p.mainRole === "sup" ? p.sup : p.core)}%</span>` : `<span class="sub">—</span>`;
+
+/* ---------- KPIs ---------- */
+(function kpis(){
+  const tot = P.reduce((s,p)=>s + p.total, 0), wins = P.reduce((s,p)=>s + p.wins, 0);
+  const active = pub.filter(p => p.daysAway < 7).length;
+  const most = [...P].sort((a,b)=>b.total-a.total)[0];
+  const d = new Date(NOW * 1000);
+  const days = (Date.now() / 1000 - NOW) / 86400, nx = new Date((NOW + 3 * 86400) * 1000);
+  $("#updWhen").textContent = d.toLocaleDateString("pt-BR", {weekday:"long", day:"2-digit", month:"2-digit", year:"numeric"}) + " às " + d.toLocaleTimeString("pt-BR", {hour:"2-digit", minute:"2-digit"});
+  if (days > 4) { $("#updbar").classList.add("stale"); $("#updNext").textContent = "Dados com " + Math.floor(days) + " dias. A próxima atualização automática deve sair em breve."; }
+  else $("#updNext").textContent = "Atualiza sozinho a cada 3 dias · próxima por volta de " + nx.toLocaleDateString("pt-BR", {day:"2-digit", month:"2-digit"});
+  $("#stamp").textContent = "Dados do Dotabuff · atualizado em " + d.toLocaleDateString("pt-BR") + " às " + d.toLocaleTimeString("pt-BR", {hour:"2-digit", minute:"2-digit"});
+  $("#foot1").textContent = "Instantâneo gerado em " + d.toLocaleString("pt-BR") + ". Neo, Lestat, Kaus e El Desperuanizador estão com o perfil privado no Dotabuff: deles só aparecem medalha e o registro que o site ainda mostra.";
+  $("#kpis").innerHTML = [
+    [fmt(tot), "Partidas somadas", "equivale a ~" + fmt(tot * 38 / 60 / 24) + " dias de jogo"],
+    [pct(wins / tot * 100), "Taxa de vitória do grupo", fmt(wins) + " vitórias"],
+    [esc(most.nick), "Mais viciado", fmt(most.total) + " partidas"],
+    [active + " de " + P.length, "Jogaram nesta semana", pub.length + " perfis públicos"],
+  ].map(k => `<div class="kpi"><span>${k[1]}</span><b class="num">${k[0]}</b><i>${k[2]}</i></div>`).join("");
+})();
+
+/* ---------- Ranking table ---------- */
+const COLS = [
+  {k:"pos", l:"#"},
+  {k:"nick", l:"Jogador", str:true, cell:p => `<div class="who"><img src="${p.avatar||""}" alt=""><div><b>${esc(p.nick)}</b><small>${esc(p.steam)}</small></div></div>`},
+  {k:"rankVal", l:"Medalha", cell:p => `<div class="medal-wrap">${medal(p)}<small>${esc(rankLabel(p))}</small></div>`},
+  {k:"total", l:"Partidas", cell:p => `<span class="big num">${fmt(p.total)}</span>`},
+  {k:"wins", l:"Vitórias", cell:p => `<span class="big num w">${fmt(p.wins)}</span>`},
+  {k:"losses", l:"Derrotas", cell:p => `<span class="big num l">${fmt(p.losses)}</span>`},
+  {k:"wr", l:"Taxa de vitória", cell:p => `<div class="wrcell"><span class="big num">${pct(p.wr,2)}</span><div class="wrbar"><i style="width:${p.wr||0}%"></i></div></div>`},
+  {k:"rankedWr", l:"Ranqueada", cell:p => p.rankedWr == null ? `<span class="sub">—</span>` : `<span class="big num">${pct(p.rankedWr)}</span><div class="sub">${fmt(p.rankedN)} partidas</div>`},
+  {k:"wr15", l:"Últimas 15", cell:p => p.n ? `${formStrip(p)}<div class="sub">${p.w15}V ${p.n - p.w15}D · ${streakTxt(p.streak)}</div>` : formStrip(p)},
+  {k:"kda", l:"KDA recente", cell:p => p.n ? `${kdaHtml(p.k,p.d,p.a)}<div class="sub">razão ${fmt(p.kda,2)}</div>` : `<span class="sub">—</span>`},
+  {k:"topN", l:"Herói mais jogado", cell:p => p.top ? `<div class="hcell"><img src="${heroImg(p.top.slug)}" alt=""><div><b>${esc(heroName(p.top.slug))}</b><div class="sub">${fmt(p.top.matches)} partidas · ${pct(p.top.wr)}</div></div></div>` : `<span class="sub">—</span>`},
+  {k:"sup", l:"Função · Lane", cell:p => p.mainRole ? `${roleChip(p)}<div class="sub" style="margin-top:4px">${LANES[p.lane] || "—"}</div>` : `<span class="sub">—</span>`},
+  {k:"bestScore", l:"Destaque recente", cell:p => p.best ? `<div class="hcell"><img src="${heroImg(p.best.slug)}" alt=""><div>${kdaHtml(p.best.k,p.best.d,p.best.a,0)}<div class="sub">${esc(heroName(p.best.slug))} · ${p.best.won ? "vitória" : "derrota"}</div></div></div>` : `<span class="sub">—</span>`},
+  {k:"daysAway", l:"Última partida", cell:p => `<span class="${p.daysAway < 3 ? "chip hot" : p.daysAway > 180 ? "chip cold" : "chip"}">${ago(p.lastMatch)}</span>`},
+];
+const LABEL_FOR = {nick:"Jogador", rankVal:"Medalha", total:"Partidas", wins:"Vitórias", losses:"Derrotas", wr:"Taxa de vitória", rankedWr:"Taxa ranqueada", wr15:"Vitórias nas últimas 15", kda:"KDA recente", topN:"Partidas com o herói favorito", sup:"% como suporte", bestScore:"Melhor partida recente", daysAway:"Dias sem jogar"};
+const podVal = (k, p) => ({
+  nick: p.steam, rankVal: rankLabel(p), total: fmt(p.total), wins: fmt(p.wins), losses: fmt(p.losses), wr: pct(p.wr,2),
+  rankedWr: pct(p.rankedWr), wr15: p.n ? p.w15 + "/" + p.n : "—", kda: fmt(p.kda,2), topN: p.top ? fmt(p.top.matches) : "—",
+  sup: pct(p.sup,0), bestScore: p.best ? `${p.best.k}/${p.best.d}/${p.best.a}` : "—", daysAway: ago(p.lastMatch)
+}[k]);
+let sortK = "wr", sortDir = -1, roleF = "all", query = "", showPriv = true;
+function rows(){
+  let list = P.filter(p => showPriv || !p.private)
+    .filter(p => roleF === "all" || p.mainRole === roleF)
+    .filter(p => !query || (p.nick + " " + p.steam).toLowerCase().includes(query));
+  const col = COLS.find(c => c.k === sortK);
+  list.sort((a,b) => {
+    if (a.qualified !== b.qualified) return a.qualified ? -1 : 1;
+    const x = a[sortK], y = b[sortK];
+    if (x == null && y == null) return 0; if (x == null) return 1; if (y == null) return -1;
+    return (col.str ? String(x).localeCompare(String(y), "pt-BR") : x - y) * sortDir;
+  });
+  return list;
+}
+function renderTable(){
+  const t = $("#rankTable");
+  t.querySelector("thead").innerHTML = "<tr>" + COLS.map(c => c.k === "pos" ? `<th>#</th>` :
+    `<th class="sortable ${c.k === sortK ? "on" : ""}" data-k="${c.k}" tabindex="0" aria-sort="${c.k === sortK ? (sortDir < 0 ? "descending" : "ascending") : "none"}">${c.l}<span class="arr">${c.k === sortK ? (sortDir < 0 ? "▾" : "▴") : ""}</span></th>`).join("") + "</tr>";
+  const list = rows();
+  t.querySelector("tbody").innerHTML = list.map((p,i) => `<tr data-nick="${esc(p.nick)}" class="${p.qualified ? "" : "unq"}">` + COLS.map(c => c.k === "pos"
+    ? `<td class="pos ${i < 3 && p.qualified ? "g" + (i+1) : ""}">${i+1}</td>` : `<td>${c.cell(p)}</td>`).join("") + "</tr>").join("")
+    || `<tr><td colspan="${COLS.length}" style="padding:24px;color:var(--mute)">Ninguém encontrado com esse filtro.</td></tr>`;
+  const podList = list.filter(p => p.qualified && p[sortK] != null).slice(0,3);
+  const order = [1,0,2];
+  $("#podium").innerHTML = order.map(i => podList[i] ? `<div class="pod p${i+1}" data-nick="${esc(podList[i].nick)}" tabindex="0" role="button">
+      <div class="place">${i+1}º</div><img class="av" src="${podList[i].avatar||""}" alt="">
+      <div class="nm">${esc(podList[i].nick)}</div><div class="val num">${podVal(sortK, podList[i])}</div><div class="lab">${LABEL_FOR[sortK]}</div></div>` : "<div></div>").join("");
+}
+$("#rankTable").addEventListener("click", e => {
+  const th = e.target.closest("th.sortable");
+  if (th) { const k = th.dataset.k; if (k === sortK) sortDir *= -1; else { sortK = k; sortDir = (k === "nick" || k === "daysAway") ? 1 : -1; } renderTable(); return; }
+  const tr = e.target.closest("tr[data-nick]"); if (tr) openPlayer(tr.dataset.nick);
+});
+$("#rankTable").addEventListener("keydown", e => { const th = e.target.closest("th.sortable"); if (th && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); th.click(); } });
+$("#podium").addEventListener("click", e => { const d = e.target.closest("[data-nick]"); if (d) openPlayer(d.dataset.nick); });
+segHandler("#roleSeg", "role", v => { roleF = v; renderTable(); });
+$("#q").addEventListener("input", e => { query = e.target.value.trim().toLowerCase(); renderTable(); });
+$("#showPriv").addEventListener("change", e => { showPriv = e.target.checked; renderTable(); });
+
+function segHandler(sel, attr, fn){
+  $(sel).addEventListener("click", e => {
+    const b = e.target.closest("button"); if (!b) return;
+    $(sel).querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b ? "true" : "false"));
+    fn(b.dataset[attr]);
+  });
+}
+
+/* ---------- Awards ---------- */
+function pick(list, f, dir = -1){
+  const v = list.filter(p => f(p) != null && !isNaN(f(p)));
+  if (!v.length) return null;
+  const best = dir < 0 ? Math.max(...v.map(f)) : Math.min(...v.map(f));
+  return {ps: v.filter(p => Math.abs(f(p) - best) < 1e-9), v: best};
+}
+const allMatches = pub.flatMap(p => p.recent.map(m => ({...m, nick: p.nick})));
+const bestMatch = allMatches.reduce((b,m) => scoreM(m) > scoreM(b) ? m : b);
+const worstMatch = allMatches.reduce((b,m) => (m.d - m.k*.3) > (b.d - b.k*.3) ? m : b);
+const vet = P.filter(p => p.total >= 500);
+const AWARDS = [
+  {t:"Viciado Oficial", d:"Mais partidas na conta", r:pick(P, p=>p.total), v:x=>fmt(x)+" partidas", q:(p,x)=>`São ~${fmt(x*38/60/24)} dias seguidos de Dota. Sem dormir.`},
+  {t:"Rei do Winrate", d:"Maior taxa de vitória (mín. 500 partidas)", r:pick(vet, p=>p.wr), v:x=>pct(x,2), q:p=>`Acima dos 50%: o sonho de todo jogador de pub.`},
+  {t:"Pé Frio", d:"Menor taxa de vitória (mín. 500 partidas)", r:pick(vet, p=>p.wr, 1), v:x=>pct(x,2), q:p=>`O MMR agradece a doação.`},
+  {t:"Em Chamas", d:"Mais vitórias nas últimas 15", r:pick(pub, p=>p.w15), v:x=>x+" de 15", q:p=>`Se alguém for jogar hoje, chama ${p.nick}.`},
+  {t:"Açougueiro", d:"Mais abates por partida (últimas 15)", r:pick(pub, p=>p.k), v:x=>fmt(x,1)+" abates", q:p=>`Joga como se a última bala fosse dele.`},
+  {t:"Doador de Ouro", d:"Mais mortes por partida (últimas 15)", r:pick(pub, p=>p.d), v:x=>fmt(x,1)+" mortes", q:p=>`O inimigo agradece o farm grátis.`},
+  {t:"Babá do Time", d:"Mais assistências por partida (últimas 15)", r:pick(pub, p=>p.a), v:x=>fmt(x,1)+" assist.", q:p=>`Se tem briga, ${p.nick} está ali do lado ajudando.`},
+  {t:"Monogâmico", d:"Maior % de partidas com um único herói", r:pick(pub, p=>p.oneTrick), v:x=>pct(x), q:p=>`${heroName(p.top.slug)}: ${fmt(p.top.matches)} partidas. Isso é casamento.`},
+  {t:"Suporte Raiz", d:"Maior % de partidas como suporte", r:pick(pub, p=>p.sup), v:x=>pct(x,0), q:p=>`Compra ward, morre primeiro e ainda leva a culpa.`},
+  {t:"Core Sedento", d:"Maior % de partidas como core", r:pick(pub, p=>p.core), v:x=>pct(x,0), q:p=>`Farm é dele. O seu também.`},
+  {t:"Maratonista", d:"Partidas mais longas em média (últimas 15)", r:pick(pub, p=>p.dur), v:x=>dur(x)+" min", q:p=>`Nunca desiste, nem quando devia.`},
+  {t:"Lobo Solitário", d:"Mais partidas sem grupo (últimas 15)", r:pick(pub, p=>p.solo), v:x=>pct(x,0)+" solo", q:p=>`Ninguém chama ou ninguém aguenta?`},
+  {t:"Medalhão", d:"Maior medalha ranqueada", r:pick(P, p=>p.rankVal), v:(x,p)=>rankLabel(p), q:p=>`Quem manda no ranked da galera.`},
+  {t:"Colecionador", d:"Mais pontos de conquista no Dotabuff", r:pick(P, p=>p.points), v:x=>fmt(x)+" pontos", q:p=>`Zerou o Dota? Ainda não, mas tá perto.`},
+  {t:"Fantasma", d:"Há mais tempo sem jogar", r:pick(P, p=>p.daysAway), v:(x,p)=>ago(p.lastMatch), q:p=>`Alguém avisa que o Dota ainda existe.`},
+  {t:"Grinder do Ranked", d:"Mais ranqueadas nos últimos 3 meses", r:pick(pub, p=>p.rankedAct || null), v:x=>x+" partidas", q:p=>`Vive no ranked. Mora lá.`},
+  {t:"Partida da Vida", d:"Melhor atuação entre as partidas recentes", r:{ps:[byNick[bestMatch.nick]], v:0}, v:()=>`${bestMatch.k}/${bestMatch.d}/${bestMatch.a}`, q:()=>`De ${heroName(bestMatch.slug)}, ${bestMatch.won ? "com vitória" : "mesmo perdendo"}, ${ago(bestMatch.t)}.`},
+  {t:"Partida pra Esquecer", d:"A pior atuação recente da galera", r:{ps:[byNick[worstMatch.nick]], v:0}, v:()=>`${worstMatch.k}/${worstMatch.d}/${worstMatch.a}`, q:()=>`De ${heroName(worstMatch.slug)}, ${ago(worstMatch.t)}. A gente não comenta.`},
+];
+$("#awards").innerHTML = AWARDS.filter(a => a.r).map(a => {
+  const p = a.r.ps[0], more = a.r.ps.length - 1;
+  return `<article class="award" data-nick="${esc(p.nick)}" tabindex="0" role="button">
+    <div class="ttl">${a.t}</div><div class="desc">${a.d}</div>
+    <div class="avs">${a.r.ps.slice(0,3).map(x => `<img src="${x.avatar||""}" alt="" data-tip="${esc(x.nick)}">`).join("")}</div>
+    <div class="who2"><b>${a.r.ps.slice(0,3).map(x=>esc(x.nick)).join(", ")}${more > 2 ? " e +" + (more-2) : ""}</b><span class="num">${a.v(a.r.v, p)}</span></div>
+    <div class="quip">${esc(a.q(p, a.r.v))}</div></article>`;
+}).join("");
+$("#awards").addEventListener("click", e => { const d = e.target.closest("[data-nick]"); if (d) openPlayer(d.dataset.nick); });
+
+/* ---------- Metrics (duel & comparator) ---------- */
+const METRICS = [
+  {k:"wr", l:"Taxa de vitória", f:v=>pct(v,2), ref:50, max:100},
+  {k:"total", l:"Partidas", f:v=>fmt(v)},
+  {k:"wins", l:"Vitórias", f:v=>fmt(v)},
+  {k:"rankedWr", l:"Taxa de vitória ranqueada", f:v=>pct(v,1), ref:50, max:100},
+  {k:"rankedN", l:"Partidas ranqueadas", f:v=>fmt(v)},
+  {k:"rankVal", l:"Medalha", f:(v,p)=>rankLabel(p)},
+  {k:"wr15", l:"Vitórias nas últimas 15", f:v=>pct(v,0), ref:50, max:100},
+  {k:"kda", l:"KDA recente", f:v=>fmt(v,2)},
+  {k:"k", l:"Abates por partida", f:v=>fmt(v,1)},
+  {k:"d", l:"Mortes por partida", f:v=>fmt(v,1), low:true},
+  {k:"a", l:"Assistências por partida", f:v=>fmt(v,1)},
+  {k:"maxK", l:"Mais abates numa partida recente", f:v=>fmt(v)},
+  {k:"dur", l:"Duração média das partidas", f:v=>dur(v)},
+  {k:"oneTrick", l:"% com o herói favorito", f:v=>pct(v,1)},
+  {k:"sup", l:"% como suporte", f:v=>pct(v,0), max:100},
+  {k:"turbo", l:"% de Turbo (últimas 15)", f:v=>pct(v,0), max:100},
+  {k:"stack", l:"% em grupo (últimas 15)", f:v=>pct(v,0), max:100},
+  {k:"variety", l:"Heróis diferentes nas últimas 15", f:v=>fmt(v)},
+  {k:"radWr", l:"Taxa de vitória de Radiant", f:v=>pct(v,1), ref:50, max:100},
+  {k:"direWr", l:"Taxa de vitória de Dire", f:v=>pct(v,1), ref:50, max:100},
+  {k:"points", l:"Pontos de conquista", f:v=>fmt(v)},
+  {k:"daysAway", l:"Dias sem jogar", f:(v,p)=>ago(p.lastMatch), low:true},
+];
+const DUEL = ["wr","total","rankedWr","rankVal","wr15","kda","k","d","a","dur","oneTrick","points"];
+
+/* ---------- Duel ---------- */
+let duelA = "Bahia", duelB = "Panda";
+const opts = sel => P.map(p => `<option value="${esc(p.nick)}" ${p.nick === sel ? "selected" : ""}>${esc(p.nick)}${p.private ? " (privado)" : ""}</option>`).join("");
+function renderDuel(){
+  const A = byNick[duelA], B = byNick[duelB];
+  let sa = 0, sb = 0;
+  const rowsH = DUEL.map(k => {
+    const m = METRICS.find(x => x.k === k), x = A[k], y = B[k];
+    let wa = false, wb = false;
+    if (x != null && y != null && x !== y) { const aBetter = m.low ? x < y : x > y; wa = aBetter; wb = !aBetter; }
+    else if (x != null && y == null) wa = true; else if (y != null && x == null) wb = true;
+    sa += wa; sb += wb;
+    const mx = Math.max(Math.abs(x||0), Math.abs(y||0)) || 1;
+    return `<div class="drow"><div class="v ${wa ? "win" : ""} num">${x == null ? "—" : m.f(x, A)}</div>
+      <div class="dbar lft"><i class="${wa ? "win" : ""}" style="width:${(x||0)/mx*100}%"></i></div>
+      <div class="lbl">${m.l}</div>
+      <div class="dbar rgt"><i class="${wb ? "win" : ""}" style="width:${(y||0)/mx*100}%"></i></div>
+      <div class="v r ${wb ? "win" : ""} num">${y == null ? "—" : m.f(y, B)}</div></div>`;
+  }).join("");
+  const lead = sa === sb ? `Empate técnico. Resolvam no 1x1 de Shadow Fiend no mid.` :
+    `${esc(sa > sb ? A.nick : B.nick)} leva o duelo por ${Math.max(sa,sb)} a ${Math.min(sa,sb)}. ${esc(sa > sb ? B.nick : A.nick)} pode pedir revanche.`;
+  $("#duelBox").innerHTML = `<div class="duel">
+      <div class="dside"><img src="${A.avatar||""}" alt=""><div><select class="sel" id="dA" aria-label="Jogador da esquerda">${opts(duelA)}</select><div class="sub" style="margin-top:4px">${esc(rankLabel(A))}</div></div></div>
+      <div class="score num">${sa} × ${sb}<small>PLACAR</small></div>
+      <div class="dside right"><img src="${B.avatar||""}" alt=""><div><select class="sel" id="dB" aria-label="Jogador da direita">${opts(duelB)}</select><div class="sub" style="margin-top:4px">${esc(rankLabel(B))}</div></div></div>
+    </div><div class="drows">${rowsH}</div><div class="verdict">${lead}</div>`;
+  $("#dA").onchange = e => { duelA = e.target.value; renderDuel(); };
+  $("#dB").onchange = e => { duelB = e.target.value; renderDuel(); };
+}
+$("#randDuel").addEventListener("click", () => {
+  const ps = pub.map(p => p.nick); const a = ps[Math.floor(Math.random()*ps.length)]; let b = a;
+  while (b === a) b = ps[Math.floor(Math.random()*ps.length)];
+  duelA = a; duelB = b; renderDuel();
+});
+
+/* ---------- Comparator ---------- */
+let metK = "wr", metDir = "desc";
+$("#metricSel").innerHTML = METRICS.map(m => `<option value="${m.k}">${m.l}</option>`).join("");
+$("#metricSel").addEventListener("change", e => { metK = e.target.value; renderBars(); });
+segHandler("#orderSeg", "o", v => { metDir = v; renderBars(); });
+function renderBars(){
+  const m = METRICS.find(x => x.k === metK);
+  const has = P.filter(p => p[metK] != null), none = P.filter(p => p[metK] == null);
+  has.sort((a,b) => metDir === "desc" ? b[metK] - a[metK] : a[metK] - b[metK]);
+  const max = m.max || Math.max(...has.map(p => p[metK])) || 1;
+  const min = 0;
+  $("#bars").innerHTML = has.concat(none).map(p => {
+    const v = p[metK], w = v == null ? 0 : Math.max(1.5, (v - min) / (max - min) * 100);
+    return `<div class="brow ${v == null ? "na" : ""}" data-nick="${esc(p.nick)}" data-tip="${esc(p.nick)}: ${esc(v == null ? "sem dados (perfil privado)" : m.f(v, p))}">
+      <div class="bn"><img src="${p.avatar||""}" alt=""><span>${esc(p.nick)}</span></div>
+      <div class="track">${v == null ? "" : `<div class="fill" style="width:${w}%"></div>`}${m.ref ? `<div class="ref" style="left:${m.ref / max * 100}%" data-tip="Linha dos ${m.ref}%"></div>` : ""}</div>
+      <div class="bv num">${v == null ? "privado" : m.f(v, p)}</div></div>`;
+  }).join("");
+}
+$("#bars").addEventListener("click", e => { const d = e.target.closest("[data-nick]"); if (d) openPlayer(d.dataset.nick); });
+
+/* ---------- Heroes ---------- */
+let heroMode = "career";
+segHandler("#heroSeg", "h", v => { heroMode = v; renderHeroes(); });
+function renderHeroes(){
+  const agg = {};
+  for (const p of pub) {
+    const src = heroMode === "career" ? p.heroes.map(h => ({slug:h.slug, n:h.matches, w:h.matches*h.wr/100}))
+      : Object.values(p.recent.reduce((o,m) => { (o[m.slug] ||= {slug:m.slug, n:0, w:0}); o[m.slug].n++; o[m.slug].w += m.won; return o; }, {}));
+    for (const h of src) { const a = agg[h.slug] ||= {slug:h.slug, n:0, w:0, by:[]}; a.n += h.n; a.w += h.w; a.by.push({p, n:h.n, w:h.w}); }
+  }
+  const list = Object.values(agg).sort((a,b) => b.by.length - a.by.length || b.n - a.n).slice(0, 16);
+  $("#heroGrid").innerHTML = list.map(h => `<div class="hcard"><div class="pic"><img src="${heroImg(h.slug)}" alt="${esc(heroName(h.slug))}" loading="lazy"><b>${esc(heroName(h.slug))}</b><span class="num" data-tip="Partidas somadas · taxa de vitória">${fmt(h.n)} · ${pct(h.w/h.n*100,0)}</span></div>
+    <div class="ppl">${h.by.sort((a,b)=>b.n-a.n).slice(0,4).map(b => `<div class="hp"><img src="${b.p.avatar||""}" alt=""><span>${esc(b.p.nick)}</span><span class="sub num">${fmt(b.n)} · ${pct(b.w/b.n*100,0)}</span></div>`).join("")}${h.by.length > 4 ? `<div class="sub">e mais ${h.by.length - 4}</div>` : ""}</div></div>`).join("");
+}
+
+/* ---------- Chemistry ---------- */
+let chemMode = "games";
+segHandler("#chemSeg", "c", v => { chemMode = v; renderChem(); });
+function renderChem(){
+  let list = D.chem.filter(c => c.with >= 3);
+  if (chemMode === "games") list.sort((a,b) => b.with - a.with);
+  else { list = list.filter(c => c.with >= 10); list.sort((a,b) => chemMode === "best" ? b.withWin/b.with - a.withWin/a.with : a.withWin/a.with - b.withWin/b.with); }
+  const q = D.chem.filter(c => c.with >= 20);
+  const best = q.length ? q.reduce((b,c) => c.withWin/c.with > b.withWin/b.with ? c : b) : null;
+  const worst = q.length ? q.reduce((b,c) => c.withWin/c.with < b.withWin/b.with ? c : b) : null;
+  const rival = [...D.chem].sort((a,b) => b.vs - a.vs)[0];
+  $("#chem").innerHTML = list.slice(0, 12).map(c => {
+    const A = byNick[c.a], B = byNick[c.b], wr = c.withWin / c.with * 100;
+    const tag = c === best ? `<span class="tag">Dupla de ouro</span>` : c === worst ? `<span class="tag bad">Dupla do caos</span>` : "";
+    return `<div class="pair"><div class="ph"><div class="duo"><img src="${A.avatar||""}" alt=""><img src="${B.avatar||""}" alt=""></div><div class="pn">${esc(c.a)} + ${esc(c.b)}</div>${tag}</div>
+      <div class="pstats"><span><b class="num">${fmt(c.with)}</b> juntos</span><span><b class="num">${pct(wr,0)}</b> vitórias</span><span><b class="num">${fmt(c.vs)}</b> contra</span></div>
+      <div class="wl" data-tip="${c.withWin} vitórias e ${c.with - c.withWin} derrotas juntos"><div class="w" style="flex:${c.withWin}"></div><div class="l" style="flex:${c.with - c.withWin}"></div></div></div>`;
+  }).join("") + (rival && rival.vs ? `<div class="pair"><div class="ph"><div class="duo"><img src="${byNick[rival.a].avatar||""}" alt=""><img src="${byNick[rival.b].avatar||""}" alt=""></div><div class="pn">${esc(rival.a)} vs ${esc(rival.b)}</div><span class="tag bad">Maior rivalidade</span></div>
+      <div class="pstats"><span><b class="num">${fmt(rival.vs)}</b> partidas em times opostos</span></div><div class="sub">Caíram um contra o outro no matchmaking mais vezes que qualquer outra dupla.</div></div>` : "");
+}
+
+/* ---------- Activity ---------- */
+(function renderAct(){
+  const end = new Date(NOW * 1000); end.setUTCHours(0,0,0,0);
+  const start = new Date(end); start.setUTCDate(start.getUTCDate() - 90 - start.getUTCDay());
+  const days = []; for (let d = new Date(start); d <= end; d.setUTCDate(d.getUTCDate()+1)) days.push(d.toISOString().slice(0,10));
+  const list = pub.filter(p => p.activity.length).sort((a,b) => b.rankedAct - a.rankedAct);
+  const shade = (w,l) => { const n = w + l; if (!n) return ""; const a = Math.min(1, .35 + n * .12); return `background:${w > l ? `rgba(125,191,90,${a})` : w < l ? `rgba(212,82,62,${a})` : `rgba(226,169,59,${a})`}`; };
+  $("#act").innerHTML = list.map(p => {
+    const m = Object.fromEntries(p.activity.map(a => [a[0], a]));
+    const w = p.activity.reduce((s,a)=>s+a[1],0), l = p.activity.reduce((s,a)=>s+a[2],0);
+    return `<div class="arow"><div class="bn" style="display:flex;gap:8px;align-items:center;cursor:pointer" data-nick="${esc(p.nick)}"><img src="${p.avatar||""}" alt="" style="width:26px;height:26px;border-radius:50%"><span>${esc(p.nick)}</span></div>
+      <div class="cal">${days.map(d => { const a = m[d]; return `<i style="${a ? shade(a[1],a[2]) : ""}" ${a ? `data-tip="${d.split("-").reverse().join("/")}: ${a[1]}V ${a[2]}D"` : ""}></i>`; }).join("")}</div>
+      <div class="sub num">${w}V ${l}D · ${days.filter(d=>m[d]).length} dias</div></div>`;
+  }).join("") + `<div class="sub">Sem dias registrados: ${pub.filter(p => !p.activity.length).map(p=>esc(p.nick)).join(", ")} (só Turbo ou fora do período).</div>`;
+  $("#act").addEventListener("click", e => { const d = e.target.closest("[data-nick]"); if (d) openPlayer(d.dataset.nick); });
+})();
+
+/* ---------- Feed ---------- */
+let feedP = "all", feedR = "all";
+$("#feedSel").innerHTML = `<option value="all">Todos os jogadores</option>` + pub.map(p => `<option value="${esc(p.nick)}">${esc(p.nick)}</option>`).join("");
+$("#feedSel").addEventListener("change", e => { feedP = e.target.value; renderFeed(); });
+segHandler("#feedSeg", "f", v => { feedR = v; renderFeed(); });
+const matchCount = allMatches.reduce((o,m) => (o[m.match] = (o[m.match]||[]).concat(m.nick), o), {});
+function renderFeed(){
+  const list = allMatches.filter(m => (feedP === "all" || m.nick === feedP) && (feedR === "all" || (feedR === "W") === !!m.won))
+    .sort((a,b) => b.t - a.t).slice(0, 40);
+  $("#feed").innerHTML = list.map(m => {
+    const p = byNick[m.nick], mates = matchCount[m.match].filter(n => n !== m.nick);
+    return `<div class="match ${m.won ? "W" : "L"}" data-nick="${esc(m.nick)}">
+      <img class="h" src="${heroImg(m.slug)}" alt="">
+      <div class="mp"><img src="${p.avatar||""}" alt=""><div><b>${esc(m.nick)}</b> <span class="sub">de ${esc(heroName(m.slug))}</span>${mates.length ? `<div class="together">juntos com ${mates.map(esc).join(", ")}</div>` : ""}</div></div>
+      <div class="res ${m.won ? "w" : "l"}">${m.won ? "Vitória" : "Derrota"}</div>
+      <div class="hide-m">${kdaHtml(m.k, m.d, m.a, 0)}</div>
+      <div class="sub hide-m">${esc(m.mode)} · ${dur(m.dur)}${m.party > 1 ? " · grupo de " + m.party : ""}</div>
+      <div class="sub hide-m" style="text-align:right">${ago(m.t)}</div></div>`;
+  }).join("") || `<div class="sub">Nenhuma partida com esse filtro.</div>`;
+}
+$("#feed").addEventListener("click", e => { const d = e.target.closest("[data-nick]"); if (d) openPlayer(d.dataset.nick); });
+
+/* ---------- Player drawer ---------- */
+let lastFocus = null;
+function openPlayer(nick){
+  const p = byNick[nick]; if (!p) return;
+  lastFocus = document.activeElement;
+  const pos = [...P].filter(x=>x.qualified).sort((a,b)=>b.wr-a.wr).findIndex(x => x.nick === nick) + 1;
+  const g = p.general.map(r => `<tr><td>${esc(r[0])}</td><td class="num">${esc(r[1])}</td><td class="num">${esc(r[2])}</td></tr>`).join("");
+  const friends = p.friends.filter(f => f[2]).map(f => `<span class="chip">${esc(f[2])} · ${esc(f[3])} partidas · ${esc(f[4])}</span>`).join("");
+  $("#drawer").innerHTML = `
+    <div class="dhead"><img class="av" src="${p.avatar||""}" alt=""><div><div class="eyebrow">${pos ? pos + "º no ranking por taxa de vitória" : "Fora do ranking"}</div><h3 id="dName">${esc(p.nick)}</h3>
+      <div class="sub">${esc(p.steam)} · conta ${p.id}</div><div style="display:flex;gap:8px;margin-top:8px;align-items:center;flex-wrap:wrap">${medal(p)}<span class="chip">${esc(rankLabel(p))}</span>${p.private ? `<span class="chip lock">${lockSvg} perfil privado</span>` : roleChip(p)}</div></div>
+      <button class="close" type="button" id="closeD" aria-label="Fechar">×</button></div>
+    <div class="dgrid">
+      <div><span>Partidas</span><b class="num">${fmt(p.total)}</b></div>
+      <div><span>Vitórias</span><b class="num w">${fmt(p.wins)}</b></div>
+      <div><span>Taxa de vitória</span><b class="num">${pct(p.wr,2)}</b></div>
+      <div><span>Ranqueada</span><b class="num">${pct(p.rankedWr)}</b></div>
+      <div><span>KDA recente</span><b class="num">${fmt(p.kda,2)}</b></div>
+      <div><span>Última partida</span><b>${ago(p.lastMatch)}</b></div>
+    </div>
+    ${p.private ? `<p class="note">Este perfil está privado no Dotabuff. Para aparecer completo aqui, é só ativar "Expor dados públicos de partidas" nas configurações do Dota 2.</p>` : ""}
+    ${p.heroes.length ? `<h4>Top 10 heróis da carreira</h4><table class="mini"><thead><tr><th>Herói</th><th>Partidas</th><th>Vitórias</th><th>KDA</th><th>Lane</th></tr></thead><tbody>
+      ${p.heroes.map(h => `<tr><td><div class="hcell"><img src="${heroImg(h.slug)}" alt="" style="width:44px;height:25px">${esc(heroName(h.slug))}</div></td><td class="num">${fmt(h.matches)}</td><td class="num">${pct(h.wr)}</td><td class="num">${fmt(h.kda,2)}</td><td class="sub">${esc(h.lane || "—")}</td></tr>`).join("")}</tbody></table>
+      ${p.pet ? `<p class="note">Herói de estimação: <b style="color:var(--rad)">${esc(heroName(p.pet.slug))}</b> (${pct(p.pet.wr)}). Herói amaldiçoado: <b style="color:var(--dire)">${esc(heroName(p.cursed.slug))}</b> (${pct(p.cursed.wr)}).</p>` : ""}` : ""}
+    ${p.n ? `<h4>Últimas ${p.n} partidas</h4><table class="mini"><thead><tr><th>Herói</th><th>Resultado</th><th>K/D/A</th><th>Modo</th><th>Quando</th></tr></thead><tbody>
+      ${p.recent.map(m => `<tr><td><div class="hcell"><img src="${heroImg(m.slug)}" alt="" style="width:44px;height:25px">${esc(heroName(m.slug))}</div></td><td class="${m.won ? "w" : "l"}">${m.won ? "Vitória" : "Derrota"}</td><td>${kdaHtml(m.k,m.d,m.a,0)}</td><td class="sub">${esc(m.mode)} · ${dur(m.dur)}</td><td class="sub">${ago(m.t)}</td></tr>`).join("")}</tbody></table>` : ""}
+    ${p.lanes.length ? `<h4>Lanes (partidas analisadas)</h4><div class="aliases">${p.lanes.map(l => `<span class="chip">${LANES[l[0]] || l[0]} ${fmt(l[1],0)}%</span>`).join("")}</div>` : ""}
+    ${g ? `<h4>Estatísticas gerais</h4><table class="mini"><thead><tr><th>Categoria</th><th>Partidas</th><th>Vitórias</th></tr></thead><tbody>${g}</tbody></table>` : ""}
+    ${friends ? `<h4>Amigos nesta semana</h4><div class="aliases">${friends}</div>` : ""}
+    ${p.aliases.length ? `<h4>Apelidos que já usou</h4><div class="aliases">${p.aliases.map(a => `<span class="chip">${esc(a)}</span>`).join("")}</div>` : ""}
+    <p class="note"><a href="https://pt.dotabuff.com/players/${p.id}" target="_blank" rel="noopener">Abrir perfil no Dotabuff ↗</a></p>`;
+  $("#overlay").hidden = false; document.body.style.overflow = "hidden";
+  $("#closeD").focus(); $("#closeD").onclick = closePlayer;
+}
+function closePlayer(){ $("#overlay").hidden = true; document.body.style.overflow = ""; if (lastFocus) lastFocus.focus(); }
+$("#overlay").addEventListener("click", e => { if (e.target.id === "overlay") closePlayer(); });
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && !$("#overlay").hidden) closePlayer();
+  if ((e.key === "Enter" || e.key === " ") && e.target.matches("[role=button][data-nick]")) { e.preventDefault(); openPlayer(e.target.dataset.nick); }
+});
+
+/* ---------- Tooltip ---------- */
+const tip = $("#tip");
+document.addEventListener("mousemove", e => {
+  const t = e.target.closest && e.target.closest("[data-tip]");
+  if (!t) { tip.hidden = true; return; }
+  tip.textContent = t.dataset.tip; tip.hidden = false;
+  const x = Math.min(e.clientX + 14, innerWidth - tip.offsetWidth - 8), y = e.clientY + 16 + tip.offsetHeight > innerHeight ? e.clientY - tip.offsetHeight - 10 : e.clientY + 16;
+  tip.style.left = x + "px"; tip.style.top = y + "px";
+});
+
+renderTable(); renderDuel(); renderBars(); renderHeroes(); renderChem(); renderFeed();
+})();
+</script>

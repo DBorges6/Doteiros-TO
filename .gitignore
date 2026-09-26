@@ -1,0 +1,5 @@
+__pycache__/
+data/img_cache/
+data/raw.json
+.claude/
+*.log
