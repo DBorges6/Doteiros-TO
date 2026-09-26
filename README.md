@@ -3,9 +3,10 @@
 Dashboard de Dota 2 da galera: ranking, prêmios, duelos 1x1, comparador, heróis e duplas.
 Os dados vêm das páginas públicas de visão geral do Dotabuff, e as duplas vêm da API do OpenDota.
 
-**Site:** https://dborges6.github.io/Doteiros-TO/
+**Site:** https://dborges6.github.io/Doteiros-TO/doteiros-TO/
 
-Ou abra o `index.html` num navegador (ele carrega `data/dashboard_data.js`).
+Ou abra `doteiros-TO/index.html` num navegador (ele carrega `doteiros-TO/data/dashboard_data.js`).
+No servidor, o dashboard fica em `/doteiros-TO/` (maiúsculas e minúsculas fazem diferença no endereço).
 Os dados são atualizados automaticamente todo dia às 10h.
 
 ## Atualizar
@@ -23,7 +24,7 @@ O Dotabuff bloqueia requisições diretas, então a coleta usa o Chrome da máqu
 | `roster.py` | lista de jogadores (apelido e ID) |
 | `fetch.py` | baixa as partidas do OpenDota (para as duplas) |
 | `scraper/scrape_dotabuff.py` + `scraper/extract.js` | coleta o Dotabuff |
-| `build_data.py` | junta tudo e embute as imagens em `data/dashboard_data.js` |
+| `build_data.py` | junta tudo e embute as imagens em `doteiros-TO/data/dashboard_data.js` |
 | `update.py` | roda as etapas acima e publica no GitHub |
 
 Perfis privados no Dotabuff (hoje: Neo, Lestat, Kaus e El Desperuanizador) aparecem só com medalha e registro parcial.

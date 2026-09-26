@@ -155,5 +155,5 @@ medals["t0"] = to_data_uri(fetch("https://www.opendota.com/assets/images/dota2/r
 
 out = {"generatedAt": int(time.time()), "players": players, "heroes": hero_imgs, "medals": medals, "chem": chem}
 js = "window.DASH = " + json.dumps(out, ensure_ascii=False, separators=(",", ":")) + ";"
-open(os.path.join(ROOT, "data", "dashboard_data.js"), "w", encoding="utf-8").write(js)
+open(os.path.join(ROOT, "doteiros-TO", "data", "dashboard_data.js"), "w", encoding="utf-8").write(js)
 print("ok", len(js) // 1024, "KB", len(hero_imgs), "heróis")
