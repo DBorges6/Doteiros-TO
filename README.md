@@ -3,7 +3,10 @@
 Dashboard de Dota 2 da galera: ranking, prêmios, duelos 1x1, comparador, heróis e duplas.
 Os dados vêm das páginas públicas de visão geral do Dotabuff, e as duplas vêm da API do OpenDota.
 
-Abra o `index.html` num navegador (ele carrega `data/dashboard_data.js`).
+**Site:** https://dborges6.github.io/Doteiros-TO/
+
+Ou abra o `index.html` num navegador (ele carrega `data/dashboard_data.js`).
+Os dados são atualizados automaticamente a cada 3 dias.
 
 ## Atualizar
 
