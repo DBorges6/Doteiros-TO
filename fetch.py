@@ -17,6 +17,18 @@ def get(path):
     return None
 F = ["hero_id","kills","deaths","assists","gold_per_min","xp_per_min","last_hits","denies","hero_damage","tower_damage","hero_healing","duration","lane_role","start_time","player_slot","radiant_win","party_size","game_mode","lobby_type","leaver_status","level"]
 proj = "&".join("project="+p for p in F)
+def refresh(pid):
+    """Pede ao OpenDota para buscar o perfil na Valve (medalha atualizada). Falha aqui não é grave."""
+    try:
+        req = urllib.request.Request(f"{B}/players/{pid}/refresh", data=b"", method="POST", headers={"User-Agent": "dota-dash"})
+        urllib.request.urlopen(req, timeout=30).read()
+    except Exception as e:
+        print("refresh falhou", pid, e, file=sys.stderr)
+    time.sleep(1.1)
+
+
+for _, pid in PLAYERS.items():
+    refresh(pid)
 raw = {"heroes": get("/constants/heroes"), "fetched": int(time.time()), "players": {}}
 if raw["heroes"]:
     json.dump(raw["heroes"], open(os.path.join(os.path.dirname(OUT), "heroes.json"), "w", encoding="utf-8"), ensure_ascii=False)

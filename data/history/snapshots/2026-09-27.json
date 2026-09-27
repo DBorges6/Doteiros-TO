@@ -1,6 +1,6 @@
 {
  "date": "2026-09-27",
- "t": 1790514780,
+ "t": 1790515161,
  "players": {
   "Dinamite": {
    "total": 1296,
@@ -14,8 +14,8 @@
   "Ghost": {
    "total": 4448,
    "wins": 2174,
-   "rank": "Archon IV",
-   "rankVal": 44,
+   "rank": "Legend I",
+   "rankVal": 51,
    "points": 2930,
    "lastMatch": 1790465103,
    "private": false
@@ -41,8 +41,8 @@
   "Dr. Sem Doutorado": {
    "total": 4898,
    "wins": 2492,
-   "rank": "Legend III",
-   "rankVal": 53,
+   "rank": "Legend I",
+   "rankVal": 51,
    "points": 3310,
    "lastMatch": 1790481367,
    "private": false
@@ -77,8 +77,8 @@
   "Neo": {
    "total": 2279,
    "wins": 1150,
-   "rank": "Not Calibrated",
-   "rankVal": null,
+   "rank": "Archon III",
+   "rankVal": 43,
    "points": null,
    "lastMatch": 1790484669,
    "private": true
@@ -86,8 +86,8 @@
   "Pesadelo": {
    "total": 3470,
    "wins": 1706,
-   "rank": "Guardian V",
-   "rankVal": 25,
+   "rank": "Crusader IV",
+   "rankVal": 34,
    "points": 2300,
    "lastMatch": 1790470663,
    "private": false
@@ -113,15 +113,15 @@
   "VacaPower": {
    "total": 1400,
    "wins": 675,
-   "rank": "Guardian V",
-   "rankVal": 25,
+   "rank": "Crusader II",
+   "rankVal": 32,
    "points": 755,
    "lastMatch": 1790483094,
    "private": false
   },
   "DBorges": {
-   "total": 5214,
-   "wins": 2605,
+   "total": 4365,
+   "wins": 2185,
    "rank": "Legend III",
    "rankVal": 53,
    "points": 3255,
@@ -176,8 +176,8 @@
   "AzAfApower": {
    "total": 135,
    "wins": 61,
-   "rank": "Not Calibrated",
-   "rankVal": null,
+   "rank": "Crusader III",
+   "rankVal": 33,
    "points": null,
    "lastMatch": 1790287288,
    "private": true

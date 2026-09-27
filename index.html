@@ -11,7 +11,7 @@
 <meta property="og:title" content="Taverna do Ancient · Dota 2 da galera">
 <meta property="og:description" content="Líder: Lule com 56,96% de vitória. Ranking, prêmios, duelos e duplas da galera. Atualizado em 27/09/2026.">
 <meta property="og:url" content="https://www.dborges.tech/">
-<meta property="og:image" content="https://www.dborges.tech/og.png?v=202609271013">
+<meta property="og:image" content="https://www.dborges.tech/og.png?v=202609271019">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -577,7 +577,7 @@ footer p{margin:4px 0;max-width:90ch}
 <div class="overlay" id="overlay" hidden><div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="dName"></div></div>
 <div id="tip" hidden></div>
 
-<script src="doteiros-TO/data/dashboard_data.js?v=1790514780" charset="utf-8"></script>
+<script src="doteiros-TO/data/dashboard_data.js?v=1790515161" charset="utf-8"></script>
 <script>
 (function(){
 const D = window.DASH, NOW = D.generatedAt, HERO = D.heroes;
@@ -741,6 +741,8 @@ const COLS = [
   {k:"bestScore", l:"Destaque recente", cell:p => p.best ? `<div class="hcell"><img src="${heroImg(p.best.slug)}" alt=""><div>${kdaHtml(p.best.k,p.best.d,p.best.a,0)}<div class="sub">${esc(heroName(p.best.slug))} · ${p.best.won ? "vitória" : "derrota"}</div></div></div>` : `<span class="sub">—</span>`},
   {k:"daysAway", l:"Última partida", cell:p => `<span class="${p.daysAway < 3 ? "chip hot" : p.daysAway > 180 ? "chip cold" : "chip"}">${ago(p.lastMatch)}</span>`},
 ];
+// Destaques/elogios só aparecem se alguém tiver números do perfil do Dota 2 em data/official.json
+if (!P.some(p => p.official)) for (const k of ["featured", "commends"]) COLS.splice(COLS.findIndex(c => c.k === k), 1);
 const officialChip = p => p.official ? `<span class="chip part" data-tip="Número oficial do perfil no Dota 2 (print de ${p.official.date}: ${fmt(p.official.baseTotal)}) + ${p.official.extra} partidas jogadas desde então. O Dotabuff registra ${fmt(p.dotabuff.total)}.">oficial</span>` : "";
 const missingOfficial = `<span class="sub" data-tip="Destaques e elogios só aparecem no perfil dentro do Dota 2. Mande o print do seu perfil que a gente coloca aqui.">—</span>`;
 const LABEL_FOR = {featured:"Destaques em partidas", commends:"Elogios", nick:"Jogador", rankVal:"Medalha", total:"Partidas", wins:"Vitórias", losses:"Derrotas", wr:"Taxa de vitória", rankedWr:"Taxa ranqueada", wr15:"Vitórias nas últimas 15", kda:"KDA recente", topN:"Partidas com o herói favorito", sup:"% como suporte", bestScore:"Melhor partida recente", daysAway:"Dias sem jogar"};
@@ -765,7 +767,7 @@ function rows(){
 }
 function renderTable(){
   $("#rankNote").textContent = period === "career"
-    ? "Carreira: partidas, vitórias e taxa de vitória vêm das estatísticas gerais do Dotabuff (todos os modos, Turbo incluído), que só contam as partidas que o site registrou. Quem manda o print do perfil do Dota 2 ganha o selo “oficial”: vale o número da Valve, mais as partidas jogadas desde o print. Destaques e elogios só existem dentro do jogo, então aparecem só para quem mandou o print. Perfis privados e quem tem menos de 100 partidas ficam no fim da lista, esmaecidos."
+    ? "Carreira: partidas, vitórias e taxa de vitória vêm das estatísticas gerais do Dotabuff (todos os modos, Turbo incluído). “Últimas 15” usa as 15 partidas mais recentes de cada um. Perfis privados e quem tem menos de 100 partidas ficam no fim da lista, esmaecidos."
     : `Período de ${PERIOD_NAME[period]}: contado a partir do histórico de partidas (OpenDota + coletas diárias do Dotabuff). Quem tem menos de ${MIN_G[period]} partidas no período fica no fim da lista. “Parcial” marca quem ainda não tem histórico cobrindo o período inteiro.`;
   const t = $("#rankTable");
   t.querySelector("thead").innerHTML = "<tr>" + COLS.map(c => c.k === "pos" ? `<th>#</th>` :
@@ -870,6 +872,7 @@ const METRICS = [
   {k:"featured", l:"Destaques em partidas (perfil do Dota 2)", f:v=>fmt(v)},
   {k:"daysAway", l:"Dias sem jogar", f:(v,p)=>ago(p.lastMatch), low:true},
 ];
+if (!P.some(p => p.official)) for (const k of ["featured", "commends"]) METRICS.splice(METRICS.findIndex(m => m.k === k), 1);
 const DUEL = ["wr","total","rankedWr","rankVal","wr15","kda","k","d","a","dur","oneTrick","points"];
 
 /* ---------- Duel ---------- */
@@ -1024,7 +1027,7 @@ function openPlayer(nick, viaHash){
       <div><span>Última partida</span><b>${ago(p.lastMatch)}</b></div>
       ${p.official ? `<div><span>Destaques em partidas</span><b class="num">${fmt(p.featured)}</b></div><div><span>Elogios</span><b class="num">${fmt(p.commends)}</b></div><div><span>Fonte</span><b style="font-size:15px">Perfil do Dota 2</b></div>` : ""}
     </div>
-    ${p.official ? `<p class="note">Partidas e vitórias: número oficial do perfil no Dota 2 (print de ${esc(p.official.date)}: ${fmt(p.official.baseTotal)} partidas), mais ${p.official.extra} jogadas desde então. O Dotabuff registra ${fmt(p.dotabuff.total)}.</p>` : (p.private ? "" : `<p class="note">Números do Dotabuff, que só conta as partidas que registrou. Para ter os números oficiais, com destaques e elogios, mande o print do perfil do Dota 2.</p>`)}
+    ${p.official ? `<p class="note">Partidas e vitórias: número oficial do perfil no Dota 2 (print de ${esc(p.official.date)}: ${fmt(p.official.baseTotal)} partidas), mais ${p.official.extra} jogadas desde então. O Dotabuff registra ${fmt(p.dotabuff.total)}.</p>` : ""}
     ${p.private ? `<p class="note">Este perfil está privado no Dotabuff. Para aparecer completo aqui: no Dota 2, abra Configurações → Opções → Social e ative “Expor dados públicos de partidas”. No dia seguinte a página já puxa tudo.</p>` : ""}
     ${p.heroes.length ? `<h4>Top 10 heróis da carreira</h4><table class="mini"><thead><tr><th>Herói</th><th>Partidas</th><th>Vitórias</th><th>KDA</th><th>Lane</th></tr></thead><tbody>
       ${p.heroes.map(h => `<tr><td><div class="hcell"><img src="${heroImg(h.slug)}" alt="" style="width:44px;height:25px">${esc(heroName(h.slug))}</div></td><td class="num">${fmt(h.matches)}</td><td class="num">${pct(h.wr)}</td><td class="num">${fmt(h.kda,2)}</td><td class="sub">${esc(h.lane || "—")}</td></tr>`).join("")}</tbody></table>

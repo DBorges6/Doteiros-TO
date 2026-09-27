@@ -26,8 +26,11 @@ def merge_matches(players, od, hero_by_id, now):
     os.makedirs(HDIR, exist_ok=True)
     rows = {}
     if os.path.exists(MATCHES):
-        for r in json.load(open(MATCHES, encoding="utf-8"))["rows"]:
+        saved = json.load(open(MATCHES, encoding="utf-8"))
+        for r in saved["rows"]:
             d = dict(zip(FIELDS, r))
+            if d["src"] == "d" and not saved.get("tstart"):
+                d["t"] -= (d["dur"] or 0) + 90  # arquivos antigos guardavam o fim da partida (padrão do Dotabuff)
             rows[(d["nick"], d["match"])] = d
     before = len(rows)
     for nick, p in (od.get("players") or {}).items():
@@ -45,13 +48,17 @@ def merge_matches(players, od, hero_by_id, now):
                          "party": m.get("party_size"), "src": "o"}
     for p in players:
         for r in p["recent"]:
-            rows[(p["nick"], r["match"])] = {"nick": p["nick"], "match": r["match"], "t": r["t"], "slug": r["slug"],
+            # O Dotabuff marca o fim da partida (início + duração + 90 s); o OpenDota, o início.
+            # Guardamos sempre o início, preferindo o horário exato do OpenDota quando existir.
+            key = (p["nick"], r["match"])
+            start = rows[key]["t"] if key in rows and rows[key]["src"] == "o" else r["t"] - (r["dur"] or 0) - 90
+            rows[key] = {"nick": p["nick"], "match": r["match"], "t": start, "slug": r["slug"],
                                              "won": int(r["won"]), "k": r["k"], "d": r["d"], "a": r["a"], "dur": r["dur"],
                                              "mode": r["mode"], "ranked": int(r["lobby"] == "Classificado"),
                                              "party": r["party"], "src": "d"}
     cutoff = now - KEEP_DAYS * 86400
     kept = sorted((r for r in rows.values() if r["t"] and r["t"] >= cutoff), key=lambda r: -r["t"])
-    json.dump({"updated": now, "fields": FIELDS, "rows": [[r[f] for f in FIELDS] for r in kept]},
+    json.dump({"updated": now, "tstart": True, "fields": FIELDS, "rows": [[r[f] for f in FIELDS] for r in kept]},
               open(MATCHES, "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
     print(f"histórico: {len(kept)} partidas ({len(kept) - before:+d} desde a última vez)")
     # Cobertura: com OpenDota o histórico é completo; só com Dotabuff, vale a partir

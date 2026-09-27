@@ -1,4 +1,3 @@
 {
-  "_como_usar": "Números do perfil dentro do cliente do Dota 2 (print do jogador). 't' é o momento do print em Unix time; o dashboard soma as partidas do histórico jogadas depois disso. Destaques e elogios ficam como no print.",
-  "151490176": {"nick": "DBorges", "t": 1790478018, "data": "27/09/2026 00:00", "total": 5210, "wins": 2603, "featured": 547, "commends": 4476}
+  "_como_usar": "Números do perfil dentro do cliente do Dota 2 (print do jogador). 't' é o momento do print em Unix time; o dashboard soma as partidas do histórico jogadas depois disso. Destaques e elogios ficam como no print."
 }

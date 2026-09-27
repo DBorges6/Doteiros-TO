@@ -86,6 +86,13 @@ for nick, pid in ROSTER:
     m = re.match(r"(\w+)\s+([IV]+)", d["rk"] or "")
     if m and m.group(1) in RANKS:
         rank_tier, rank_star = RANKS.index(m.group(1)) + 1, ROMAN[m.group(2)]
+    # Medalha: o OpenDota busca na Valve a cada coleta (mais atual); o Dotabuff fica de reserva.
+    od_rank = (((od["players"].get(nick) or {}).get("profile")) or {}).get("rank_tier")
+    if od_rank:
+        rank_tier, rank_star = od_rank // 10, od_rank % 10
+        rank_name = RANKS[rank_tier - 1] + (" " + ["", "I", "II", "III", "IV", "V"][rank_star] if rank_star else "")
+        if rank_star == 0:
+            rank_star = 5  # Immortal não tem estrelas; usa o ícone cheio
     roles = {}
     for label, w, lanes in d["roles"]:
         kind = "Suporte" if "SUPORTE" in label.upper() else ("Core" if "CORE" in label.upper() else None)
