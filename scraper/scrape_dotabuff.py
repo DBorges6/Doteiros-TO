@@ -18,7 +18,8 @@ old = json.load(open(OUT, encoding="utf-8")) if os.path.exists(OUT) else {}
 new, failed = {}, []
 
 with sync_playwright() as pw:
-    browser = pw.chromium.launch(channel="chrome", headless=headless,
+    channel = os.environ.get("BROWSER_CHANNEL", "chrome")  # na nuvem: chromium (vem com o Playwright)
+    browser = pw.chromium.launch(channel=None if channel == "chromium" else channel, headless=headless,
                                  args=["--disable-blink-features=AutomationControlled"])
     ctx = browser.new_context(locale="pt-BR", viewport={"width": 1366, "height": 900},
                               user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36")

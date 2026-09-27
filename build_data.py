@@ -20,7 +20,14 @@ RANKS = ["Herald", "Guardian", "Crusader", "Archon", "Legend", "Ancient", "Divin
 ROMAN = {"I": 1, "II": 2, "III": 3, "IV": 4, "V": 5}
 
 db = json.load(open(os.path.join(ROOT, "data", "dotabuff.json"), encoding="utf-8"))
-od = json.load(open(os.path.join(ROOT, "data", "raw.json"), encoding="utf-8"))
+raw_path = os.path.join(ROOT, "data", "raw.json")
+if os.path.exists(raw_path):
+    od = json.load(open(raw_path, encoding="utf-8"))
+else:  # sem OpenDota nesta rodada: usa a tabela de heróis salva e segue só com o Dotabuff
+    print("aviso: data/raw.json não existe; seguindo sem os dados do OpenDota")
+    od = {"heroes": None, "players": {}}
+if not od.get("heroes"):
+    od["heroes"] = json.load(open(os.path.join(ROOT, "data", "heroes.json"), encoding="utf-8"))
 
 
 def fetch(url):

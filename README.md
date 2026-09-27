@@ -10,7 +10,13 @@ No servidor, o dashboard abre na página principal e também em `/doteiros-TO/` 
 Edite sempre `doteiros-TO/index.html`: o `index.html` da raiz é gerado a partir dele pelo `build_data.py`.
 Os dados são atualizados automaticamente todo dia às 10h.
 
-## Atualizar
+## Atualização automática
+
+Todo dia às 10h (Brasília), o GitHub Actions (`.github/workflows/atualizar.yml`) roda a coleta na nuvem,
+gera os dados e faz commit. A Hostinger publica a cada push, então o site atualiza sem nenhum PC ligado.
+Para rodar na hora: aba **Actions** do GitHub → **Atualizar dashboard** → **Run workflow**.
+
+## Atualizar manualmente
 
 ```bash
 python update.py            # coleta tudo, gera os dados e faz commit + push

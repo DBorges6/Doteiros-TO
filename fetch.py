@@ -18,6 +18,8 @@ def get(path):
 F = ["hero_id","kills","deaths","assists","gold_per_min","xp_per_min","last_hits","denies","hero_damage","tower_damage","hero_healing","duration","lane_role","start_time","player_slot","radiant_win","party_size","game_mode","lobby_type","leaver_status","level"]
 proj = "&".join("project="+p for p in F)
 raw = {"heroes": get("/constants/heroes"), "fetched": int(time.time()), "players": {}}
+if raw["heroes"]:
+    json.dump(raw["heroes"], open(os.path.join(os.path.dirname(OUT), "heroes.json"), "w", encoding="utf-8"), ensure_ascii=False)
 for name, pid in PLAYERS.items():
     raw["players"][name] = {"id": pid, "profile": get(f"/players/{pid}"),
         "matches": get(f"/players/{pid}/matches?significant=0&{proj}")}

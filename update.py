@@ -22,6 +22,10 @@ def run(*cmd, check=True):
     return r.returncode
 
 
+if "--no-push" not in sys.argv:
+    # a nuvem (GitHub Actions) também atualiza o repositório; pega a versão mais nova antes
+    run("git", "pull", "--rebase", "--autostash")
+
 if "--skip-opendota" not in sys.argv:
     # Falha no OpenDota não é fatal: mantém o raw.json anterior.
     run(PY, "fetch.py", check=False)
