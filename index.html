@@ -11,7 +11,7 @@
 <meta property="og:title" content="Taverna do Ancient · Dota 2 da galera">
 <meta property="og:description" content="Líder: Lule com 56,96% de vitória. Ranking, prêmios, duelos e duplas da galera. Atualizado em 27/09/2026.">
 <meta property="og:url" content="https://www.dborges.tech/">
-<meta property="og:image" content="https://www.dborges.tech/og.png?v=202609271019">
+<meta property="og:image" content="https://www.dborges.tech/og.png?v=202609271039">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -234,12 +234,6 @@ table.rank{border-collapse:collapse;width:100%;min-width:1180px}
 .tag{font-family:var(--cond);text-transform:uppercase;letter-spacing:.1em;font-size:11px;font-weight:700;padding:2px 7px;border-radius:4px;background:var(--goldDim);color:var(--gold2);margin-left:auto;white-space:nowrap}
 .tag.bad{background:var(--direDim);color:#f08a78}
 
-/* ---------- Activity ---------- */
-.act{display:grid;gap:10px;padding:16px}
-.arow{display:grid;grid-template-columns:150px minmax(0,1fr) 110px;gap:12px;align-items:center}
-.cal{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,11px);gap:3px;overflow-x:auto}
-.cal i{width:11px;height:11px;border-radius:2px;background:var(--panel3);display:block}
-
 /* ---------- Feed ---------- */
 .feed{display:grid;gap:6px}
 .match{display:grid;grid-template-columns:64px minmax(0,1.4fr) 90px 110px 120px minmax(0,1fr);gap:12px;align-items:center;background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--line2);border-radius:8px;padding:8px 12px}
@@ -326,6 +320,9 @@ footer p{margin:4px 0;max-width:90ch}
 .spark svg{width:100%;height:34px;display:block}
 .legend{display:flex;gap:16px;flex-wrap:wrap;color:var(--ink2);font-size:13px;padding:0 16px 14px}
 .legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.plinks{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.plink{display:inline-flex;align-items:center;gap:6px;padding:9px 14px;border-radius:8px;background:var(--panel2);border:1px solid var(--line2);color:var(--ink);text-decoration:none;font-family:var(--cond);font-weight:700;letter-spacing:.05em;text-transform:uppercase;font-size:14px}
+.plink:hover{border-color:var(--gold);color:var(--gold2)}
 .copy{background:var(--panel2);border:1px solid var(--line2);border-radius:8px;padding:7px 12px;cursor:pointer;font-family:var(--cond);font-weight:600;letter-spacing:.05em;text-transform:uppercase;font-size:13px;color:var(--gold2)}
 .copy:hover{border-color:var(--gold)}
 .linkbox{font-family:var(--cond);color:var(--ink2);user-select:all;word-break:break-all}
@@ -336,8 +333,6 @@ footer p{margin:4px 0;max-width:90ch}
   .match{grid-template-columns:56px minmax(0,1fr) 80px;}
   .match .hide-m{display:none}
   .drow{grid-template-columns:52px minmax(0,1fr) 96px minmax(0,1fr) 52px}
-  .arow{grid-template-columns:110px minmax(0,1fr)}
-  .arow .sub{display:none}
   .erow,.eaxis{grid-template-columns:110px minmax(0,1fr)}
   .erow .spark,.eaxis div:nth-child(3){display:none}
   .wrow{grid-template-columns:24px 110px minmax(0,1fr) 110px}
@@ -538,17 +533,6 @@ footer p{margin:4px 0;max-width:90ch}
     <div class="chem" id="chem"></div>
   </section>
 
-  <section class="block" id="grind">
-    <div class="sec-head">
-      <div>
-        <div class="eyebrow">Últimos 3 meses</div>
-        <h2>Calendário do Grind</h2>
-        <p class="sec-sub">Dias com partidas no calendário de atividade do Dotabuff (o Dotabuff não conta Turbo aqui). Verde é dia de lucro, vermelho é dia de prejuízo.</p>
-      </div>
-    </div>
-    <div class="panel"><div class="act" id="act"></div></div>
-  </section>
-
   <section class="block" id="partidas">
     <div class="sec-head">
       <div>
@@ -577,7 +561,7 @@ footer p{margin:4px 0;max-width:90ch}
 <div class="overlay" id="overlay" hidden><div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="dName"></div></div>
 <div id="tip" hidden></div>
 
-<script src="doteiros-TO/data/dashboard_data.js?v=1790515181" charset="utf-8"></script>
+<script src="doteiros-TO/data/dashboard_data.js?v=1790516388" charset="utf-8"></script>
 <script>
 (function(){
 const D = window.DASH, NOW = D.generatedAt, HERO = D.heroes;
@@ -967,23 +951,6 @@ function renderChem(){
       <div class="pstats"><span><b class="num">${fmt(rival.vs)}</b> partidas em times opostos</span></div><div class="sub">Caíram um contra o outro no matchmaking mais vezes que qualquer outra dupla.</div></div>` : "");
 }
 
-/* ---------- Activity ---------- */
-(function renderAct(){
-  const end = new Date(NOW * 1000); end.setUTCHours(0,0,0,0);
-  const start = new Date(end); start.setUTCDate(start.getUTCDate() - 90 - start.getUTCDay());
-  const days = []; for (let d = new Date(start); d <= end; d.setUTCDate(d.getUTCDate()+1)) days.push(d.toISOString().slice(0,10));
-  const list = pub.filter(p => p.activity.length).sort((a,b) => b.rankedAct - a.rankedAct);
-  const shade = (w,l) => { const n = w + l; if (!n) return ""; const a = Math.min(1, .35 + n * .12); return `background:${w > l ? `rgba(125,191,90,${a})` : w < l ? `rgba(212,82,62,${a})` : `rgba(226,169,59,${a})`}`; };
-  $("#act").innerHTML = list.map(p => {
-    const m = Object.fromEntries(p.activity.map(a => [a[0], a]));
-    const w = p.activity.reduce((s,a)=>s+a[1],0), l = p.activity.reduce((s,a)=>s+a[2],0);
-    return `<div class="arow"><div class="bn" style="display:flex;gap:8px;align-items:center;cursor:pointer" data-nick="${esc(p.nick)}"><img src="${p.avatar||""}" alt="" style="width:26px;height:26px;border-radius:50%"><span>${esc(p.nick)}</span></div>
-      <div class="cal">${days.map(d => { const a = m[d]; return `<i style="${a ? shade(a[1],a[2]) : ""}" ${a ? `data-tip="${d.split("-").reverse().join("/")}: ${a[1]}V ${a[2]}D"` : ""}></i>`; }).join("")}</div>
-      <div class="sub num">${w}V ${l}D · ${days.filter(d=>m[d]).length} dias</div></div>`;
-  }).join("") + `<div class="sub">Sem dias registrados: ${pub.filter(p => !p.activity.length).map(p=>esc(p.nick)).join(", ")} (só Turbo ou fora do período).</div>`;
-  $("#act").addEventListener("click", e => { const d = e.target.closest("[data-nick]"); if (d) openPlayer(d.dataset.nick); });
-})();
-
 /* ---------- Feed ---------- */
 let feedP = "all", feedR = "all";
 $("#feedSel").innerHTML = `<option value="all">Todos os jogadores</option>` + pub.map(p => `<option value="${esc(p.nick)}">${esc(p.nick)}</option>`).join("");
@@ -1018,6 +985,10 @@ function openPlayer(nick, viaHash){
     <div class="dhead"><img class="av" src="${p.avatar||""}" alt=""><div><div class="eyebrow">${pos ? pos + "º no ranking por taxa de vitória" : "Fora do ranking"}</div><h3 id="dName">${esc(p.nick)}</h3>
       <div class="sub">${esc(p.steam)} · conta ${p.id}</div><div style="display:flex;gap:8px;margin-top:8px;align-items:center;flex-wrap:wrap">${medal(p)}<span class="chip">${esc(rankLabel(p))}</span>${p.private ? `<span class="chip lock">${lockSvg} perfil privado</span>` : roleChip(p)}</div></div>
       <button class="close" type="button" id="closeD" aria-label="Fechar">×</button></div>
+    <div class="plinks">
+      <a class="plink" href="https://pt.dotabuff.com/players/${p.id}" target="_blank" rel="noopener">Ver no Dotabuff ↗</a>
+      <a class="plink" href="https://www.opendota.com/players/${p.id}" target="_blank" rel="noopener">Ver no OpenDota ↗</a>
+    </div>
     <div class="dgrid">
       <div><span>Partidas</span><b class="num">${fmt(p.total)}</b></div>
       <div><span>Vitórias</span><b class="num w">${fmt(p.wins)}</b></div>
@@ -1039,7 +1010,7 @@ function openPlayer(nick, viaHash){
     ${friends ? `<h4>Amigos nesta semana</h4><div class="aliases">${friends}</div>` : ""}
     ${p.aliases.length ? `<h4>Apelidos que já usou</h4><div class="aliases">${p.aliases.map(a => `<span class="chip">${esc(a)}</span>`).join("")}</div>` : ""}
     <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:20px"><button class="copy" type="button" id="copyLink">Copiar link da ficha</button><span class="linkbox" id="linkTxt">${esc((D.site || "") + "#" + slugNick(p.nick))}</span></div>
-    <p class="note"><a href="https://pt.dotabuff.com/players/${p.id}" target="_blank" rel="noopener">Abrir perfil no Dotabuff ↗</a></p>`;
+`;
   $("#overlay").hidden = false; document.body.style.overflow = "hidden";
   if (!viaHash) { try { history.replaceState(null, "", "#" + slugNick(nick)); } catch (e) {} }
   $("#copyLink").onclick = async () => {
