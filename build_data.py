@@ -216,7 +216,9 @@ print("prévia gerada: og.png |", desc)
 
 # Cópia do dashboard na raiz do site (página principal do domínio), apontando
 # para os mesmos dados de doteiros-TO/. A fonte é sempre doteiros-TO/index.html.
-src = '<script src="data/dashboard_data.js"'
-assert src in page, "caminho dos dados não encontrado em doteiros-TO/index.html"
-open(os.path.join(ROOT, "index.html"), "w", encoding="utf-8").write(page.replace(src, '<script src="doteiros-TO/data/dashboard_data.js"'))
+# ?v=... muda a cada atualização, para o navegador não usar o arquivo de dados antigo do cache
+page, n_src = re.subn(r'<script src="data/dashboard_data\.js(\?v=\d+)?"', f'<script src="data/dashboard_data.js?v={NOW}"', page)
+assert n_src == 1, "caminho dos dados não encontrado em doteiros-TO/index.html"
+open(src_path, "w", encoding="utf-8").write(page)
+open(os.path.join(ROOT, "index.html"), "w", encoding="utf-8").write(page.replace('<script src="data/', '<script src="doteiros-TO/data/'))
 print("index.html da raiz atualizado")
