@@ -1,6 +1,6 @@
 {
  "date": "2026-09-27",
- "t": 1790486843,
+ "t": 1790514780,
  "players": {
   "Dinamite": {
    "total": 1296,
@@ -80,7 +80,7 @@
    "rank": "Not Calibrated",
    "rankVal": null,
    "points": null,
-   "lastMatch": 1790483094,
+   "lastMatch": 1790484669,
    "private": true
   },
   "Pesadelo": {
@@ -125,7 +125,7 @@
    "rank": "Legend III",
    "rankVal": 53,
    "points": 3255,
-   "lastMatch": 1790483094,
+   "lastMatch": 1790484669,
    "private": false
   },
   "BAUA": {
@@ -136,6 +136,51 @@
    "points": 3605,
    "lastMatch": 1790475028,
    "private": false
+  },
+  "CX": {
+   "total": 6638,
+   "wins": 3395,
+   "rank": "Archon III",
+   "rankVal": 43,
+   "points": 5220,
+   "lastMatch": 1790382590,
+   "private": false
+  },
+  "Lule": {
+   "total": 230,
+   "wins": 131,
+   "rank": "Not Calibrated",
+   "rankVal": null,
+   "points": 375,
+   "lastMatch": 1780888148,
+   "private": false
+  },
+  "MotherBoard": {
+   "total": 12,
+   "wins": 8,
+   "rank": "Not Calibrated",
+   "rankVal": null,
+   "points": null,
+   "lastMatch": 1765585235,
+   "private": true
+  },
+  "Milan Buzano Diporra": {
+   "total": 4177,
+   "wins": 2115,
+   "rank": "Archon I",
+   "rankVal": 41,
+   "points": 4785,
+   "lastMatch": 1790482028,
+   "private": false
+  },
+  "AzAfApower": {
+   "total": 135,
+   "wins": 61,
+   "rank": "Not Calibrated",
+   "rankVal": null,
+   "points": null,
+   "lastMatch": 1790287288,
+   "private": true
   }
  }
 }

@@ -5,4 +5,6 @@ ROSTER = [
     ("Lestat", 224047111), ("Neo", 76975473), ("Pesadelo", 100351844), ("Panda", 110609987),
     ("Tanner", 88251580), ("VacaPower", 39463901), ("DBorges", 151490176),
     ("BAUA", 116119734),
+    ("CX", 186798535), ("Lule", 299090742), ("MotherBoard", 1592826064),
+    ("Milan Buzano Diporra", 237132537), ("AzAfApower", 210201414),
 ]
