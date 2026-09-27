@@ -1,6 +1,6 @@
 {
  "date": "2026-09-27",
- "t": 1790483526,
+ "t": 1790486843,
  "players": {
   "Dinamite": {
    "total": 1296,
@@ -120,7 +120,7 @@
    "private": false
   },
   "DBorges": {
-   "total": 5213,
+   "total": 5214,
    "wins": 2605,
    "rank": "Legend III",
    "rankVal": 53,
