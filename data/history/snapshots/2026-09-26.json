@@ -1,6 +1,6 @@
 {
  "date": "2026-09-26",
- "t": 1790475446,
+ "t": 1790475598,
  "players": {
   "Dinamite": {
    "total": 1296,
@@ -125,6 +125,15 @@
    "rank": "Legend III",
    "rankVal": 53,
    "points": 3255,
+   "lastMatch": 1790475028,
+   "private": false
+  },
+  "BAUA": {
+   "total": 4645,
+   "wins": 2322,
+   "rank": "Ancient II",
+   "rankVal": 62,
+   "points": 3605,
    "lastMatch": 1790475028,
    "private": false
   }

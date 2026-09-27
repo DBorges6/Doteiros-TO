@@ -4,4 +4,5 @@ ROSTER = [
     ("Dr. Sem Doutorado", 91601867), ("El Desperuanizador", 339842799), ("Kaus", 100311594),
     ("Lestat", 224047111), ("Neo", 76975473), ("Pesadelo", 100351844), ("Panda", 110609987),
     ("Tanner", 88251580), ("VacaPower", 39463901), ("DBorges", 151490176),
+    ("BAUA", 116119734),
 ]

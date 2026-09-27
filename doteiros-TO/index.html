@@ -11,7 +11,7 @@
 <meta property="og:title" content="Taverna do Ancient · Dota 2 da galera">
 <meta property="og:description" content="Líder: Dr. Sem Doutorado com 50,89% de vitória. Ranking, prêmios, duelos e duplas da galera. Atualizado em 26/09/2026.">
 <meta property="og:url" content="https://www.dborges.tech/">
-<meta property="og:image" content="https://www.dborges.tech/og.png?v=202609262317">
+<meta property="og:image" content="https://www.dborges.tech/og.png?v=202609262319">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -360,7 +360,7 @@ footer p{margin:4px 0;max-width:90ch}
 </div>
 <header class="topbar">
   <div class="wrap">
-    <div class="brand">TAVERNA DO ANCIENT<small>DOTA 2 · 14 JOGADORES</small></div>
+    <div class="brand">TAVERNA DO ANCIENT<small id="brandCount">DOTA 2</small></div>
     <nav class="nav" aria-label="Seções">
       <a href="#novidades">Novidades</a>
       <a href="#ranking">Ranking</a>
@@ -702,7 +702,9 @@ const roleChip = p => p.mainRole ? `<span class="chip ${p.mainRole}">${p.mainRol
   if (days > 2) { $("#updbar").classList.add("stale"); $("#updNext").textContent = "Dados com " + Math.floor(days) + " dias. A próxima atualização automática deve sair em breve."; }
   else $("#updNext").textContent = "Atualiza sozinho todo dia às 10h · próxima em " + nx.toLocaleDateString("pt-BR", {day:"2-digit", month:"2-digit"});
   $("#stamp").textContent = "Dados do Dotabuff · atualizado em " + d.toLocaleDateString("pt-BR") + " às " + d.toLocaleTimeString("pt-BR", {hour:"2-digit", minute:"2-digit"});
-  $("#foot1").textContent = "Instantâneo gerado em " + d.toLocaleString("pt-BR") + ". Neo, Lestat, Kaus e El Desperuanizador estão com o perfil privado no Dotabuff: deles só aparecem medalha e o registro que o site ainda mostra.";
+  const privNames = P.filter(p => p.private).map(p => p.nick);
+  $("#brandCount").textContent = "DOTA 2 · " + P.length + " JOGADORES";
+  $("#foot1").textContent = "Instantâneo gerado em " + d.toLocaleString("pt-BR") + "." + (privNames.length ? " " + privNames.join(", ").replace(/, ([^,]*)$/, " e $1") + (privNames.length > 1 ? " estão" : " está") + " com o perfil privado no Dotabuff: só aparecem medalha e o registro que o site ainda mostra." : "");
   $("#kpis").innerHTML = [
     [fmt(tot), "Partidas somadas", "equivale a ~" + fmt(tot * 38 / 60 / 24) + " dias de jogo"],
     [pct(wins / tot * 100), "Taxa de vitória do grupo", fmt(wins) + " vitórias"],
