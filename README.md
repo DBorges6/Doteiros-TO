@@ -32,5 +32,11 @@ O Dotabuff bloqueia requisições diretas, então a coleta usa o Chrome da máqu
 | `update.py` | roda as etapas acima e publica no GitHub |
 | `.htaccess` | no servidor, esconde scripts e dados brutos (só o dashboard fica público) |
 
+## Números oficiais (print do perfil do Dota 2)
+
+Dotabuff e OpenDota só contam as partidas que registraram. Quando alguém manda o print do perfil do Dota 2,
+coloque os números em `data/official.json` (partidas, vitórias, destaques, elogios e o momento do print em Unix time).
+O dashboard usa o número oficial e soma as partidas jogadas depois do print.
+
 Perfis privados no Dotabuff (hoje: Neo, Lestat, Kaus e El Desperuanizador) aparecem só com medalha e registro parcial.
 Para aparecer completo, ative "Expor dados públicos de partidas" nas configurações do Dota 2.

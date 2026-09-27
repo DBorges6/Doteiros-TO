@@ -139,6 +139,24 @@ print("pares:", [(c["a"], c["b"], c["with"], c["withWin"]) for c in chem[:12]])
 
 # ---- Histórico, fotos diárias e novidades ----
 hist, coverage = history.merge_matches(players, od, hero_by_id, NOW)
+
+# ---- Números oficiais do cliente do Dota (print do jogador) ----
+# Dotabuff/OpenDota só contam as partidas que registraram; o cliente mostra o total da Valve.
+# Partidas e vitórias partem do print e somam o que foi jogado depois dele.
+off_path = os.path.join(ROOT, "data", "official.json")
+official = json.load(open(off_path, encoding="utf-8")) if os.path.exists(off_path) else {}
+for p in players:
+    o = official.get(str(p["id"]))
+    if not o:
+        continue
+    extra = [r for r in hist if r["nick"] == p["nick"] and r["t"] > o["t"]]
+    p["dotabuff"] = {"total": p["total"], "wins": p["wins"]}
+    p["total"] = o["total"] + len(extra)
+    p["wins"] = o["wins"] + sum(r["won"] for r in extra)
+    p["losses"] = p["total"] - p["wins"]
+    p["official"] = {"date": o["data"], "featured": o.get("featured"), "commends": o.get("commends"),
+                     "extra": len(extra), "baseTotal": o["total"]}
+    print(f"oficial: {p['nick']} {o['total']} + {len(extra)} partidas desde o print = {p['total']}")
 snaps, prev_snap = history.save_snapshot(players, NOW)
 news, news_label = history.build_news(players, hist, prev_snap, NOW)
 print("novidades:", [n["nick"] + " " + n["text"] for n in news])

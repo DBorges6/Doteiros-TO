@@ -5,13 +5,13 @@
 <meta name="theme-color" content="#0d1112">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230d1112'/%3E%3Cpath d='M14 14h36v10H37v28H27V24H14z' fill='%23f4cd6e'/%3E%3C/svg%3E">
 <!--META-->
-<meta name="description" content="Líder: Dr. Sem Doutorado com 50,89% de vitória. Ranking, prêmios, duelos e duplas da galera. Atualizado em 26/09/2026.">
+<meta name="description" content="Líder: Dr. Sem Doutorado com 50,89% de vitória. Ranking, prêmios, duelos e duplas da galera. Atualizado em 27/09/2026.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Taverna do Ancient">
 <meta property="og:title" content="Taverna do Ancient · Dota 2 da galera">
-<meta property="og:description" content="Líder: Dr. Sem Doutorado com 50,89% de vitória. Ranking, prêmios, duelos e duplas da galera. Atualizado em 26/09/2026.">
+<meta property="og:description" content="Líder: Dr. Sem Doutorado com 50,89% de vitória. Ranking, prêmios, duelos e duplas da galera. Atualizado em 27/09/2026.">
 <meta property="og:url" content="https://www.dborges.tech/">
-<meta property="og:image" content="https://www.dborges.tech/og.png?v=202609262321">
+<meta property="og:image" content="https://www.dborges.tech/og.png?v=202609270001">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -571,7 +571,7 @@ footer p{margin:4px 0;max-width:90ch}
 <div class="overlay" id="overlay" hidden><div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="dName"></div></div>
 <div id="tip" hidden></div>
 
-<script src="data/dashboard_data.js?v=1790475666" charset="utf-8"></script>
+<script src="data/dashboard_data.js?v=1790478068" charset="utf-8"></script>
 <script>
 (function(){
 const D = window.DASH, NOW = D.generatedAt, HERO = D.heroes;
@@ -634,6 +634,8 @@ const P = D.players.map(p => {
     variety: n ? new Set(r.map(m=>m.slug)).size : null,
     lvl: n ? sum(m => m.lvl || 0) / Math.max(1, r.filter(m=>m.lvl).length) : null,
     rankedAct: p.activity.reduce((s,a)=>s + a[1] + a[2], 0),
+    featured: p.official ? p.official.featured : null,
+    commends: p.official ? p.official.commends : null,
     qualified: !p.private && p.total >= 100,
   };
   q.bestScore = q.best ? scoreM(q.best) : null;
@@ -718,11 +720,13 @@ const COLS = [
   {k:"pos", l:"#"},
   {k:"nick", l:"Jogador", str:true, cell:p => `<div class="who"><img src="${p.avatar||""}" alt=""><div><b>${esc(p.nick)}</b><small>${esc(p.steam)}</small></div></div>`},
   {k:"rankVal", l:"Medalha", cell:p => `<div class="medal-wrap">${medal(p)}<small>${esc(rankLabel(p))}</small></div>`},
-  {k:"total", l:"Partidas", cell:p => `<span class="big num">${fmt(p.total)}</span>${partialChip(p)}`},
+  {k:"total", l:"Partidas", cell:p => `<span class="big num">${fmt(p.total)}</span>${partialChip(p)}${period === "career" ? officialChip(p) : ""}`},
   {k:"wins", l:"Vitórias", cell:p => `<span class="big num w">${fmt(p.wins)}</span>`},
   {k:"losses", l:"Derrotas", cell:p => `<span class="big num l">${fmt(p.losses)}</span>`},
   {k:"wr", l:"Taxa de vitória", cell:p => `<div class="wrcell"><span class="big num">${pct(p.wr,2)}</span><div class="wrbar"><i style="width:${p.wr||0}%"></i></div></div>`},
   {k:"rankedWr", l:"Ranqueada", cell:p => p.rankedWr == null ? `<span class="sub">—</span>` : `<span class="big num">${pct(p.rankedWr)}</span><div class="sub">${fmt(p.rankedN)} partidas</div>`},
+  {k:"featured", l:"Destaques", cell:p => p.featured != null ? `<span class="big num">${fmt(p.featured)}</span>` : missingOfficial},
+  {k:"commends", l:"Elogios", cell:p => p.commends != null ? `<span class="big num">${fmt(p.commends)}</span>` : missingOfficial},
   {k:"wr15", l:"Últimas 15", cell:p => p.n ? `${formStrip(p)}<div class="sub">${p.w15}V ${p.n - p.w15}D · ${streakTxt(p.streak)}</div>` : formStrip(p)},
   {k:"kda", l:"KDA recente", cell:p => p.n ? `${kdaHtml(p.k,p.d,p.a)}<div class="sub">razão ${fmt(p.kda,2)}</div>` : `<span class="sub">—</span>`},
   {k:"topN", l:"Herói mais jogado", cell:p => p.top ? `<div class="hcell"><img src="${heroImg(p.top.slug)}" alt=""><div><b>${esc(heroName(p.top.slug))}</b><div class="sub">${fmt(p.top.matches)} partidas · ${pct(p.top.wr)}${period === "career" && p.heroSample < 50 ? `<span class="chip tiny" data-tip="O Dotabuff não conta Turbo na lista de heróis, então aqui há poucas partidas">poucos dados</span>` : ""}</div></div></div>` : `<span class="sub">—</span>`},
@@ -730,11 +734,13 @@ const COLS = [
   {k:"bestScore", l:"Destaque recente", cell:p => p.best ? `<div class="hcell"><img src="${heroImg(p.best.slug)}" alt=""><div>${kdaHtml(p.best.k,p.best.d,p.best.a,0)}<div class="sub">${esc(heroName(p.best.slug))} · ${p.best.won ? "vitória" : "derrota"}</div></div></div>` : `<span class="sub">—</span>`},
   {k:"daysAway", l:"Última partida", cell:p => `<span class="${p.daysAway < 3 ? "chip hot" : p.daysAway > 180 ? "chip cold" : "chip"}">${ago(p.lastMatch)}</span>`},
 ];
-const LABEL_FOR = {nick:"Jogador", rankVal:"Medalha", total:"Partidas", wins:"Vitórias", losses:"Derrotas", wr:"Taxa de vitória", rankedWr:"Taxa ranqueada", wr15:"Vitórias nas últimas 15", kda:"KDA recente", topN:"Partidas com o herói favorito", sup:"% como suporte", bestScore:"Melhor partida recente", daysAway:"Dias sem jogar"};
+const officialChip = p => p.official ? `<span class="chip part" data-tip="Número oficial do perfil no Dota 2 (print de ${p.official.date}: ${fmt(p.official.baseTotal)}) + ${p.official.extra} partidas jogadas desde então. O Dotabuff registra ${fmt(p.dotabuff.total)}.">oficial</span>` : "";
+const missingOfficial = `<span class="sub" data-tip="Destaques e elogios só aparecem no perfil dentro do Dota 2. Mande o print do seu perfil que a gente coloca aqui.">—</span>`;
+const LABEL_FOR = {featured:"Destaques em partidas", commends:"Elogios", nick:"Jogador", rankVal:"Medalha", total:"Partidas", wins:"Vitórias", losses:"Derrotas", wr:"Taxa de vitória", rankedWr:"Taxa ranqueada", wr15:"Vitórias nas últimas 15", kda:"KDA recente", topN:"Partidas com o herói favorito", sup:"% como suporte", bestScore:"Melhor partida recente", daysAway:"Dias sem jogar"};
 const podVal = (k, p) => ({
   nick: p.steam, rankVal: rankLabel(p), total: fmt(p.total), wins: fmt(p.wins), losses: fmt(p.losses), wr: pct(p.wr,2),
   rankedWr: pct(p.rankedWr), wr15: p.n ? p.w15 + "/" + p.n : "—", kda: fmt(p.kda,2), topN: p.top ? fmt(p.top.matches) : "—",
-  sup: pct(p.sup,0), bestScore: p.best ? `${p.best.k}/${p.best.d}/${p.best.a}` : "—", daysAway: ago(p.lastMatch)
+  featured: fmt(p.featured), commends: fmt(p.commends), sup: pct(p.sup,0), bestScore: p.best ? `${p.best.k}/${p.best.d}/${p.best.a}` : "—", daysAway: ago(p.lastMatch)
 }[k]);
 let sortK = "wr", sortDir = -1, roleF = "all", query = "", showPriv = true;
 function rows(){
@@ -752,7 +758,7 @@ function rows(){
 }
 function renderTable(){
   $("#rankNote").textContent = period === "career"
-    ? "Carreira: partidas, vitórias e taxa de vitória vêm das estatísticas gerais do Dotabuff (todos os modos, Turbo incluído). “Últimas 15” usa as 15 partidas mais recentes de cada um. Perfis privados e quem tem menos de 100 partidas ficam no fim da lista, esmaecidos."
+    ? "Carreira: partidas, vitórias e taxa de vitória vêm das estatísticas gerais do Dotabuff (todos os modos, Turbo incluído), que só contam as partidas que o site registrou. Quem manda o print do perfil do Dota 2 ganha o selo “oficial”: vale o número da Valve, mais as partidas jogadas desde o print. Destaques e elogios só existem dentro do jogo, então aparecem só para quem mandou o print. Perfis privados e quem tem menos de 100 partidas ficam no fim da lista, esmaecidos."
     : `Últimos ${period} dias: contado a partir do histórico de partidas (OpenDota + coletas diárias do Dotabuff). Quem tem menos de ${MIN_G[period]} partidas no período fica no fim da lista. “Parcial” marca quem ainda não tem histórico cobrindo o período inteiro.`;
   const t = $("#rankTable");
   t.querySelector("thead").innerHTML = "<tr>" + COLS.map(c => c.k === "pos" ? `<th>#</th>` :
@@ -797,7 +803,10 @@ const allMatches = pub.flatMap(p => p.recent.map(m => ({...m, nick: p.nick})));
 const bestMatch = allMatches.reduce((b,m) => scoreM(m) > scoreM(b) ? m : b);
 const worstMatch = allMatches.reduce((b,m) => (m.d - m.k*.3) > (b.d - b.k*.3) ? m : b);
 const vet = P.filter(p => p.total >= 500);
+const withOfficial = P.filter(p => p.official);
 const AWARDS = [
+  {t:"Mais Elogiado", d:"Mais elogios no perfil do Dota 2", r:withOfficial.length >= 2 ? pick(withOfficial, p=>p.commends) : null, v:x=>fmt(x)+" elogios", q:p=>`O pessoal gosta de jogar com ${p.nick}. Ou foi pressionado a elogiar.`},
+  {t:"Rei dos Destaques", d:"Mais destaques em partidas no perfil do Dota 2", r:withOfficial.length >= 2 ? pick(withOfficial, p=>p.featured) : null, v:x=>fmt(x)+" destaques", q:p=>`Quando aparece o cartão de destaque no fim da partida, é ${p.nick}.`},
   {t:"Viciado Oficial", d:"Mais partidas na conta", r:pick(P, p=>p.total), v:x=>fmt(x)+" partidas", q:(p,x)=>`São ~${fmt(x*38/60/24)} dias seguidos de Dota. Sem dormir.`},
   {t:"Rei do Winrate", d:"Maior taxa de vitória (mín. 500 partidas)", r:pick(vet, p=>p.wr), v:x=>pct(x,2), q:p=>`Acima dos 50%: o sonho de todo jogador de pub.`},
   {t:"Pé Frio", d:"Menor taxa de vitória (mín. 500 partidas)", r:pick(vet, p=>p.wr, 1), v:x=>pct(x,2), q:p=>`O MMR agradece a doação.`},
@@ -850,6 +859,8 @@ const METRICS = [
   {k:"radWr", l:"Taxa de vitória de Radiant", f:v=>pct(v,1), ref:50, max:100},
   {k:"direWr", l:"Taxa de vitória de Dire", f:v=>pct(v,1), ref:50, max:100},
   {k:"points", l:"Pontos de conquista", f:v=>fmt(v)},
+  {k:"commends", l:"Elogios (perfil do Dota 2)", f:v=>fmt(v)},
+  {k:"featured", l:"Destaques em partidas (perfil do Dota 2)", f:v=>fmt(v)},
   {k:"daysAway", l:"Dias sem jogar", f:(v,p)=>ago(p.lastMatch), low:true},
 ];
 const DUEL = ["wr","total","rankedWr","rankVal","wr15","kda","k","d","a","dur","oneTrick","points"];
@@ -1004,7 +1015,9 @@ function openPlayer(nick, viaHash){
       <div><span>Ranqueada</span><b class="num">${pct(p.rankedWr)}</b></div>
       <div><span>KDA recente</span><b class="num">${fmt(p.kda,2)}</b></div>
       <div><span>Última partida</span><b>${ago(p.lastMatch)}</b></div>
+      ${p.official ? `<div><span>Destaques em partidas</span><b class="num">${fmt(p.featured)}</b></div><div><span>Elogios</span><b class="num">${fmt(p.commends)}</b></div><div><span>Fonte</span><b style="font-size:15px">Perfil do Dota 2</b></div>` : ""}
     </div>
+    ${p.official ? `<p class="note">Partidas e vitórias: número oficial do perfil no Dota 2 (print de ${esc(p.official.date)}: ${fmt(p.official.baseTotal)} partidas), mais ${p.official.extra} jogadas desde então. O Dotabuff registra ${fmt(p.dotabuff.total)}.</p>` : (p.private ? "" : `<p class="note">Números do Dotabuff, que só conta as partidas que registrou. Para ter os números oficiais, com destaques e elogios, mande o print do perfil do Dota 2.</p>`)}
     ${p.private ? `<p class="note">Este perfil está privado no Dotabuff. Para aparecer completo aqui: no Dota 2, abra Configurações → Opções → Social e ative “Expor dados públicos de partidas”. No dia seguinte a página já puxa tudo.</p>` : ""}
     ${p.heroes.length ? `<h4>Top 10 heróis da carreira</h4><table class="mini"><thead><tr><th>Herói</th><th>Partidas</th><th>Vitórias</th><th>KDA</th><th>Lane</th></tr></thead><tbody>
       ${p.heroes.map(h => `<tr><td><div class="hcell"><img src="${heroImg(h.slug)}" alt="" style="width:44px;height:25px">${esc(heroName(h.slug))}</div></td><td class="num">${fmt(h.matches)}</td><td class="num">${pct(h.wr)}</td><td class="num">${fmt(h.kda,2)}</td><td class="sub">${esc(h.lane || "—")}</td></tr>`).join("")}</tbody></table>
