@@ -185,7 +185,9 @@ for slug in sorted(needed_heroes):
     hero_imgs[slug] = {"name": info["name"], "attr": info["attr"], "img": to_data_uri(fetch(url), (128, 72), 70)}
 avatar_bytes = {}
 for pl in players:
-    h = pl["avatarUrl"].rsplit("/", 1)[-1]
+    # Foto do perfil: o OpenDota acompanha a Steam; o Dotabuff às vezes fica com a foto antiga.
+    od_prof = ((od["players"].get(pl["nick"]) or {}).get("profile") or {}).get("profile") or {}
+    h = (od_prof.get("avatarfull") or pl["avatarUrl"]).rsplit("/", 1)[-1]
     avatar_bytes[pl["nick"]] = fetch("https://avatars.steamstatic.com/" + h)
     pl["avatar"] = to_data_uri(avatar_bytes[pl["nick"]], (96, 96), 82)
     del pl["avatarUrl"]
