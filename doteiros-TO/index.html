@@ -5,13 +5,13 @@
 <meta name="theme-color" content="#0d1112">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230d1112'/%3E%3Cpath d='M14 14h36v10H37v28H27V24H14z' fill='%23f4cd6e'/%3E%3C/svg%3E">
 <!--META-->
-<meta name="description" content="Líder: Dr. Sem Doutorado com 50,89% de vitória. Ranking, prêmios, duelos e duplas da galera. Atualizado em 27/09/2026.">
+<meta name="description" content="Líder: Dr. Sem Doutorado com 50,88% de vitória. Ranking, prêmios, duelos e duplas da galera. Atualizado em 27/09/2026.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Taverna do Ancient">
 <meta property="og:title" content="Taverna do Ancient · Dota 2 da galera">
-<meta property="og:description" content="Líder: Dr. Sem Doutorado com 50,89% de vitória. Ranking, prêmios, duelos e duplas da galera. Atualizado em 27/09/2026.">
+<meta property="og:description" content="Líder: Dr. Sem Doutorado com 50,88% de vitória. Ranking, prêmios, duelos e duplas da galera. Atualizado em 27/09/2026.">
 <meta property="og:url" content="https://www.dborges.tech/">
-<meta property="og:image" content="https://www.dborges.tech/og.png?v=202609270035">
+<meta property="og:image" content="https://www.dborges.tech/og.png?v=202609270132">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -401,11 +401,13 @@ footer p{margin:4px 0;max-width:90ch}
       <div>
         <div class="eyebrow">Classificação geral</div>
         <h2>O Ranking da Taverna</h2>
-        <p class="sec-sub">Clique no título de qualquer coluna para ordenar do maior para o menor (e clique de novo para inverter). O pódio acompanha a coluna escolhida. Troque o período para ver só as partidas dos últimos 7, 30 ou 90 dias.</p>
+        <p class="sec-sub">Clique no título de qualquer coluna para ordenar do maior para o menor (e clique de novo para inverter). O pódio acompanha a coluna escolhida. Troque o período para ver só as partidas do último ano, dos últimos 6 meses, 90, 30 ou 7 dias.</p>
       </div>
       <div class="controls">
         <div class="seg periodSeg" role="group" aria-label="Período">
           <button type="button" data-p="career" aria-pressed="true">Carreira</button>
+          <button type="button" data-p="365" aria-pressed="false">1 ano</button>
+          <button type="button" data-p="180" aria-pressed="false">6 meses</button>
           <button type="button" data-p="90" aria-pressed="false">90 dias</button>
           <button type="button" data-p="30" aria-pressed="false">30 dias</button>
           <button type="button" data-p="7" aria-pressed="false">7 dias</button>
@@ -472,6 +474,8 @@ footer p{margin:4px 0;max-width:90ch}
       <div class="controls">
         <div class="seg periodSeg" role="group" aria-label="Período">
           <button type="button" data-p="career" aria-pressed="true">Carreira</button>
+          <button type="button" data-p="365" aria-pressed="false">1a</button>
+          <button type="button" data-p="180" aria-pressed="false">6m</button>
           <button type="button" data-p="90" aria-pressed="false">90d</button>
           <button type="button" data-p="30" aria-pressed="false">30d</button>
           <button type="button" data-p="7" aria-pressed="false">7d</button>
@@ -508,6 +512,8 @@ footer p{margin:4px 0;max-width:90ch}
       </div>
       <div class="seg" role="group" aria-label="Período dos heróis" id="heroSeg">
         <button type="button" data-h="career" aria-pressed="true">Carreira</button>
+        <button type="button" data-h="365" aria-pressed="false">1 ano</button>
+        <button type="button" data-h="180" aria-pressed="false">6 meses</button>
         <button type="button" data-h="90" aria-pressed="false">90 dias</button>
         <button type="button" data-h="30" aria-pressed="false">30 dias</button>
         <button type="button" data-h="7" aria-pressed="false">7 dias</button>
@@ -571,7 +577,7 @@ footer p{margin:4px 0;max-width:90ch}
 <div class="overlay" id="overlay" hidden><div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="dName"></div></div>
 <div id="tip" hidden></div>
 
-<script src="data/dashboard_data.js?v=1790480103" charset="utf-8"></script>
+<script src="data/dashboard_data.js?v=1790483526" charset="utf-8"></script>
 <script>
 (function(){
 const D = window.DASH, NOW = D.generatedAt, HERO = D.heroes;
@@ -649,7 +655,8 @@ const pub = P.filter(p => !p.private);
 const MODE_NAME = {T:"Turbo", A:"All Pick", S:"Single Draft", O:"Outro"};
 const HROWS = (D.hist || []).map(r => ({pi:r[0], t:r[1], slug:r[2], won:r[3], k:r[4], d:r[5], a:r[6], dur:r[7], mode:MODE_NAME[r[8]] || "Outro", ranked:r[9], party:r[10]}));
 const pIndex = new Map(D.players.map((p,i) => [p.nick, i]));
-const MIN_G = {90:15, 30:8, 7:3};
+const MIN_G = {365:50, 180:30, 90:15, 30:8, 7:3};
+const PERIOD_NAME = {365:"1 ano", 180:"6 meses", 90:"90 dias", 30:"30 dias", 7:"7 dias"};
 let period = "career";
 const dBR = ts => new Date(ts * 1000).toLocaleDateString("pt-BR", {day:"2-digit", month:"2-digit", timeZone:"America/Sao_Paulo"});
 function histOf(p, days){ const i = pIndex.get(p.nick), from = NOW - days * 86400; return HROWS.filter(r => r.pi === i && r.t >= from); }
@@ -675,7 +682,7 @@ function view(p){
   v.bestScore = v.best ? scoreM(v.best) : null;
   return viewCache[key] = v;
 }
-const periodLabel = () => period === "career" ? "" : " · " + period + " dias";
+const periodLabel = () => period === "career" ? "" : " · " + PERIOD_NAME[period];
 const partialChip = p => period !== "career" && p.partial ? `<span class="chip part" data-tip="${p.private ? "Perfil privado: sem histórico de partidas" : p.coverage ? "Histórico deste jogador só a partir de " + dBR(p.coverage) : "Sem histórico"}">${p.private ? "sem dados" : "parcial"}</span>` : "";
 const heroTxt = t => esc(t).replace(/\{hero:([a-z0-9-]+)\}/g, (_, sl) => `<b>${esc(heroName(sl))}</b>`);
 const slugNick = n => n.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -759,7 +766,7 @@ function rows(){
 function renderTable(){
   $("#rankNote").textContent = period === "career"
     ? "Carreira: partidas, vitórias e taxa de vitória vêm das estatísticas gerais do Dotabuff (todos os modos, Turbo incluído), que só contam as partidas que o site registrou. Quem manda o print do perfil do Dota 2 ganha o selo “oficial”: vale o número da Valve, mais as partidas jogadas desde o print. Destaques e elogios só existem dentro do jogo, então aparecem só para quem mandou o print. Perfis privados e quem tem menos de 100 partidas ficam no fim da lista, esmaecidos."
-    : `Últimos ${period} dias: contado a partir do histórico de partidas (OpenDota + coletas diárias do Dotabuff). Quem tem menos de ${MIN_G[period]} partidas no período fica no fim da lista. “Parcial” marca quem ainda não tem histórico cobrindo o período inteiro.`;
+    : `Período de ${PERIOD_NAME[period]}: contado a partir do histórico de partidas (OpenDota + coletas diárias do Dotabuff). Quem tem menos de ${MIN_G[period]} partidas no período fica no fim da lista. “Parcial” marca quem ainda não tem histórico cobrindo o período inteiro.`;
   const t = $("#rankTable");
   t.querySelector("thead").innerHTML = "<tr>" + COLS.map(c => c.k === "pos" ? `<th>#</th>` :
     `<th class="sortable ${c.k === sortK ? "on" : ""}" data-k="${c.k}" tabindex="0" aria-sort="${c.k === sortK ? (sortDir < 0 ? "descending" : "ascending") : "none"}">${c.l}<span class="arr">${c.k === sortK ? (sortDir < 0 ? "▾" : "▴") : ""}</span></th>`).join("") + "</tr>";

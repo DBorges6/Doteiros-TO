@@ -161,7 +161,7 @@ snaps, prev_snap = history.save_snapshot(players, NOW)
 news, news_label = history.build_news(players, hist, prev_snap, NOW)
 print("novidades:", [n["nick"] + " " + n["text"] for n in news])
 nick_idx = {p["nick"]: i for i, p in enumerate(players)}
-recent_hist = [r for r in hist if r["t"] >= NOW - 92 * 86400 and r["slug"]]
+recent_hist = [r for r in hist if r["t"] >= NOW - 366 * 86400 and r["slug"]]  # filtros até 1 ano
 MODE_CODE = {"Turbo": "T", "All Pick": "A", "Single Draft": "S"}
 hist_rows = [[nick_idx[r["nick"]], r["t"], r["slug"], r["won"], r["k"], r["d"], r["a"], r["dur"],
               MODE_CODE.get(r["mode"], "O"), r["ranked"], r["party"] or 0] for r in recent_hist if r["nick"] in nick_idx]

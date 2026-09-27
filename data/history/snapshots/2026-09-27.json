@@ -1,6 +1,6 @@
 {
  "date": "2026-09-27",
- "t": 1790480103,
+ "t": 1790483526,
  "players": {
   "Dinamite": {
    "total": 1296,
@@ -39,12 +39,12 @@
    "private": false
   },
   "Dr. Sem Doutorado": {
-   "total": 4897,
+   "total": 4898,
    "wins": 2492,
    "rank": "Legend III",
    "rankVal": 53,
    "points": 3310,
-   "lastMatch": 1790429774,
+   "lastMatch": 1790481367,
    "private": false
   },
   "El Desperuanizador": {
@@ -80,7 +80,7 @@
    "rank": "Not Calibrated",
    "rankVal": null,
    "points": null,
-   "lastMatch": 1788149902,
+   "lastMatch": 1790483094,
    "private": true
   },
   "Pesadelo": {
@@ -111,21 +111,21 @@
    "private": false
   },
   "VacaPower": {
-   "total": 1396,
-   "wins": 672,
+   "total": 1400,
+   "wins": 675,
    "rank": "Guardian V",
    "rankVal": 25,
    "points": 755,
-   "lastMatch": 1790401751,
+   "lastMatch": 1790483094,
    "private": false
   },
   "DBorges": {
-   "total": 5211,
-   "wins": 2604,
+   "total": 5213,
+   "wins": 2605,
    "rank": "Legend III",
    "rankVal": 53,
    "points": 3255,
-   "lastMatch": 1790475028,
+   "lastMatch": 1790483094,
    "private": false
   },
   "BAUA": {
