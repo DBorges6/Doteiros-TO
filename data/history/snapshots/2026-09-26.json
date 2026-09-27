@@ -1,0 +1,132 @@
+{
+ "date": "2026-09-26",
+ "t": 1790467741,
+ "players": {
+  "Dinamite": {
+   "total": 1292,
+   "wins": 629,
+   "rank": "Not Calibrated",
+   "rankVal": null,
+   "points": 75,
+   "lastMatch": 1790457284,
+   "private": false
+  },
+  "Ghost": {
+   "total": 4447,
+   "wins": 2174,
+   "rank": "Archon IV",
+   "rankVal": 44,
+   "points": 2930,
+   "lastMatch": 1790401751,
+   "private": false
+  },
+  "Soma": {
+   "total": 1540,
+   "wins": 778,
+   "rank": "Archon V",
+   "rankVal": 45,
+   "points": 775,
+   "lastMatch": 1790401751,
+   "private": false
+  },
+  "Bahia": {
+   "total": 7024,
+   "wins": 3506,
+   "rank": "Crusader IV",
+   "rankVal": 34,
+   "points": 3195,
+   "lastMatch": 1790460214,
+   "private": false
+  },
+  "Dr. Sem Doutorado": {
+   "total": 4897,
+   "wins": 2492,
+   "rank": "Legend III",
+   "rankVal": 53,
+   "points": 3310,
+   "lastMatch": 1790429774,
+   "private": false
+  },
+  "El Desperuanizador": {
+   "total": 2,
+   "wins": 1,
+   "rank": "Archon III",
+   "rankVal": 43,
+   "points": null,
+   "lastMatch": 1787883709,
+   "private": true
+  },
+  "Kaus": {
+   "total": 54,
+   "wins": 28,
+   "rank": "Not Calibrated",
+   "rankVal": null,
+   "points": null,
+   "lastMatch": 1789965347,
+   "private": true
+  },
+  "Lestat": {
+   "total": 3,
+   "wins": 0,
+   "rank": "Not Calibrated",
+   "rankVal": null,
+   "points": null,
+   "lastMatch": 1701993066,
+   "private": true
+  },
+  "Neo": {
+   "total": 2279,
+   "wins": 1150,
+   "rank": "Not Calibrated",
+   "rankVal": null,
+   "points": null,
+   "lastMatch": 1788149902,
+   "private": true
+  },
+  "Pesadelo": {
+   "total": 3468,
+   "wins": 1704,
+   "rank": "Guardian V",
+   "rankVal": 25,
+   "points": 2300,
+   "lastMatch": 1790457284,
+   "private": false
+  },
+  "Panda": {
+   "total": 11322,
+   "wins": 5548,
+   "rank": "Archon II",
+   "rankVal": 42,
+   "points": 6740,
+   "lastMatch": 1745285719,
+   "private": false
+  },
+  "Tanner": {
+   "total": 6429,
+   "wins": 3257,
+   "rank": "Legend II",
+   "rankVal": 52,
+   "points": 3235,
+   "lastMatch": 1790126618,
+   "private": false
+  },
+  "VacaPower": {
+   "total": 1396,
+   "wins": 672,
+   "rank": "Guardian V",
+   "rankVal": 25,
+   "points": 755,
+   "lastMatch": 1790401751,
+   "private": false
+  },
+  "DBorges": {
+   "total": 4356,
+   "wins": 2179,
+   "rank": "Legend III",
+   "rankVal": 53,
+   "points": 3255,
+   "lastMatch": 1790463970,
+   "private": false
+  }
+ }
+}

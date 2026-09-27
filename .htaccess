@@ -1,0 +1,14 @@
+# O site público é só o dashboard (index.html, doteiros-TO/ e og.png).
+# Scripts, dados brutos e arquivos de configuração do repositório respondem 404.
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+# pastas técnicas na raiz (doteiros-TO/data continua liberada)
+RewriteRule ^(data|scraper|__pycache__)(/|$) - [R=404,L]
+# arquivos e pastas ocultos (.git, .gitignore, .htaccess...), menos .well-known (renovação do SSL)
+RewriteCond %{REQUEST_URI} !^/\.well-known/
+RewriteRule (^|/)\. - [R=404,L]
+# scripts e documentos na raiz
+RewriteRule ^[^/]+\.(py|md|txt|json)$ - [R=404,L]
+</IfModule>

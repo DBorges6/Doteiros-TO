@@ -1,9 +1,9 @@
-"""Monta data/dashboard_data.js a partir do Dotabuff (data/dotabuff.json) + OpenDota (data/raw.json).
+"""Monta doteiros-TO/data/dashboard_data.js a partir do Dotabuff (data/dotabuff.json) + OpenDota (data/raw.json).
 
 Imagens (heróis, avatares, medalhas) são baixadas e embutidas em base64 para o
 dashboard funcionar offline e dentro do Artifact (que bloqueia imagens externas).
 """
-import base64, io, json, os, re, time, urllib.request
+import base64, datetime, io, json, os, re, time, urllib.request
 from collections import defaultdict
 from PIL import Image
 
@@ -12,6 +12,10 @@ CACHE = os.path.join(ROOT, "data", "img_cache")
 os.makedirs(CACHE, exist_ok=True)
 
 from roster import ROSTER  # apelido, account_id
+import history, og_image
+
+NOW = int(time.time())
+SITE = "https://www.dborges.tech/"
 RANKS = ["Herald", "Guardian", "Crusader", "Archon", "Legend", "Ancient", "Divine", "Immortal"]
 ROMAN = {"I": 1, "II": 2, "III": 3, "IV": 4, "V": 5}
 
@@ -102,7 +106,7 @@ for nick, pid in ROSTER:
         "abandons": d["ab"], "rank": rank_name, "rankTier": rank_tier, "rankStar": rank_star,
         "points": d["pts"], "general": d["g"], "roles": roles,
         "lanes": sorted(([k, round(v, 1)] for k, v in lane_tot.items() if v > 0), key=lambda x: -x[1]),
-        "heroes": heroes, "recent": recent, "aliases": d["al"], "friends": d["fr"], "activity": d["act"],
+        "heroes": heroes, "heroSample": int(sum(h["matches"] or 0 for h in heroes)), "recent": recent, "aliases": d["al"], "friends": d["fr"], "activity": d["act"],
     })
 
 # ---- Química: partidas em comum (OpenDota: histórico completo; Dotabuff: últimas 15) ----
@@ -133,6 +137,25 @@ chem = [{"a": a, "b": b, **v} for (a, b), v in pairs.items()]
 chem.sort(key=lambda x: -x["with"])
 print("pares:", [(c["a"], c["b"], c["with"], c["withWin"]) for c in chem[:12]])
 
+# ---- Histórico, fotos diárias e novidades ----
+hist, coverage = history.merge_matches(players, od, hero_by_id, NOW)
+snaps, prev_snap = history.save_snapshot(players, NOW)
+news, news_label = history.build_news(players, hist, prev_snap, NOW)
+print("novidades:", [n["nick"] + " " + n["text"] for n in news])
+nick_idx = {p["nick"]: i for i, p in enumerate(players)}
+recent_hist = [r for r in hist if r["t"] >= NOW - 92 * 86400 and r["slug"]]
+MODE_CODE = {"Turbo": "T", "All Pick": "A", "Single Draft": "S"}
+hist_rows = [[nick_idx[r["nick"]], r["t"], r["slug"], r["won"], r["k"], r["d"], r["a"], r["dur"],
+              MODE_CODE.get(r["mode"], "O"), r["ranked"], r["party"] or 0] for r in recent_hist if r["nick"] in nick_idx]
+for r in recent_hist:
+    needed_heroes.add(r["slug"])
+for n in news:
+    if n.get("slug"):
+        needed_heroes.add(n["slug"])
+for p in players:
+    p["coverage"] = coverage.get(p["nick"])
+evolution = [{"date": s["date"], "p": {n: [v["total"], v["wins"]] for n, v in s["players"].items()}} for s in snaps]
+
 # ---- Imagens ----
 hero_imgs = {}
 for slug in sorted(needed_heroes):
@@ -141,10 +164,12 @@ for slug in sorted(needed_heroes):
         print("herói sem mapeamento:", slug)
         continue
     url = f"https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/{info['short']}.png"
-    hero_imgs[slug] = {"name": info["name"], "attr": info["attr"], "img": to_data_uri(fetch(url), (128, 72), 78)}
+    hero_imgs[slug] = {"name": info["name"], "attr": info["attr"], "img": to_data_uri(fetch(url), (128, 72), 70)}
+avatar_bytes = {}
 for pl in players:
     h = pl["avatarUrl"].rsplit("/", 1)[-1]
-    pl["avatar"] = to_data_uri(fetch("https://avatars.steamstatic.com/" + h), (96, 96), 82)
+    avatar_bytes[pl["nick"]] = fetch("https://avatars.steamstatic.com/" + h)
+    pl["avatar"] = to_data_uri(avatar_bytes[pl["nick"]], (96, 96), 82)
     del pl["avatarUrl"]
 medals = {}
 for t in range(1, 9):
@@ -153,14 +178,44 @@ for s in range(1, 6):
     medals[f"s{s}"] = to_data_uri(fetch(f"https://www.opendota.com/assets/images/dota2/rank_icons/rank_star_{s}.png"), (72, 72), 85)
 medals["t0"] = to_data_uri(fetch("https://www.opendota.com/assets/images/dota2/rank_icons/rank_icon_0.png"), (72, 72), 85)
 
-out = {"generatedAt": int(time.time()), "players": players, "heroes": hero_imgs, "medals": medals, "chem": chem}
+out = {"generatedAt": NOW, "players": players, "heroes": hero_imgs, "medals": medals, "chem": chem,
+       "hist": hist_rows, "news": news, "newsLabel": news_label, "evolution": evolution, "site": SITE}
 js = "window.DASH = " + json.dumps(out, ensure_ascii=False, separators=(",", ":")) + ";"
 open(os.path.join(ROOT, "doteiros-TO", "data", "dashboard_data.js"), "w", encoding="utf-8").write(js)
 print("ok", len(js) // 1024, "KB", len(hero_imgs), "heróis")
 
+# ---- Prévia de link (WhatsApp etc.) ----
+stamp = datetime.datetime.fromtimestamp(NOW, history.BRT)
+ranked_players = sorted((p for p in players if not p["private"] and p["total"] >= 100), key=lambda p: -p["wins"] / p["total"])
+podium = [(p["nick"], f"{p['wins'] / p['total'] * 100:.2f}% de vitória".replace(".", ","), avatar_bytes[p["nick"]]) for p in ranked_players[:3]]
+og_image.make(podium, "Atualizado em " + stamp.strftime("%d/%m/%Y às %H:%M"),
+              "Ranking, prêmios e duelos da galera", os.path.join(ROOT, "og.png"))
+leader = ranked_players[0]
+leader_wr = f"{leader['wins'] / leader['total'] * 100:.2f}".replace(".", ",")
+desc = (f"Líder: {leader['nick']} com {leader_wr}% de vitória. "
+        + f"Ranking, prêmios, duelos e duplas da galera. Atualizado em {stamp.strftime('%d/%m/%Y')}.")
+meta = "\n".join([
+    '<!--META-->',
+    '<meta name="description" content="%s">' % desc,
+    '<meta property="og:type" content="website">',
+    '<meta property="og:site_name" content="Taverna do Ancient">',
+    '<meta property="og:title" content="Taverna do Ancient · Dota 2 da galera">',
+    '<meta property="og:description" content="%s">' % desc,
+    '<meta property="og:url" content="%s">' % SITE,
+    '<meta property="og:image" content="%sog.png?v=%s">' % (SITE, stamp.strftime("%Y%m%d%H%M")),
+    '<meta property="og:image:width" content="1200">',
+    '<meta property="og:image:height" content="630">',
+    '<meta name="twitter:card" content="summary_large_image">',
+    '<!--/META-->'])
+src_path = os.path.join(ROOT, "doteiros-TO", "index.html")
+page = open(src_path, encoding="utf-8").read()
+page, n_meta = re.subn(r"<!--META-->.*?<!--/META-->", lambda _: meta, page, flags=re.S)
+assert n_meta == 1, "marcadores <!--META--> não encontrados em doteiros-TO/index.html"
+open(src_path, "w", encoding="utf-8").write(page)
+print("prévia gerada: og.png |", desc)
+
 # Cópia do dashboard na raiz do site (página principal do domínio), apontando
 # para os mesmos dados de doteiros-TO/. A fonte é sempre doteiros-TO/index.html.
-page = open(os.path.join(ROOT, "doteiros-TO", "index.html"), encoding="utf-8").read()
 src = '<script src="data/dashboard_data.js"'
 assert src in page, "caminho dos dados não encontrado em doteiros-TO/index.html"
 open(os.path.join(ROOT, "index.html"), "w", encoding="utf-8").write(page.replace(src, '<script src="doteiros-TO/data/dashboard_data.js"'))

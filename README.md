@@ -18,6 +18,7 @@ python update.py --no-push  # só atualiza localmente
 ```
 
 Requisitos: Python 3, `pip install playwright pillow` e o Google Chrome instalado.
+As fontes usadas na prévia (Cinzel e Barlow Condensed, licença OFL) ficam em `data/fonts/`.
 O Dotabuff bloqueia requisições diretas, então a coleta usa o Chrome da máquina em modo invisível.
 
 | Arquivo | O que faz |
@@ -26,7 +27,10 @@ O Dotabuff bloqueia requisições diretas, então a coleta usa o Chrome da máqu
 | `fetch.py` | baixa as partidas do OpenDota (para as duplas) |
 | `scraper/scrape_dotabuff.py` + `scraper/extract.js` | coleta o Dotabuff |
 | `build_data.py` | junta tudo e embute as imagens em `doteiros-TO/data/dashboard_data.js` |
+| `history.py` | guarda o histórico de partidas (`data/history/matches.json`), a foto diária dos números (`data/history/snapshots/`) e monta as novidades do dia |
+| `og_image.py` | gera `og.png`, a prévia que aparece ao mandar o link no WhatsApp |
 | `update.py` | roda as etapas acima e publica no GitHub |
+| `.htaccess` | no servidor, esconde scripts e dados brutos (só o dashboard fica público) |
 
 Perfis privados no Dotabuff (hoje: Neo, Lestat, Kaus e El Desperuanizador) aparecem só com medalha e registro parcial.
 Para aparecer completo, ative "Expor dados públicos de partidas" nas configurações do Dota 2.
