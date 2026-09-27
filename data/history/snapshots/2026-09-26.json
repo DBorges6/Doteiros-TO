@@ -1,23 +1,23 @@
 {
  "date": "2026-09-26",
- "t": 1790467741,
+ "t": 1790475446,
  "players": {
   "Dinamite": {
-   "total": 1292,
-   "wins": 629,
+   "total": 1296,
+   "wins": 632,
    "rank": "Not Calibrated",
    "rankVal": null,
    "points": 75,
-   "lastMatch": 1790457284,
+   "lastMatch": 1790475028,
    "private": false
   },
   "Ghost": {
-   "total": 4447,
+   "total": 4448,
    "wins": 2174,
    "rank": "Archon IV",
    "rankVal": 44,
    "points": 2930,
-   "lastMatch": 1790401751,
+   "lastMatch": 1790465103,
    "private": false
   },
   "Soma": {
@@ -84,12 +84,12 @@
    "private": true
   },
   "Pesadelo": {
-   "total": 3468,
-   "wins": 1704,
+   "total": 3470,
+   "wins": 1706,
    "rank": "Guardian V",
    "rankVal": 25,
    "points": 2300,
-   "lastMatch": 1790457284,
+   "lastMatch": 1790470663,
    "private": false
   },
   "Panda": {
@@ -120,12 +120,12 @@
    "private": false
   },
   "DBorges": {
-   "total": 4356,
-   "wins": 2179,
+   "total": 4360,
+   "wins": 2182,
    "rank": "Legend III",
    "rankVal": 53,
    "points": 3255,
-   "lastMatch": 1790463970,
+   "lastMatch": 1790475028,
    "private": false
   }
  }
