@@ -88,6 +88,7 @@ for nick, pid in ROSTER:
         rank_tier, rank_star = RANKS.index(m.group(1)) + 1, ROMAN[m.group(2)]
     # Medalha: o OpenDota busca na Valve a cada coleta (mais atual); o Dotabuff fica de reserva.
     od_rank = (((od["players"].get(nick) or {}).get("profile")) or {}).get("rank_tier")
+    rank_src = "od" if od_rank else "db"
     if od_rank:
         rank_tier, rank_star = od_rank // 10, od_rank % 10
         rank_name = RANKS[rank_tier - 1] + (" " + ["", "I", "II", "III", "IV", "V"][rank_star] if rank_star else "")
@@ -117,7 +118,7 @@ for nick, pid in ROSTER:
     players.append({
         "nick": nick, "id": pid, "steam": d["n"], "avatarUrl": d["av"], "private": private,
         "lastMatch": d["lm"], "total": int(total), "wins": int(wins), "losses": int(total - wins),
-        "abandons": d["ab"], "rank": rank_name, "rankTier": rank_tier, "rankStar": rank_star,
+        "abandons": d["ab"], "rank": rank_name, "rankTier": rank_tier, "rankStar": rank_star, "rankSrc": rank_src,
         "points": d["pts"], "general": d["g"], "roles": roles,
         "lanes": sorted(([k, round(v, 1)] for k, v in lane_tot.items() if v > 0), key=lambda x: -x[1]),
         "heroes": heroes, "heroSample": int(sum(h["matches"] or 0 for h in heroes)), "recent": recent, "aliases": d["al"], "friends": d["fr"], "activity": d["act"],

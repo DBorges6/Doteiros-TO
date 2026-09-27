@@ -1,6 +1,6 @@
 {
  "date": "2026-09-27",
- "t": 1790515161,
+ "t": 1790515181,
  "players": {
   "Dinamite": {
    "total": 1296,
@@ -9,7 +9,8 @@
    "rankVal": null,
    "points": 75,
    "lastMatch": 1790475028,
-   "private": false
+   "private": false,
+   "rankSrc": "db"
   },
   "Ghost": {
    "total": 4448,
@@ -18,7 +19,8 @@
    "rankVal": 51,
    "points": 2930,
    "lastMatch": 1790465103,
-   "private": false
+   "private": false,
+   "rankSrc": "od"
   },
   "Soma": {
    "total": 1540,
@@ -27,7 +29,8 @@
    "rankVal": 45,
    "points": 775,
    "lastMatch": 1790401751,
-   "private": false
+   "private": false,
+   "rankSrc": "db"
   },
   "Bahia": {
    "total": 7024,
@@ -36,7 +39,8 @@
    "rankVal": 34,
    "points": 3195,
    "lastMatch": 1790460214,
-   "private": false
+   "private": false,
+   "rankSrc": "od"
   },
   "Dr. Sem Doutorado": {
    "total": 4898,
@@ -45,7 +49,8 @@
    "rankVal": 51,
    "points": 3310,
    "lastMatch": 1790481367,
-   "private": false
+   "private": false,
+   "rankSrc": "od"
   },
   "El Desperuanizador": {
    "total": 2,
@@ -54,7 +59,8 @@
    "rankVal": 43,
    "points": null,
    "lastMatch": 1787883709,
-   "private": true
+   "private": true,
+   "rankSrc": "db"
   },
   "Kaus": {
    "total": 54,
@@ -63,7 +69,8 @@
    "rankVal": null,
    "points": null,
    "lastMatch": 1789965347,
-   "private": true
+   "private": true,
+   "rankSrc": "db"
   },
   "Lestat": {
    "total": 3,
@@ -72,7 +79,8 @@
    "rankVal": null,
    "points": null,
    "lastMatch": 1701993066,
-   "private": true
+   "private": true,
+   "rankSrc": "db"
   },
   "Neo": {
    "total": 2279,
@@ -81,7 +89,8 @@
    "rankVal": 43,
    "points": null,
    "lastMatch": 1790484669,
-   "private": true
+   "private": true,
+   "rankSrc": "od"
   },
   "Pesadelo": {
    "total": 3470,
@@ -90,7 +99,8 @@
    "rankVal": 34,
    "points": 2300,
    "lastMatch": 1790470663,
-   "private": false
+   "private": false,
+   "rankSrc": "od"
   },
   "Panda": {
    "total": 11322,
@@ -99,7 +109,8 @@
    "rankVal": 42,
    "points": 6740,
    "lastMatch": 1745285719,
-   "private": false
+   "private": false,
+   "rankSrc": "od"
   },
   "Tanner": {
    "total": 6429,
@@ -108,7 +119,8 @@
    "rankVal": 52,
    "points": 3235,
    "lastMatch": 1790126618,
-   "private": false
+   "private": false,
+   "rankSrc": "od"
   },
   "VacaPower": {
    "total": 1400,
@@ -117,7 +129,8 @@
    "rankVal": 32,
    "points": 755,
    "lastMatch": 1790483094,
-   "private": false
+   "private": false,
+   "rankSrc": "od"
   },
   "DBorges": {
    "total": 4365,
@@ -126,7 +139,8 @@
    "rankVal": 53,
    "points": 3255,
    "lastMatch": 1790484669,
-   "private": false
+   "private": false,
+   "rankSrc": "od"
   },
   "BAUA": {
    "total": 4645,
@@ -135,7 +149,8 @@
    "rankVal": 62,
    "points": 3605,
    "lastMatch": 1790475028,
-   "private": false
+   "private": false,
+   "rankSrc": "od"
   },
   "CX": {
    "total": 6638,
@@ -144,7 +159,8 @@
    "rankVal": 43,
    "points": 5220,
    "lastMatch": 1790382590,
-   "private": false
+   "private": false,
+   "rankSrc": "od"
   },
   "Lule": {
    "total": 230,
@@ -153,7 +169,8 @@
    "rankVal": null,
    "points": 375,
    "lastMatch": 1780888148,
-   "private": false
+   "private": false,
+   "rankSrc": "db"
   },
   "MotherBoard": {
    "total": 12,
@@ -162,7 +179,8 @@
    "rankVal": null,
    "points": null,
    "lastMatch": 1765585235,
-   "private": true
+   "private": true,
+   "rankSrc": "db"
   },
   "Milan Buzano Diporra": {
    "total": 4177,
@@ -171,7 +189,8 @@
    "rankVal": 41,
    "points": 4785,
    "lastMatch": 1790482028,
-   "private": false
+   "private": false,
+   "rankSrc": "od"
   },
   "AzAfApower": {
    "total": 135,
@@ -180,7 +199,8 @@
    "rankVal": 33,
    "points": null,
    "lastMatch": 1790287288,
-   "private": true
+   "private": true,
+   "rankSrc": "od"
   }
  }
 }

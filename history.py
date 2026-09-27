@@ -74,7 +74,7 @@ def merge_matches(players, od, hero_by_id, now):
 def snapshot_of(p):
     return {"total": p["total"], "wins": p["wins"], "rank": p["rank"],
             "rankVal": p["rankTier"] * 10 + p["rankStar"] if p["rankTier"] else None,
-            "points": p["points"], "lastMatch": p["lastMatch"], "private": p["private"]}
+            "points": p["points"], "lastMatch": p["lastMatch"], "private": p["private"], "rankSrc": p.get("rankSrc")}
 
 
 def save_snapshot(players, now):
@@ -145,7 +145,8 @@ def build_news(players, history, prev_snap, now):
             if not p or p["private"]:
                 continue
             new = snapshot_of(p)
-            if old.get("rankVal") and new["rankVal"] and new["rankVal"] != old["rankVal"]:
+            # só compara medalhas vindas da mesma fonte (trocar de fonte não é subir ou cair)
+            if old.get("rankVal") and new["rankVal"] and new["rankVal"] != old["rankVal"] and old.get("rankSrc") == new["rankSrc"]:
                 up = new["rankVal"] > old["rankVal"]
                 news.append({"nick": nick, "kind": "rankup" if up else "rankdown",
                              "text": f"{'subiu' if up else 'caiu'} de {old['rank']} para {new['rank']}", "score": 10})
