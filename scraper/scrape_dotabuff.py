@@ -24,19 +24,27 @@ with sync_playwright() as pw:
     ctx = browser.new_context(locale="pt-BR", viewport={"width": 1366, "height": 900},
                               user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36")
     page = ctx.new_page()
+    streak = 0  # falhas seguidas; o Dotabuff às vezes bloqueia servidores de nuvem
     for nick, pid in ROSTER:
         data = None
-        for attempt in range(3):
-            try:
-                page.goto(f"https://pt.dotabuff.com/players/{pid}", wait_until="domcontentloaded", timeout=60000)
-                page.wait_for_selector(".header-content-title h1", timeout=30000)
-                page.wait_for_timeout(2500)  # seções React terminam de montar
-                data = page.evaluate(EXTRACT)
-                if data.get("ok"):
-                    break
-            except Exception as e:
-                print(f"  tentativa {attempt + 1} falhou para {nick}: {e}", flush=True)
-                page.wait_for_timeout(5000)
+        if streak >= 3:
+            print(f"PULADO {nick}: Dotabuff bloqueando (3 falhas seguidas)", flush=True)
+        else:
+            for attempt in range(2):
+                try:
+                    page.goto(f"https://pt.dotabuff.com/players/{pid}", wait_until="domcontentloaded", timeout=40000)
+                    page.wait_for_timeout(1500)
+                    if any(t in page.title() for t in ("Just a moment", "Um momento", "Attention Required")):
+                        raise RuntimeError("tela de verificação do Cloudflare")
+                    page.wait_for_selector(".header-content-title h1", timeout=20000)
+                    page.wait_for_timeout(2500)  # seções React terminam de montar
+                    data = page.evaluate(EXTRACT)
+                    if data.get("ok"):
+                        break
+                except Exception as e:
+                    print(f"  tentativa {attempt + 1} falhou para {nick}: {str(e).splitlines()[0]}", flush=True)
+                    page.wait_for_timeout(3000)
+        streak = 0 if (data and data.get("ok")) else streak + 1
         if data and data.get("ok"):
             data.pop("ok")
             new[str(pid)] = data
@@ -51,5 +59,5 @@ with sync_playwright() as pw:
 
 json.dump(new, open(OUT, "w", encoding="utf-8"), ensure_ascii=False)
 print("salvo", OUT, "| falhas:", failed or "nenhuma")
-if len(failed) == len(ROSTER):
-    sys.exit(2)
+if len(failed) == len(ROSTER) or streak >= 3:
+    sys.exit(2)  # bloqueado: quem chamou sabe que o Dotabuff ficou (em parte) com os dados anteriores

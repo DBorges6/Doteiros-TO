@@ -29,7 +29,8 @@ if "--no-push" not in sys.argv:
 if "--skip-opendota" not in sys.argv:
     # Falha no OpenDota não é fatal: mantém o raw.json anterior.
     run(PY, "fetch.py", check=False)
-run(PY, os.path.join("scraper", "scrape_dotabuff.py"))
+if run(PY, os.path.join("scraper", "scrape_dotabuff.py"), check=False) != 0:
+    print("aviso: o Dotabuff bloqueou parte da coleta; quem falhou ficou com os dados anteriores")
 run(PY, "build_data.py")
 
 if "--no-push" not in sys.argv:

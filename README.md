@@ -12,8 +12,9 @@ Os dados são atualizados automaticamente todo dia às 10h.
 
 ## Atualização automática
 
-Todo dia às 10h (Brasília), o GitHub Actions (`.github/workflows/atualizar.yml`) roda a coleta na nuvem,
+Todo dia de manhã (agendado para 6h de Brasília; o GitHub pode atrasar algumas horas), o GitHub Actions (`.github/workflows/atualizar.yml`) roda a coleta na nuvem,
 gera os dados e faz commit. A Hostinger publica a cada push, então o site atualiza sem nenhum PC ligado.
+Se o Dotabuff bloquear a nuvem, o commit sai como "nuvem, sem Dotabuff" (OpenDota e histórico atualizados) e a tarefa do PC completa o Dotabuff.
 Para rodar na hora: aba **Actions** do GitHub → **Atualizar dashboard** → **Run workflow**.
 
 ## Atualizar manualmente

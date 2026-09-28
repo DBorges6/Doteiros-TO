@@ -4,7 +4,7 @@ name: Atualizar dashboard
 
 on:
   schedule:
-    - cron: "0 13 * * *"   # 10:00 em Brasília (13:00 UTC)
+    - cron: "0 9 * * *"    # 06:00 em Brasília; o GitHub costuma atrasar rodadas agendadas em algumas horas
   workflow_dispatch:        # botão "Run workflow" na aba Actions do GitHub
   push:
     paths: [".github/workflows/atualizar.yml"]   # roda quando este arquivo muda
@@ -47,6 +47,11 @@ jobs:
         run: python fetch.py || echo "OpenDota falhou; seguindo com o histórico salvo"
 
       - name: Dotabuff
+        id: dotabuff
+        # O Dotabuff às vezes bloqueia servidores de nuvem. Se falhar, seguimos com os dados
+        # anteriores do Dotabuff e o PC completa essa parte (ver tarefa agendada local).
+        continue-on-error: true
+        timeout-minutes: 12
         run: python scraper/scrape_dotabuff.py
 
       - name: Gera o dashboard
@@ -58,6 +63,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
           if git diff --cached --quiet; then echo "Nada mudou."; exit 0; fi
-          git commit -m "Atualiza dados do dashboard ($(date '+%d/%m/%Y %H:%M'), nuvem)"
+          extra=""; [ "${{ steps.dotabuff.outcome }}" != "success" ] && extra=", sem Dotabuff"
+          git commit -m "Atualiza dados do dashboard ($(date '+%d/%m/%Y %H:%M'), nuvem$extra)"
           git pull --rebase
           git push
