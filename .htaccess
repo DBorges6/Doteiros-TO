@@ -4,10 +4,15 @@ Options -Indexes
 
 <IfModule mod_rewrite.c>
 RewriteEngine On
-# endereço antigo: dborges.tech -> doteiros.com.br (mantém o caminho, ex.: /doteiros-TO/)
+# dborges.tech fica sem conteúdo: qualquer endereço mostra só a página sem-conteudo.html
+# (o dashboard é servido apenas em doteiros.com.br)
 RewriteCond %{HTTP_HOST} ^(www\.)?dborges\.tech$ [NC]
 RewriteCond %{REQUEST_URI} !^/\.well-known/
-RewriteRule ^(.*)$ https://doteiros.com.br/$1 [R=301,L]
+RewriteCond %{REQUEST_URI} !^/sem-conteudo\.html$
+RewriteRule ^ /sem-conteudo.html [L]
+# em doteiros.com.br essa página não é usada
+RewriteCond %{HTTP_HOST} !^(www\.)?dborges\.tech$ [NC]
+RewriteRule ^sem-conteudo\.html$ - [R=404,L]
 # pastas técnicas na raiz (doteiros-TO/data continua liberada)
 RewriteRule ^(data|scraper|__pycache__)(/|$) - [R=404,L]
 # arquivos e pastas ocultos (.git, .gitignore, .htaccess...), menos .well-known (renovação do SSL)
