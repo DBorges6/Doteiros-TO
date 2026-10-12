@@ -1,6 +1,6 @@
 {
  "date": "2026-10-12",
- "t": 1791824283,
+ "t": 1791830585,
  "players": {
   "Dinamite": {
    "total": 1311,
@@ -195,8 +195,8 @@
   "AzAfApower": {
    "total": 160,
    "wins": 74,
-   "rank": "Crusader V",
-   "rankVal": 35,
+   "rank": "Archon I",
+   "rankVal": 41,
    "points": 585,
    "lastMatch": 1791683906,
    "private": false,
