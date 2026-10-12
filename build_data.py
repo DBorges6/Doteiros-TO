@@ -15,7 +15,7 @@ from roster import ROSTER  # apelido, account_id
 import history, og_image
 
 NOW = int(time.time())
-SITE = "https://www.dborges.tech/"
+SITE = "https://doteiros.com.br/"
 RANKS = ["Herald", "Guardian", "Crusader", "Archon", "Legend", "Ancient", "Divine", "Immortal"]
 ROMAN = {"I": 1, "II": 2, "III": 3, "IV": 4, "V": 5}
 
