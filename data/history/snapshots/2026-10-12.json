@@ -1,6 +1,6 @@
 {
  "date": "2026-10-12",
- "t": 1791830585,
+ "t": 1791854421,
  "players": {
   "Dinamite": {
    "total": 1311,
@@ -33,12 +33,12 @@
    "rankSrc": "db"
   },
   "Bahia": {
-   "total": 7109,
-   "wins": 3547,
+   "total": 7111,
+   "wins": 3548,
    "rank": "Crusader IV",
    "rankVal": 34,
    "points": 3195,
-   "lastMatch": 1791782824,
+   "lastMatch": 1791853082,
    "private": false,
    "rankSrc": "od"
   },
@@ -63,13 +63,13 @@
    "rankSrc": "db"
   },
   "Kaus": {
-   "total": 54,
-   "wins": 28,
+   "total": 198,
+   "wins": 83,
    "rank": "Not Calibrated",
    "rankVal": null,
-   "points": null,
+   "points": 235,
    "lastMatch": 1791745629,
-   "private": true,
+   "private": false,
    "rankSrc": "db"
   },
   "Lestat": {
@@ -83,22 +83,22 @@
    "rankSrc": "db"
   },
   "Neo": {
-   "total": 2279,
-   "wins": 1150,
+   "total": 2280,
+   "wins": 1151,
    "rank": "Archon III",
    "rankVal": 43,
    "points": null,
-   "lastMatch": 1791774390,
+   "lastMatch": 1791852008,
    "private": true,
    "rankSrc": "od"
   },
   "Pesadelo": {
-   "total": 3512,
-   "wins": 1730,
+   "total": 3513,
+   "wins": 1731,
    "rank": "Crusader IV",
    "rankVal": 34,
    "points": 2300,
-   "lastMatch": 1791763795,
+   "lastMatch": 1791841773,
    "private": false,
    "rankSrc": "od"
   },
@@ -113,52 +113,52 @@
    "rankSrc": "od"
   },
   "Tanner": {
-   "total": 6447,
-   "wins": 3270,
+   "total": 6452,
+   "wins": 3271,
    "rank": "Legend II",
    "rankVal": 52,
    "points": 3235,
-   "lastMatch": 1791755604,
+   "lastMatch": 1791854077,
    "private": false,
    "rankSrc": "od"
   },
   "VacaPower": {
-   "total": 1473,
-   "wins": 711,
+   "total": 1475,
+   "wins": 713,
    "rank": "Crusader II",
    "rankVal": 32,
    "points": 765,
-   "lastMatch": 1791778862,
+   "lastMatch": 1791826131,
    "private": false,
    "rankSrc": "od"
   },
   "DBorges": {
-   "total": 4404,
-   "wins": 2204,
+   "total": 4412,
+   "wins": 2210,
    "rank": "Legend IV",
    "rankVal": 54,
    "points": 3255,
-   "lastMatch": 1791258443,
+   "lastMatch": 1791852423,
    "private": false,
    "rankSrc": "od"
   },
   "BAUA": {
-   "total": 4680,
+   "total": 4683,
    "wins": 2344,
    "rank": "Ancient II",
    "rankVal": 62,
    "points": 3615,
-   "lastMatch": 1791788597,
+   "lastMatch": 1791848705,
    "private": false,
    "rankSrc": "od"
   },
   "CX": {
-   "total": 6639,
+   "total": 6640,
    "wins": 3395,
    "rank": "Archon III",
    "rankVal": 43,
    "points": 5220,
-   "lastMatch": 1791737135,
+   "lastMatch": 1791824830,
    "private": false,
    "rankSrc": "od"
   },
@@ -193,12 +193,22 @@
    "rankSrc": "od"
   },
   "AzAfApower": {
-   "total": 160,
-   "wins": 74,
+   "total": 165,
+   "wins": 76,
    "rank": "Archon I",
    "rankVal": 41,
    "points": 585,
-   "lastMatch": 1791683906,
+   "lastMatch": 1791852052,
+   "private": false,
+   "rankSrc": "od"
+  },
+  "PATIXA": {
+   "total": 1850,
+   "wins": 922,
+   "rank": "Ancient III",
+   "rankVal": 63,
+   "points": 2100,
+   "lastMatch": 1789348916,
    "private": false,
    "rankSrc": "od"
   }

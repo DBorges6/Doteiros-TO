@@ -7,4 +7,5 @@ ROSTER = [
     ("BAUA", 116119734),
     ("CX", 186798535), ("Lule", 299090742), ("MotherBoard", 1592826064),
     ("Milan Buzano Diporra", 237132537), ("AzAfApower", 210201414),
+    ("PATIXA", 143876329),
 ]
