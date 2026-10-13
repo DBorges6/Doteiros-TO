@@ -11,7 +11,7 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 CACHE = os.path.join(ROOT, "data", "img_cache")
 os.makedirs(CACHE, exist_ok=True)
 
-from roster import ROSTER  # apelido, account_id
+from roster import ROSTER, APPROVED_AT  # apelido, account_id; data de aprovação de quem entrou pelo site
 import history, og_image
 
 NOW = int(time.time())
@@ -121,7 +121,7 @@ for nick, pid in ROSTER:
         "abandons": d["ab"], "rank": rank_name, "rankTier": rank_tier, "rankStar": rank_star, "rankSrc": rank_src,
         "points": d["pts"], "general": d["g"], "roles": roles,
         "lanes": sorted(([k, round(v, 1)] for k, v in lane_tot.items() if v > 0), key=lambda x: -x[1]),
-        "heroes": heroes, "heroSample": int(sum(h["matches"] or 0 for h in heroes)), "recent": recent, "aliases": d["al"], "friends": d["fr"], "activity": d["act"],
+        "approvedAt": APPROVED_AT.get(pid), "heroes": heroes, "heroSample": int(sum(h["matches"] or 0 for h in heroes)), "recent": recent, "aliases": d["al"], "friends": d["fr"], "activity": d["act"],
     })
 
 # ---- Química: partidas em comum (OpenDota: histórico completo; Dotabuff: últimas 15) ----
@@ -212,6 +212,10 @@ for t in range(1, 9):
 for s in range(1, 6):
     medals[f"s{s}"] = to_data_uri(fetch(f"https://www.opendota.com/assets/images/dota2/rank_icons/rank_star_{s}.png"), (72, 72), 85)
 medals["t0"] = to_data_uri(fetch("https://www.opendota.com/assets/images/dota2/rank_icons/rank_icon_0.png"), (72, 72), 85)
+
+# Lista pública de quem já está no ranking (o formulário de entrada usa para barrar repetidos)
+json.dump([{"id": p["id"], "nick": p["nick"]} for p in players],
+          open(os.path.join(ROOT, "doteiros-TO", "data", "roster.json"), "w", encoding="utf-8"), ensure_ascii=False)
 
 out = {"generatedAt": NOW, "players": players, "heroes": hero_imgs, "medals": medals, "chem": chem,
        "hist": hist_rows, "news": news, "newsLabel": news_label, "evolution": evolution, "site": SITE}

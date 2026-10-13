@@ -11,7 +11,7 @@
 <meta property="og:title" content="Taverna do Ancient · Dota 2 da galera">
 <meta property="og:description" content="Líder: Lule com 56,96% de vitória. Ranking, prêmios, duelos e duplas da galera. Atualizado em 12/10/2026.">
 <meta property="og:url" content="https://doteiros.com.br/">
-<meta property="og:image" content="https://doteiros.com.br/og.png?v=202610122220">
+<meta property="og:image" content="https://doteiros.com.br/og.png?v=202610122344">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -285,6 +285,28 @@ table.rank{border-collapse:collapse;width:100%;min-width:1180px}
 footer{color:var(--mute);font-size:13px;padding-block:30px 50px;border-top:1px solid var(--line);margin-top:30px}
 footer p{margin:4px 0;max-width:90ch}
 
+/* ---------- Pedido de entrada ---------- */
+.cta{margin-top:18px;display:inline-flex;align-items:center;gap:10px;background:var(--gold);color:#1a1405;border:0;border-radius:10px;padding:11px 18px;font-family:var(--cond);font-weight:700;font-size:16px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;box-shadow:0 6px 20px #e2a93b33}
+.cta:hover{background:var(--gold2)}
+.jover{position:fixed;inset:0;z-index:55;background:#05080acc;display:grid;place-items:center;padding:16px}
+.jbox{width:min(480px,100%);max-height:100%;overflow-y:auto;background:var(--bg);border:1px solid var(--line2);border-radius:14px;padding:22px}
+.jbox h3{font-family:var(--display);font-weight:800;font-size:22px;margin:0 0 4px}
+.jbox label{display:grid;gap:6px;margin-top:14px;font-family:var(--cond);text-transform:uppercase;letter-spacing:.08em;font-size:12.5px;color:var(--ink2);font-weight:600}
+.jbox input[type=text]{background:var(--panel2);border:1px solid var(--line2);border-radius:8px;padding:10px 12px;color:var(--ink);font:15px var(--body);text-transform:none;letter-spacing:0}
+.jbox input[type=text]:focus{outline:2px solid var(--gold);outline-offset:1px}
+.jrow{display:flex;gap:10px;align-items:flex-end}
+.jrow label{flex:1}
+.jbtn{background:var(--panel2);border:1px solid var(--line2);border-radius:8px;padding:10px 14px;color:var(--ink);font-family:var(--cond);font-weight:700;letter-spacing:.05em;text-transform:uppercase;cursor:pointer}
+.jbtn.go{background:var(--gold);border-color:var(--gold);color:#1a1405}
+.jbtn:disabled{opacity:.5;cursor:default}
+.jcard{display:grid;grid-template-columns:64px minmax(0,1fr);gap:14px;align-items:center;margin-top:16px;padding:12px;border:1px solid var(--line2);border-radius:10px;background:var(--panel)}
+.jcard img{width:64px;height:64px;border-radius:50%;object-fit:cover}
+.jmsg{margin-top:14px;padding:10px 12px;border-radius:8px;font-size:14px}
+.jmsg.err{background:var(--direDim);color:#f6c1b7}.jmsg.ok{background:var(--radDim);color:#cdeab9}.jmsg.warn{background:var(--goldDim);color:var(--gold2)}
+.jhp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.jfoot{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}
+.chip.new{color:#1a1405;background:var(--gold2);border-color:var(--gold2);font-size:10.5px;padding:1px 6px;margin-left:6px;vertical-align:2px}
+
 /* ---------- News ---------- */
 .news-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:10px}
 .nitem{display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:12px;align-items:center;background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:8px;padding:10px 12px;cursor:pointer;transition:border-color .15s}
@@ -403,6 +425,7 @@ footer p{margin:4px 0;max-width:90ch}
       <div class="eyebrow" id="stamp">Dados do Dotabuff</div>
       <h1>Quem carrega<br>e quem é <em>carregado</em>.</h1>
       <p class="lede">O placar oficial da galera: partidas, vitórias, medalhas, heróis de estimação e as duplas que dão certo (ou não). Clique em qualquer jogador para abrir a ficha completa.</p>
+      <button class="cta" type="button" id="joinBtn" hidden>Quero entrar na Taverna</button>
     </div>
     <div class="kpis" id="kpis"></div>
   </section>
@@ -593,8 +616,32 @@ footer p{margin:4px 0;max-width:90ch}
 
 <div class="overlay" id="overlay" hidden><div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="dName"></div></div>
 <div id="tip" hidden></div>
+<div class="jover" id="joinOverlay" hidden>
+  <div class="jbox" role="dialog" aria-modal="true" aria-labelledby="joinTitle">
+    <h3 id="joinTitle">Entrar na Taverna</h3>
+    <p class="sub" style="margin:0">Mande sua conta do Dota 2. O pedido passa por aprovação e, depois de aprovado, você entra no ranking na atualização seguinte.</p>
+    <form id="joinForm" autocomplete="off">
+      <div class="jrow">
+        <label for="joinId">Seu ID ou link do perfil
+          <input type="text" id="joinId" inputmode="text" placeholder="ex.: 151490176 ou link do Dotabuff/OpenDota/Steam" required>
+        </label>
+        <button class="jbtn" type="button" id="joinFind">Buscar</button>
+      </div>
+      <div id="joinCard" hidden></div>
+      <label for="joinNick" id="joinNickWrap" hidden>Como quer aparecer no ranking
+        <input type="text" id="joinNick" maxlength="24">
+      </label>
+      <div class="jhp" aria-hidden="true"><label for="joinSite">Site</label><input type="text" id="joinSite" tabindex="-1"></div>
+      <div id="joinMsg" hidden></div>
+      <div class="jfoot">
+        <button class="jbtn" type="button" id="joinCancel">Fechar</button>
+        <button class="jbtn go" type="submit" id="joinSend" disabled>Enviar pedido</button>
+      </div>
+    </form>
+  </div>
+</div>
 
-<script src="data/dashboard_data.js?v=1791854421" charset="utf-8"></script>
+<script src="data/dashboard_data.js?v=1791859458" charset="utf-8"></script>
 <script>
 (function(){
 const D = window.DASH, NOW = D.generatedAt, HERO = D.heroes;
@@ -666,6 +713,7 @@ const P = D.players.map(p => {
   return q;
 });
 const byNick = Object.fromEntries(P.map(p => [p.nick, p]));
+const isNew = p => p.approvedAt && NOW - p.approvedAt < 14 * 86400;
 const pub = P.filter(p => !p.private);
 
 /* ---------- histórico e períodos ---------- */
@@ -742,7 +790,7 @@ const roleChip = p => p.mainRole ? `<span class="chip ${p.mainRole}">${p.mainRol
 /* ---------- Ranking table ---------- */
 const COLS = [
   {k:"pos", l:"#"},
-  {k:"nick", l:"Jogador", str:true, cell:p => `<div class="who"><img src="${p.avatar||""}" alt=""><div><b>${esc(p.nick)}</b><small>${esc(p.steam)}</small></div></div>`},
+  {k:"nick", l:"Jogador", str:true, cell:p => `<div class="who"><img src="${p.avatar||""}" alt=""><div><b>${esc(p.nick)}</b>${isNew(p) ? `<span class="chip new" data-tip="Entrou pelo pedido no site em ${dBR(p.approvedAt)}">Novo</span>` : ""}<small>${esc(p.steam)}</small></div></div>`},
   {k:"rankVal", l:"Medalha", cell:p => `<div class="medal-wrap">${medal(p)}<small>${esc(rankLabel(p))}</small></div>`},
   {k:"total", l:"Partidas", cell:p => `<span class="big num">${fmt(p.total)}</span>${partialChip(p)}${period === "career" ? officialChip(p) : ""}`},
   {k:"wins", l:"Vitórias", cell:p => `<span class="big num w">${fmt(p.wins)}</span>`},
@@ -1186,6 +1234,66 @@ document.querySelectorAll(".periodSeg").forEach(seg => seg.addEventListener("cli
 /* ---------- Link direto para a ficha (#apelido) ---------- */
 function fromHash(){ const h = decodeURIComponent(location.hash.slice(1)); if (bySlug[h]) openPlayer(bySlug[h], true); }
 window.addEventListener("hashchange", fromHash);
+
+/* ---------- Pedido de entrada ---------- */
+// O formulário só aparece no site de verdade (o backend em PHP roda na Hostinger).
+(function joinForm(){
+  if (!/(^|\.)doteiros\.com\.br$/.test(location.hostname)) return;
+  const RANK_N = ["Herald","Guardian","Crusader","Archon","Legend","Ancient","Divine","Immortal"], ROM = ["","I","II","III","IV","V"];
+  const medalName = t => t ? RANK_N[Math.floor(t / 10) - 1] + (t % 10 ? " " + ROM[t % 10] : "") : "sem medalha";
+  const parseId = raw => {
+    raw = String(raw || "").trim();
+    let m = raw.match(/(?:dotabuff\.com|opendota\.com|stratz\.com)\/players\/(\d+)/i) || raw.match(/steamcommunity\.com\/profiles\/(\d{17})/i);
+    if (m) raw = m[1];
+    if (!/^\d{1,20}$/.test(raw)) return null;
+    if (raw.length === 17 && raw.startsWith("7656119")) return Number(BigInt(raw) - 76561197960265728n);
+    const n = Number(raw); return n > 0 && n < 4294967296 ? n : null;
+  };
+  const known = new Set(D.players.map(p => p.id));
+  const ov = $("#joinOverlay"), msg = $("#joinMsg"), card = $("#joinCard"), send = $("#joinSend"), nickWrap = $("#joinNickWrap");
+  let found = null;
+  const say = (text, kind) => { msg.hidden = !text; msg.className = "jmsg " + (kind || ""); msg.textContent = text || ""; };
+  const reset = () => { found = null; card.hidden = true; nickWrap.hidden = true; send.disabled = true; say(""); };
+  $("#joinBtn").hidden = false;
+  $("#joinBtn").addEventListener("click", () => { ov.hidden = false; document.body.style.overflow = "hidden"; $("#joinId").focus(); });
+  const close = () => { ov.hidden = true; document.body.style.overflow = ""; };
+  $("#joinCancel").addEventListener("click", close);
+  ov.addEventListener("click", e => { if (e.target === ov) close(); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && !ov.hidden) close(); });
+  $("#joinId").addEventListener("input", reset);
+  async function find(){
+    reset();
+    const id = parseId($("#joinId").value);
+    if (!id) return say("Não reconheci esse ID. Use o número que aparece no Dotabuff ou no OpenDota, ou cole o link do seu perfil.", "err");
+    if (known.has(id)) return say("Essa conta já está no ranking.", "warn");
+    $("#joinFind").disabled = true; say("Buscando a conta…");
+    try {
+      const r = await fetch("https://api.opendota.com/api/players/" + id);
+      const j = await r.json();
+      if (!j || !j.profile) return say("Não encontrei essa conta. Confira o ID ou o link.", "err");
+      found = {id, name: j.profile.personaname || "", avatar: j.profile.avatarfull || "", rank: j.rank_tier, priv: !!j.profile.fh_unavailable};
+      card.hidden = false;
+      card.innerHTML = `<div class="jcard"><img src="${esc(found.avatar)}" alt=""><div><b>É você? ${esc(found.name)}</b><div class="sub">${esc(medalName(found.rank))} · ID ${id}</div></div></div>`;
+      nickWrap.hidden = false; $("#joinNick").value = found.name.slice(0, 24); send.disabled = false;
+      say(found.priv ? "Seu histórico de partidas parece estar privado. Para aparecer completo no ranking, ative no Dota 2: Configurações → Opções → Social → “Expor dados públicos de partidas”." : "", found.priv ? "warn" : "");
+    } catch (e) { say("Não consegui buscar agora. Tente de novo em instantes.", "err"); }
+    finally { $("#joinFind").disabled = false; }
+  }
+  $("#joinFind").addEventListener("click", find);
+  $("#joinId").addEventListener("keydown", e => { if (e.key === "Enter" && !found) { e.preventDefault(); find(); } });
+  $("#joinForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    if (!found) return find();
+    send.disabled = true; say("Enviando…");
+    try {
+      const r = await fetch("/api/pedido.php", {method:"POST", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({id: found.id, apelido: $("#joinNick").value, site: $("#joinSite").value})});
+      const j = await r.json().catch(() => ({}));
+      if (r.ok && j.ok) { say("Pedido enviado! Assim que for aprovado, você aparece no ranking na atualização seguinte.", "ok"); card.hidden = true; nickWrap.hidden = true; $("#joinId").value = ""; found = null; }
+      else { say(j.erro || "Não deu para enviar agora. Tente de novo mais tarde.", "err"); send.disabled = false; }
+    } catch (e) { say("Não deu para enviar agora. Tente de novo mais tarde.", "err"); send.disabled = false; }
+  });
+})();
 
 renderNews(); renderTable(); renderWeek(); renderDuel(); renderBars(); renderEvo(); renderHeroes(); renderChem(); renderFeed();
 fromHash();

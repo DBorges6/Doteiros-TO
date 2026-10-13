@@ -39,6 +39,13 @@ O Dotabuff bloqueia requisições diretas, então a coleta usa o Chrome da máqu
 | `update.py` | roda as etapas acima e publica no GitHub |
 | `.htaccess` | no servidor, esconde scripts e dados brutos (só o dashboard fica público) |
 
+## Pedidos de entrada (formulário no site)
+
+- Botão **"Quero entrar na Taverna"** no site: o jogador informa o ID ou o link do perfil, confirma a conta ("É você?") e escolhe o apelido.
+- `api/pedido.php` grava o pedido em `doteiros_dados/` (pasta FORA de `public_html`, então as publicações do GitHub não apagam nada).
+- **https://doteiros.com.br/admin**: aprovar, recusar, ajustar o apelido ou remover alguém depois. No primeiro acesso, a senha é criada com o código do arquivo `ADMIN_SETUP_CODE.txt` (fica só no PC, fora do Git).
+- `sync_roster.py` lê `api/aprovados.php` a cada atualização e grava `data/roster_extra.json`; o `roster.py` junta esses jogadores à lista fixa.
+
 ## Números oficiais (print do perfil do Dota 2)
 
 Dotabuff e OpenDota só contam as partidas que registraram. Quando alguém manda o print do perfil do Dota 2,

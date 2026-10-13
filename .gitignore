@@ -3,3 +3,6 @@ data/img_cache/
 data/raw.json
 .claude/
 *.log
+
+# código do primeiro acesso ao /admin (só no PC)
+ADMIN_SETUP_CODE.txt

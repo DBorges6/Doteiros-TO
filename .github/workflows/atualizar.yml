@@ -43,6 +43,9 @@ jobs:
           pip install playwright pillow
           python -m playwright install --with-deps chromium
 
+      - name: Jogadores aprovados no site
+        run: python sync_roster.py || echo "Site não respondeu; mantendo a lista anterior de aprovados"
+
       - name: OpenDota (duplas e histórico)
         run: python fetch.py || echo "OpenDota falhou; seguindo com o histórico salvo"
 
