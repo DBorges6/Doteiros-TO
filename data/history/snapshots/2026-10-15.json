@@ -1,6 +1,6 @@
 {
  "date": "2026-10-15",
- "t": 1792064065,
+ "t": 1792073355,
  "players": {
   "Dinamite": {
    "total": 1311,
@@ -125,8 +125,8 @@
   "VacaPower": {
    "total": 1475,
    "wins": 713,
-   "rank": "Crusader II",
-   "rankVal": 32,
+   "rank": "Crusader III",
+   "rankVal": 33,
    "points": 765,
    "lastMatch": 1791826131,
    "private": false,
