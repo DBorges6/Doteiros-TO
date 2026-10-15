@@ -65,7 +65,7 @@ h1 .vs{color:var(--gold)}
 .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:8px}
 .kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
 .kpi b{display:block;font-family:var(--disp);font-size:46px;line-height:1;font-weight:600}
-.kpi span{font-size:12.5px;color:var(--mute);text-transform:uppercase;letter-spacing:.1em}
+.kpi > span{font-size:12.5px;color:var(--mute);text-transform:uppercase;letter-spacing:.1em}
 .kpi .rd{display:flex;gap:6px;align-items:baseline}
 .kpi .rd .r{color:var(--rad)} .kpi .rd .d{color:var(--dire)} .kpi .rd em{font-style:normal;color:var(--mute);font-size:26px}
 
@@ -408,7 +408,7 @@ function renderKpis(st){
   $("#kpis").innerHTML = [
     [`<b class="num">${S.partidas.length}</b>`, "Partidas na LAN"],
     [`<b class="num">${S.participantes.length}</b>`, "Confirmados" + (S.inscricoesPendentes ? ` · ${S.inscricoesPendentes} aguardando` : "")],
-    [`<b class="num">${lob.length}<span class="muted" style="font-size:26px"> lobby · </span>${mm}<span class="muted" style="font-size:26px"> MM</span></b>`, "Tipo de partida"],
+    [`<b class="num">${lob.length}<span class="muted" style="font-size:22px"> lobby </span>${mm}<span class="muted" style="font-size:22px"> MM</span></b>`, "Lobby e matchmaking"],
     [`<b class="rd num"><span class="r">${rw}</span><em>×</em><span class="d">${lob.length - rw}</span></b>`, "Radiant × Dire nos lobbies"],
   ].map(([v, l]) => `<div class="kpi">${v}<span>${l}</span></div>`).join("");
 }
@@ -625,6 +625,8 @@ document.addEventListener("mousemove", e => {
 function render(){
   const st = stats();
   $("#tvTitle").textContent = S.evento.nome + " · " + ddmm(S.evento.inicio);
+  $("#title").innerHTML = `LAN Party<br><span class="vs">${ddmm(S.evento.inicio).replace("/", " · ")}</span>`;
+  document.title = S.evento.nome + " · " + ddmm(S.evento.inicio);
   renderStatus(); renderKpis(st); renderBoard(st); renderAwards(st); renderMatches(); renderPeople();
   // não redesenha o formulário enquanto alguém está preenchendo
   if (!$("#regForm").contains(document.activeElement) || !$("#regBy").options.length || $("#regBy").options.length - 1 !== S.participantes.length) renderRegForm();
