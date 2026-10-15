@@ -12,13 +12,6 @@ const LAN_EVENTOS = [
         'fim' => '2026-10-17T22:00:00-03:00',
         'atual' => true,
     ],
-    // Evento de teste (não aparece no site): aprova e confirma sozinho, aponta para partidas reais passadas.
-    'teste' => [
-        'nome' => 'Teste da LAN',
-        'inicio' => '2026-10-12T08:00:00-03:00',
-        'fim' => '2026-10-12T23:59:00-03:00',
-        'teste' => true,
-    ],
 ];
 
 function lan_evento(?string $id = null): array {
@@ -121,7 +114,7 @@ function lan_set_status_partida(array $ev, string $uid, string $status): void {
 }
 
 // ---------- Partidas de matchmaking (OpenDota), com cache ----------
-// Atualiza no máximo a cada 5 minutos, só perto do horário do evento. Pede ao OpenDota para
+// Atualiza no máximo a cada 10 minutos (limite diário do OpenDota gratuito), só perto do horário do evento. Pede ao OpenDota para
 // buscar partidas novas dos inscritos a cada 30 minutos.
 function lan_atualizar_cache(array $ev, array $ids): void {
     $f = lan_file($ev, 'cache');
@@ -129,7 +122,7 @@ function lan_atualizar_cache(array $ev, array $ids): void {
     $now = time();
     $ativo = !empty($ev['teste']) || ($now >= $ev['ini'] - 3600 && $now <= $ev['end'] + 3 * 3600);
     $faltando = array_diff(array_map('strval', $ids), array_keys($cache['jogadores'] ?? []));
-    if (!$ativo || ($now - ($cache['atualizado'] ?? 0) < 300 && !$faltando)) return;
+    if (!$ativo || ($now - ($cache['atualizado'] ?? 0) < 600 && !$faltando)) return;
 
     $h = fopen(data_path('lan_cache.lock'), 'c');
     if (!flock($h, LOCK_EX | LOCK_NB)) { fclose($h); return; }  // outra visita já está atualizando

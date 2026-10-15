@@ -1,6 +1,6 @@
 <?php
 // Tudo o que a página da LAN precisa: evento, inscritos confirmados e partidas (lobby + matchmaking).
-// As partidas de matchmaking vêm do OpenDota e ficam em cache (atualiza no máximo a cada 5 min).
+// As partidas de matchmaking vêm do OpenDota e ficam em cache (atualiza no máximo a cada 10 min).
 require __DIR__ . '/_lan.php';
 
 $ev = lan_evento($_GET['evento'] ?? null);
