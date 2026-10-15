@@ -1,0 +1,648 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LAN Party Doteiros</title>
+<meta name="description" content="Placar ao vivo da LAN Party dos Doteiros: partidas, campeão, prêmios e rivalidades do dia.">
+<meta property="og:title" content="LAN Party Doteiros · 17/10">
+<meta property="og:description" content="Placar ao vivo da LAN: partidas, campeão do dia, prêmios e rivalidades.">
+<meta property="og:image" content="https://doteiros.com.br/og.png">
+<meta name="theme-color" content="#0e1013">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230e1013'/%3E%3Cpath d='M8 56 L56 8' stroke='%2363d46b' stroke-width='10'/%3E%3Cpath d='M8 8 L56 56' stroke='%23ff5b45' stroke-width='10'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Teko:wght@500;600;700&family=Rubik:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  color-scheme: dark;
+  --bg:#0e1013; --panel:#16191e; --panel2:#1e2229; --panel3:#262b33; --line:#2b3038; --line2:#3a414b;
+  --ink:#f3f1ea; --ink2:#b5b9c0; --mute:#7e848d;
+  --rad:#63d46b; --radD:#63d46b26; --dire:#ff5b45; --direD:#ff5b4526; --gold:#ffc94a; --goldD:#ffc94a22;
+  --disp:"Teko", "Bahnschrift", "Arial Narrow", sans-serif;
+  --body:"Rubik", "Segoe UI", system-ui, sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{background:var(--bg);color:var(--ink)}
+body{margin:0;font:15px/1.45 var(--body)}
+a{color:inherit}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:4px}
+.wrap{max-width:1240px;margin:0 auto;padding-inline:20px}
+.num{font-variant-numeric:tabular-nums}
+
+/* ---------- topo ---------- */
+.stripe{height:6px;background:linear-gradient(90deg,var(--rad) 0 50%,var(--dire) 50% 100%)}
+.top{padding-block:14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+.top a.back{font-size:14px;color:var(--ink2);text-decoration:none}
+.top a.back:hover{color:var(--ink)}
+.top nav{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap}
+.top nav a,.top nav button{font-family:var(--disp);font-size:19px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);text-decoration:none;padding:4px 10px;border-radius:6px;background:none;border:0;cursor:pointer;line-height:1.2}
+.top nav a:hover,.top nav button:hover{color:var(--ink);background:var(--panel2)}
+.top nav .tvbtn{color:var(--gold);border:1px solid #ffc94a55}
+
+.hero{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:28px;align-items:center;padding-block:34px 22px}
+.kicker{font-family:var(--disp);font-size:22px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);display:flex;gap:10px;align-items:center}
+.kicker .r{color:var(--rad)} .kicker .d{color:var(--dire)}
+h1{font-family:var(--disp);font-weight:700;font-size:clamp(56px,9vw,112px);line-height:.86;margin:8px 0 10px;letter-spacing:.01em;text-transform:uppercase}
+h1 .vs{color:var(--gold)}
+.lede{color:var(--ink2);max-width:56ch;margin:0}
+.status{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;display:grid;gap:12px}
+.badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--disp);font-size:22px;letter-spacing:.1em;text-transform:uppercase;padding:2px 12px;border-radius:999px;width:max-content}
+.badge.live{background:var(--direD);color:#ff9d8f}
+.badge.live i{width:10px;height:10px;border-radius:50%;background:var(--dire);animation:pulse 1.4s infinite}
+.badge.soon{background:var(--goldD);color:var(--gold)}
+.badge.done{background:var(--panel3);color:var(--ink2)}
+@keyframes pulse{0%{box-shadow:0 0 0 0 #ff5b4588}100%{box-shadow:0 0 0 12px #ff5b4500}}
+.count{font-family:var(--disp);font-size:54px;line-height:1;letter-spacing:.02em}
+.count small{font-size:22px;color:var(--ink2);margin-right:10px}
+.status .sub{color:var(--mute);font-size:13px}
+.cta{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--gold);color:#1b1404;border:0;border-radius:10px;padding:10px 18px;font-family:var(--disp);font-size:22px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;line-height:1.1}
+.cta:hover{filter:brightness(1.08)}
+.cta.ghost{background:none;color:var(--ink);border:1px solid var(--line2)}
+
+/* ---------- números ---------- */
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:8px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.kpi b{display:block;font-family:var(--disp);font-size:46px;line-height:1;font-weight:600}
+.kpi span{font-size:12.5px;color:var(--mute);text-transform:uppercase;letter-spacing:.1em}
+.kpi .rd{display:flex;gap:6px;align-items:baseline}
+.kpi .rd .r{color:var(--rad)} .kpi .rd .d{color:var(--dire)} .kpi .rd em{font-style:normal;color:var(--mute);font-size:26px}
+
+section.block{padding-block:30px}
+.sh{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+h2{font-family:var(--disp);font-weight:600;font-size:44px;line-height:.95;margin:0;text-transform:uppercase;letter-spacing:.02em}
+.sh p{margin:6px 0 0;color:var(--ink2);max-width:66ch}
+.empty{border:1px dashed var(--line2);border-radius:12px;padding:22px;color:var(--ink2);text-align:center}
+
+/* ---------- campeão ---------- */
+.champ{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:20px;align-items:center;background:linear-gradient(100deg,#2a2210,var(--panel) 60%);border:1px solid #ffc94a55;border-radius:16px;padding:18px 22px;margin-bottom:16px}
+.champ img{width:92px;height:92px;border-radius:50%;object-fit:cover;border:3px solid var(--gold)}
+.champ .t{font-family:var(--disp);font-size:22px;letter-spacing:.14em;color:var(--gold);text-transform:uppercase}
+.champ .n{font-family:var(--disp);font-size:56px;line-height:.9;font-weight:700}
+.champ .s{color:var(--ink2)}
+.champ .big{font-family:var(--disp);font-size:64px;line-height:.9;text-align:right}
+.champ .big small{display:block;font-size:20px;color:var(--ink2);letter-spacing:.1em}
+
+/* ---------- placar ---------- */
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;min-width:760px}
+th{font-family:var(--disp);font-size:18px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);font-weight:500}
+td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0}
+td.pos{font-family:var(--disp);font-size:30px;width:44px;text-align:center;color:var(--mute)}
+tr.p1 td.pos{color:var(--gold)} tr.p2 td.pos{color:#d6dde0} tr.p3 td.pos{color:#e09a64}
+.who{display:flex;align-items:center;gap:10px;min-width:170px}
+.who img{width:38px;height:38px;border-radius:50%;object-fit:cover;background:var(--panel3)}
+.who b{font-weight:600}
+.big{font-family:var(--disp);font-size:28px;line-height:1}
+.w{color:var(--rad)} .l{color:var(--dire)}
+.bar{height:6px;background:var(--panel3);border-radius:4px;overflow:hidden;margin-top:4px;width:110px}
+.bar i{display:block;height:100%;background:var(--gold)}
+.form{display:flex;gap:2px}
+.form i{width:8px;height:18px;border-radius:2px}
+.form i.W{background:var(--rad)} .form i.L{background:var(--dire)}
+.hero-ic{display:flex;align-items:center;gap:8px;white-space:nowrap}
+.hero-ic img{width:44px;height:25px;border-radius:3px;object-fit:cover}
+.kda{white-space:nowrap}
+.kda .k{color:var(--rad)} .kda .d{color:var(--dire)} .kda .a{color:var(--ink2)}
+.muted{color:var(--mute)}
+
+/* ---------- prêmios ---------- */
+.awards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.aw{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;grid-template-columns:auto 1fr;gap:4px 12px;align-items:center}
+.aw .t{grid-column:1/-1;font-family:var(--disp);font-size:24px;letter-spacing:.05em;text-transform:uppercase;color:var(--gold);line-height:1}
+.aw .d{grid-column:1/-1;font-size:12.5px;color:var(--mute);margin-bottom:6px}
+.aw .avs{display:flex}
+.aw .avs img{width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid var(--panel)}
+.aw .avs img+img{margin-left:-14px}
+.aw .v{font-family:var(--disp);font-size:26px;line-height:1}
+.aw b{display:block;font-weight:600}
+
+/* ---------- partidas ---------- */
+.matches{display:grid;gap:12px}
+.match{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.mh{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:10px 14px;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink2)}
+.tag{font-family:var(--disp);font-size:17px;letter-spacing:.08em;text-transform:uppercase;padding:0 9px;border-radius:6px;border:1px solid var(--line2);color:var(--ink2);line-height:1.4}
+.tag.lobby{color:var(--gold);border-color:#ffc94a55}
+.tag.mm{color:#8fd4ff;border-color:#8fd4ff55}
+.mh a{margin-left:auto;color:var(--ink2);font-size:13px}
+.sides{display:grid;grid-template-columns:1fr 1fr}
+.side{padding:12px 14px;display:grid;gap:8px;align-content:start}
+.side.r{border-right:1px solid var(--line)}
+.side h4{margin:0;font-family:var(--disp);font-size:24px;letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:8px;line-height:1}
+.side.r h4{color:var(--rad)} .side.d h4{color:var(--dire)}
+.side.won{background:linear-gradient(180deg,var(--goldD),transparent 70%)}
+.side h4 .win{font-size:16px;color:#1b1404;background:var(--gold);padding:0 8px;border-radius:5px;letter-spacing:.1em}
+.pl{display:grid;grid-template-columns:32px 50px minmax(0,1fr) auto;gap:10px;align-items:center}
+.pl img.av{width:32px;height:32px;border-radius:50%;object-fit:cover}
+.pl img.hr{width:50px;height:28px;border-radius:3px;object-fit:cover;background:var(--panel3)}
+.pl .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.side .others{font-size:12.5px;color:var(--mute)}
+
+/* ---------- participantes ---------- */
+.people{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.person{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;justify-items:center;gap:6px;text-align:center}
+.person img{width:64px;height:64px;border-radius:50%;object-fit:cover}
+.person b{font-weight:600;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.person small{color:var(--mute);font-size:12px}
+.warnpill{font-size:11px;color:#ffb7a8;border:1px solid #ff5b4555;border-radius:999px;padding:0 6px}
+
+/* ---------- formulários ---------- */
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px}
+.fl{display:grid;gap:6px;font-size:12.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink2);font-weight:600}
+.fl input,.fl select,.pin input,.pin select{background:var(--panel2);border:1px solid var(--line2);border-radius:8px;padding:9px 11px;font:15px var(--body);text-transform:none;letter-spacing:0;color:var(--ink);min-width:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.pick{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:5px 12px 5px 5px;border-radius:999px;border:1px solid var(--line2);background:var(--panel2);cursor:pointer;user-select:none}
+.chip img{width:28px;height:28px;border-radius:50%;object-fit:cover}
+.chip[data-s="r"]{border-color:var(--rad);background:var(--radD)}
+.chip[data-s="d"]{border-color:var(--dire);background:var(--direD)}
+.chip em{font-style:normal;font-family:var(--disp);font-size:16px;letter-spacing:.08em;color:var(--mute)}
+.chip[data-s="r"] em{color:var(--rad)} .chip[data-s="d"] em{color:var(--dire)}
+.winsel{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.winsel button{flex:1;min-width:150px;padding:12px;border-radius:10px;border:1px solid var(--line2);background:var(--panel2);cursor:pointer;font-family:var(--disp);font-size:24px;letter-spacing:.06em;text-transform:uppercase}
+.winsel button[aria-pressed="true"].r{background:var(--radD);border-color:var(--rad);color:var(--rad)}
+.winsel button[aria-pressed="true"].d{background:var(--direD);border-color:var(--dire);color:var(--dire)}
+.pins{display:grid;gap:8px;margin-top:10px}
+.pin{display:grid;grid-template-columns:170px minmax(0,1fr) repeat(3,60px);gap:8px;align-items:center}
+.pin .who{min-width:0}
+.pin input{width:100%;text-align:center}
+.msg{margin-top:12px;padding:10px 12px;border-radius:8px;font-size:14px}
+.msg.err{background:var(--direD);color:#ffc2b8}.msg.ok{background:var(--radD);color:#c9f2cb}.msg.warn{background:var(--goldD);color:var(--gold)}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.foot{display:flex;justify-content:flex-end;gap:10px;margin-top:16px;flex-wrap:wrap}
+
+/* janela de inscrição */
+.ov{position:fixed;inset:0;z-index:50;background:#06080acc;display:grid;place-items:center;padding:16px}
+.box{width:min(480px,100%);max-height:100%;overflow-y:auto;background:var(--bg);border:1px solid var(--line2);border-radius:14px;padding:22px}
+.box h3{font-family:var(--disp);font-size:38px;line-height:1;margin:0 0 6px;text-transform:uppercase}
+.card{display:grid;grid-template-columns:64px minmax(0,1fr);gap:14px;align-items:center;margin-top:14px;padding:12px;border:1px solid var(--line2);border-radius:10px;background:var(--panel)}
+.card img{width:64px;height:64px;border-radius:50%;object-fit:cover}
+
+#tip{position:fixed;z-index:60;pointer-events:none;background:#08090b;border:1px solid var(--line2);padding:6px 10px;border-radius:6px;font-size:13px;max-width:260px}
+footer{color:var(--mute);font-size:13px;padding-block:30px 50px;border-top:1px solid var(--line);margin-top:20px}
+
+/* ---------- modo telão ---------- */
+.tvbar{display:none}
+html.tv body{font-size:18px}
+html.tv .top,html.tv .hero,html.tv #participantes,html.tv #registrar,html.tv footer,html.tv .kpis{display:none}
+html.tv section.block{display:none;padding-block:12px}
+html.tv section.block.on{display:block}
+html.tv .wrap{max-width:none;padding-inline:3vw}
+html.tv .tvbar{display:flex;align-items:center;gap:18px;padding:16px 3vw;border-bottom:1px solid var(--line)}
+html.tv .tvbar .tt{font-family:var(--disp);font-size:40px;text-transform:uppercase;letter-spacing:.04em}
+html.tv .tvbar .clock{margin-left:auto;font-family:var(--disp);font-size:44px}
+html.tv h2{font-size:64px}
+html.tv .sh p{display:none}
+html.tv td{padding:12px 16px}
+html.tv .big{font-size:40px}
+html.tv .who img{width:52px;height:52px}
+html.tv .who b{font-size:24px}
+html.tv .matches .match:nth-child(n+3){display:none}
+
+@media (max-width:860px){
+  .hero{grid-template-columns:1fr}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .champ{grid-template-columns:auto minmax(0,1fr)}
+  .champ .big{grid-column:1/-1;text-align:left}
+  .sides{grid-template-columns:1fr}
+  .side.r{border-right:0;border-bottom:1px solid var(--line)}
+  .pin{grid-template-columns:1fr repeat(3,52px)}
+  .pin select{grid-column:1/-1}
+}
+@media (max-width:520px){ .wrap{padding-inline:16px} .top nav{margin-left:0} }
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="stripe"></div>
+<div class="tvbar"><span class="tt" id="tvTitle">LAN Party</span><span class="badge live" id="tvLive" hidden><i></i>Ao vivo</span><span class="clock num" id="tvClock"></span><button class="cta ghost" type="button" id="tvExit">Sair do telão</button></div>
+<header class="wrap top">
+  <a class="back" href="/">← Ranking geral da Taverna</a>
+  <nav aria-label="Seções">
+    <a href="#placar">Placar</a><a href="#premios">Prêmios</a><a href="#partidas">Partidas</a><a href="#participantes">Galera</a><a href="#registrar">Registrar partida</a>
+    <button class="tvbtn" type="button" id="tvBtn">Modo telão</button>
+  </nav>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <div>
+      <div class="kicker"><span class="r">Radiant</span>×<span class="d">Dire</span>· Doteiros</div>
+      <h1 id="title">LAN Party<br><span class="vs">17 · 10</span></h1>
+      <p class="lede" id="lede">Placar só desse dia e só de quem está na LAN: lobbies entre a galera e partidas de matchmaking em grupo.</p>
+    </div>
+    <div class="status" id="statusBox">
+      <span class="badge soon" id="badge">Carregando…</span>
+      <div class="count num" id="count"></div>
+      <div class="sub" id="window"></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="cta" type="button" id="joinBtn">Vou na LAN</button>
+        <a class="cta ghost" href="#registrar" id="regLink">Registrar partida</a>
+      </div>
+      <div class="sub" id="updated"></div>
+    </div>
+  </section>
+
+  <div class="kpis" id="kpis"></div>
+
+  <section class="block" id="placar">
+    <div class="sh"><div><h2>Placar da LAN</h2><p>Ordem: mais vitórias, depois melhor taxa. Conta lobbies confirmados e partidas de matchmaking dos inscritos dentro do horário da LAN.</p></div></div>
+    <div id="champ"></div>
+    <div id="board"></div>
+  </section>
+
+  <section class="block" id="premios">
+    <div class="sh"><div><h2>Prêmios do dia</h2><p>Calculados com as partidas da LAN. Mudam a cada jogo.</p></div></div>
+    <div class="awards" id="awards"></div>
+  </section>
+
+  <section class="block" id="partidas">
+    <div class="sh"><div><h2>Partidas</h2><p>Da mais recente para a mais antiga. Lobbies aparecem depois que o organizador confirma o resultado.</p></div></div>
+    <div class="matches" id="matches"></div>
+  </section>
+
+  <section class="block" id="participantes">
+    <div class="sh"><div><h2>A galera da LAN</h2><p id="peopleSub"></p></div><button class="cta" type="button" id="joinBtn2">Vou na LAN</button></div>
+    <div class="people" id="people"></div>
+  </section>
+
+  <section class="block" id="registrar">
+    <div class="sh"><div><h2>Registrar partida de lobby</h2><p>Terminou um lobby entre a galera? Marque quem jogou em cada lado e quem venceu. O resultado entra no placar depois que o organizador confirmar. Partidas de matchmaking entram sozinhas.</p></div></div>
+    <form class="panel" id="regForm" autocomplete="off">
+      <div class="grid2">
+        <label class="fl" for="regBy">Quem está enviando
+          <select id="regBy" required><option value="">Escolha seu nome</option></select>
+        </label>
+        <label class="fl" for="regMatch">ID da partida (opcional)
+          <input type="text" id="regMatch" inputmode="numeric" placeholder="Fica no fim do jogo / histórico">
+        </label>
+        <label class="fl" for="regDur">Duração em minutos (opcional)
+          <input type="text" id="regDur" inputmode="numeric" placeholder="ex.: 38">
+        </label>
+      </div>
+      <div class="fl" style="margin-top:18px">Quem jogou · toque no nome para trocar: Radiant → Dire → fora</div>
+      <div class="pick" id="pick"></div>
+      <div class="fl" style="margin-top:18px">Quem venceu</div>
+      <div class="winsel"><button type="button" class="r" data-w="radiant" aria-pressed="false">Radiant venceu</button><button type="button" class="d" data-w="dire" aria-pressed="false">Dire venceu</button></div>
+      <details style="margin-top:16px"><summary style="cursor:pointer;color:var(--ink2)">Heróis e K/D/A de cada um (opcional, deixa os prêmios mais completos)</summary>
+        <div class="pins" id="pins"></div>
+      </details>
+      <div class="hp" aria-hidden="true"><label for="regSite">Site</label><input type="text" id="regSite" tabindex="-1"></div>
+      <div id="regMsg" hidden></div>
+      <div class="foot"><button class="cta" type="submit" id="regSend">Enviar resultado</button></div>
+    </form>
+  </section>
+</main>
+
+<footer class="wrap">
+  <p>Matchmaking: dados do OpenDota (só de quem tem "Expor dados públicos de partidas" ligado no Dota 2), atualizados a cada ~5 minutos durante a LAN. Lobbies: registrados pela galera e confirmados pelo organizador.</p>
+  <p><a href="/">Voltar para o ranking geral</a></p>
+</footer>
+
+<div class="ov" id="joinOv" hidden>
+  <div class="box" role="dialog" aria-modal="true" aria-labelledby="joinTitle">
+    <h3 id="joinTitle">Vou na LAN</h3>
+    <p class="muted" style="margin:0">Mande sua conta do Dota 2. O organizador confirma a sua presença e você entra no placar (e no ranking geral da Taverna).</p>
+    <form id="joinForm" autocomplete="off">
+      <div style="display:flex;gap:10px;align-items:flex-end;margin-top:14px">
+        <label class="fl" for="joinId" style="flex:1">Seu ID ou link do perfil<input type="text" id="joinId" placeholder="número ou link do Dotabuff/OpenDota/Steam" required></label>
+        <button class="cta ghost" type="button" id="joinFind">Buscar</button>
+      </div>
+      <div id="joinCard" hidden></div>
+      <label class="fl" for="joinNick" id="joinNickWrap" style="margin-top:14px" hidden>Como quer aparecer<input type="text" id="joinNick" maxlength="24"></label>
+      <div class="hp" aria-hidden="true"><label for="joinSite">Site</label><input type="text" id="joinSite" tabindex="-1"></div>
+      <div id="joinMsg" hidden></div>
+      <div class="foot"><button class="cta ghost" type="button" id="joinClose">Fechar</button><button class="cta" type="submit" id="joinSend" disabled>Confirmar inscrição</button></div>
+    </form>
+  </div>
+</div>
+<div id="tip" hidden></div>
+
+<script>
+(function(){
+"use strict";
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmt = (v, d = 0) => v == null || isNaN(v) ? "—" : Number(v).toLocaleString("pt-BR", {minimumFractionDigits:d, maximumFractionDigits:d});
+const pct = (v, d = 0) => v == null || isNaN(v) ? "—" : fmt(v, d) + "%";
+const TZ = "America/Sao_Paulo";
+const hhmm = ts => new Date(ts * 1000).toLocaleTimeString("pt-BR", {hour:"2-digit", minute:"2-digit", timeZone:TZ});
+const ddmm = ts => new Date(ts * 1000).toLocaleDateString("pt-BR", {day:"2-digit", month:"2-digit", timeZone:TZ});
+const dur = s => s ? Math.floor(s / 60) + " min" : "";
+const EV = new URLSearchParams(location.search).get("evento");
+const API = (p, q = "") => "/api/" + p + "?" + (EV ? "evento=" + encodeURIComponent(EV) + "&" : "") + q;
+const RANKS = ["Herald","Guardian","Crusader","Archon","Legend","Ancient","Divine","Immortal"], ROM = ["","I","II","III","IV","V"];
+const medal = t => t ? RANKS[Math.floor(t / 10) - 1] + (t % 10 ? " " + ROM[t % 10] : "") : "sem medalha";
+const CDN = "https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/";
+
+let S = null, HEROES = {}, offset = 0;
+const heroImg = id => HEROES[id] ? CDN + HEROES[id].short + ".png" : "";
+const heroName = id => HEROES[id] ? HEROES[id].name : "";
+const person = id => S.participantes.find(p => p.id === id) || {id, apelido: "?", avatar: ""};
+const now = () => Date.now() / 1000 + offset;
+
+/* ---------- estatísticas da LAN ---------- */
+function stats(){
+  const P = {}, pairs = {}, heroCount = {};
+  S.participantes.forEach(p => P[p.id] = {p, n:0, w:0, l:0, k:0, d:0, a:0, kdaN:0, maxK:0, maxKm:null, heroes:{}, form:[]});
+  const chron = [...S.partidas].sort((a, b) => a.inicio - b.inicio);
+  for (const m of chron) {
+    const sides = [[m.radiant, m.radiantWin], [m.dire, !m.radiantWin]];
+    for (const [team, won] of sides) {
+      for (const id of team) {
+        const s = P[id]; if (!s) continue;
+        const pl = m.players[id] || {};
+        s.n++; won ? s.w++ : s.l++; s.form.push(won ? "W" : "L");
+        if (pl.k != null && pl.d != null) { s.k += pl.k; s.d += pl.d; s.a += pl.a || 0; s.kdaN++; if (pl.k > s.maxK) { s.maxK = pl.k; s.maxKm = {m, pl}; } }
+        if (pl.hero) { s.heroes[pl.hero] = (s.heroes[pl.hero] || 0) + 1; heroCount[pl.hero] = (heroCount[pl.hero] || 0) + 1; }
+      }
+      for (let i = 0; i < team.length; i++) for (let j = i + 1; j < team.length; j++) {
+        const key = [team[i], team[j]].sort().join("-"), x = pairs[key] ||= {a:Math.min(team[i], team[j]), b:Math.max(team[i], team[j]), with:0, withWin:0, vs:0, aWins:0};
+        x.with++; if (won) x.withWin++;
+      }
+    }
+    for (const a of m.radiant) for (const b of m.dire) {
+      const key = [a, b].sort().join("-"), x = pairs[key] ||= {a:Math.min(a, b), b:Math.max(a, b), with:0, withWin:0, vs:0, aWins:0};
+      x.vs++; const aIsRad = x.a === a; if ((aIsRad && m.radiantWin) || (!aIsRad && !m.radiantWin)) x.aWins++;
+    }
+  }
+  const list = Object.values(P).map(s => {
+    const top = Object.entries(s.heroes).sort((a, b) => b[1] - a[1])[0];
+    let streak = 0; for (let i = s.form.length - 1; i >= 0 && s.form[i] === s.form[s.form.length - 1]; i--) streak++;
+    return {...s, wr: s.n ? s.w / s.n * 100 : null, kda: s.kdaN ? (s.k + s.a) / Math.max(1, s.d) : null,
+      topHero: top ? +top[0] : null, topHeroN: top ? top[1] : 0, streak: s.form.length ? (s.form.at(-1) === "W" ? streak : -streak) : 0};
+  });
+  list.sort((a, b) => b.w - a.w || (b.wr ?? -1) - (a.wr ?? -1) || (b.kda ?? -1) - (a.kda ?? -1) || b.n - a.n);
+  return {list, pairs: Object.values(pairs), heroCount};
+}
+
+/* ---------- renderização ---------- */
+function renderStatus(){
+  const ev = S.evento, t = now();
+  const badge = $("#badge"), count = $("#count");
+  $("#window").textContent = `${ddmm(ev.inicio)} · das ${hhmm(ev.inicio)} às ${hhmm(ev.fim)} (horário de Brasília)`;
+  const live = t >= ev.inicio && t <= ev.fim;
+  $("#tvLive").hidden = !live;
+  if (t < ev.inicio) {
+    badge.className = "badge soon"; badge.textContent = "Faltam";
+    const s = Math.max(0, ev.inicio - t), d = Math.floor(s / 86400), h = Math.floor(s % 86400 / 3600), mi = Math.floor(s % 3600 / 60);
+    count.innerHTML = (d ? `${d}<small>d</small>` : "") + `${h}<small>h</small>${String(mi).padStart(2, "0")}<small>min</small>`;
+  } else if (live) {
+    badge.className = "badge live"; badge.innerHTML = "<i></i>Ao vivo";
+    const s = ev.fim - t, h = Math.floor(s / 3600), mi = Math.floor(s % 3600 / 60);
+    count.innerHTML = `${h}<small>h</small>${String(mi).padStart(2, "0")}<small>min para acabar</small>`;
+  } else {
+    badge.className = "badge done"; badge.textContent = "Encerrada";
+    count.innerHTML = "<small>Resultado final</small>";
+  }
+  const open = t <= ev.fim;
+  $("#joinBtn").hidden = $("#joinBtn2").hidden = !open;
+  $("#updated").textContent = S.cacheAtualizado ? "Matchmaking atualizado às " + hhmm(S.cacheAtualizado) : "";
+  $("#tvClock").textContent = new Date().toLocaleTimeString("pt-BR", {hour:"2-digit", minute:"2-digit", timeZone:TZ});
+}
+
+function renderKpis(st){
+  const lob = S.partidas.filter(m => m.origem === "lobby"), mm = S.partidas.length - lob.length;
+  const rw = lob.filter(m => m.radiantWin).length;
+  $("#kpis").innerHTML = [
+    [`<b class="num">${S.partidas.length}</b>`, "Partidas na LAN"],
+    [`<b class="num">${S.participantes.length}</b>`, "Confirmados" + (S.inscricoesPendentes ? ` · ${S.inscricoesPendentes} aguardando` : "")],
+    [`<b class="num">${lob.length}<span class="muted" style="font-size:26px"> lobby · </span>${mm}<span class="muted" style="font-size:26px"> MM</span></b>`, "Tipo de partida"],
+    [`<b class="rd num"><span class="r">${rw}</span><em>×</em><span class="d">${lob.length - rw}</span></b>`, "Radiant × Dire nos lobbies"],
+  ].map(([v, l]) => `<div class="kpi">${v}<span>${l}</span></div>`).join("");
+}
+
+function renderBoard(st){
+  const played = st.list.filter(s => s.n), rest = st.list.filter(s => !s.n);
+  if (!played.length) {
+    $("#champ").innerHTML = "";
+    $("#board").innerHTML = `<div class="empty">${now() < S.evento.inicio ? "O placar começa às " + hhmm(S.evento.inicio) + " do dia " + ddmm(S.evento.inicio) + ". Até lá, confirme sua presença!" : "Nenhuma partida contabilizada ainda. Assim que a primeira terminar, ela aparece aqui."}</div>`;
+    return;
+  }
+  const c = played[0];
+  $("#champ").innerHTML = `<div class="champ"><img src="${esc(c.p.avatar)}" alt=""><div><div class="t">${now() > S.evento.fim ? "Campeão da LAN" : "Liderando agora"}</div><div class="n">${esc(c.p.apelido)}</div><div class="s">${c.w} vitórias em ${c.n} partidas${c.kda != null ? " · KDA " + fmt(c.kda, 2) : ""}</div></div><div class="big num">${pct(c.wr)}<small>de vitórias</small></div></div>`;
+  const rows = played.concat(rest).map((s, i) => `<tr class="${s.n && i < 3 ? "p" + (i + 1) : ""}">
+    <td class="pos">${s.n ? i + 1 : "–"}</td>
+    <td><div class="who"><img src="${esc(s.p.avatar)}" alt=""><div><b>${esc(s.p.apelido)}</b><div class="muted" style="font-size:12px">${esc(medal(s.p.medalha))}</div></div></div></td>
+    <td class="big num">${s.n}</td><td class="big num w">${s.w}</td><td class="big num l">${s.l}</td>
+    <td><span class="big num">${pct(s.wr)}</span><div class="bar"><i style="width:${s.wr || 0}%"></i></div></td>
+    <td class="kda num">${s.kdaN ? `<span class="k">${fmt(s.k / s.kdaN, 1)}</span> / <span class="d">${fmt(s.d / s.kdaN, 1)}</span> / <span class="a">${fmt(s.a / s.kdaN, 1)}</span>` : '<span class="muted">—</span>'}</td>
+    <td>${s.topHero ? `<div class="hero-ic"><img src="${heroImg(s.topHero)}" alt="">${esc(heroName(s.topHero))}<span class="muted">×${s.topHeroN}</span></div>` : '<span class="muted">—</span>'}</td>
+    <td><div class="form">${s.form.slice(-10).map(f => `<i class="${f}"></i>`).join("")}</div>${s.streak >= 2 ? `<div class="muted" style="font-size:12px">${s.streak} vitórias seguidas</div>` : s.streak <= -2 ? `<div class="muted" style="font-size:12px">${-s.streak} derrotas seguidas</div>` : ""}</td>
+  </tr>`).join("");
+  $("#board").innerHTML = `<div class="tbl"><table><thead><tr><th>#</th><th>Jogador</th><th>Partidas</th><th>V</th><th>D</th><th>Vitórias</th><th>K/D/A médio</th><th>Herói do dia</th><th>Sequência</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
+function renderAwards(st){
+  const L = st.list.filter(s => s.n), A = [];
+  const best = (arr, f, min = false) => { const v = arr.filter(s => f(s) != null); if (!v.length) return null; const val = min ? Math.min(...v.map(f)) : Math.max(...v.map(f)); return {ps: v.filter(s => f(s) === val).map(s => s.p), val}; };
+  const add = (t, d, r, v, ok = true) => { if (r && ok) A.push({t, d, ps: r.ps, v: v(r.val)}); };
+  if (L.length) {
+    add("Rei da LAN", "Mais vitórias no dia", best(L, s => s.w), v => v + " vitórias");
+    const inv = L.filter(s => s.n >= 3 && s.l === 0); if (inv.length) A.push({t:"Invicto", d:"3 ou mais partidas sem perder", ps: inv.map(s => s.p), v: inv[0].w + " × 0"});
+    add("Saco de pancada", "Mais derrotas no dia", best(L, s => s.l), v => v + " derrotas", L.some(s => s.l));
+    add("Carregador do piano", "Melhor KDA (mín. 2 partidas com K/D/A)", best(L, s => s.kdaN >= 2 ? +s.kda.toFixed(2) : null), v => "KDA " + fmt(v, 2));
+    add("Feeder oficial", "Mais mortes somadas", best(L, s => s.kdaN ? s.d : null), v => v + " mortes", L.some(s => s.d));
+    add("Anjo da guarda", "Mais assistências somadas", best(L, s => s.kdaN ? s.a : null), v => v + " assistências", L.some(s => s.a));
+    add("Açougueiro", "Mais abates numa partida", best(L, s => s.maxK || null), v => v + " abates");
+    add("Viciado da noite", "Mais partidas jogadas", best(L, s => s.n), v => v + " partidas");
+    const hc = Object.entries(st.heroCount).sort((a, b) => b[1] - a[1])[0];
+    if (hc && hc[1] >= 2) A.push({t:"Herói da noite", d:"O mais escolhido na LAN", hero:+hc[0], v: heroName(+hc[0]) + " ×" + hc[1]});
+    const duo = st.pairs.filter(x => x.with >= 2).sort((a, b) => b.withWin - a.withWin || b.withWin / b.with - a.withWin / a.with)[0];
+    if (duo && duo.withWin) A.push({t:"Dupla imbatível", d:"Mais vitórias jogando juntos", ps:[person(duo.a), person(duo.b)], v: `${duo.withWin} de ${duo.with}`});
+    const riv = st.pairs.filter(x => x.vs >= 2).sort((a, b) => b.vs - a.vs)[0];
+    if (riv) A.push({t:"Clássico da noite", d:"Quem mais se enfrentou", ps:[person(riv.a), person(riv.b)], v: `${riv.aWins} × ${riv.vs - riv.aWins}`});
+    const longest = [...S.partidas].filter(m => m.duracao).sort((a, b) => b.duracao - a.duracao)[0];
+    if (longest) A.push({t:"Partida mais longa", d:"Às " + hhmm(longest.inicio), ps:[...longest.radiant, ...longest.dire].slice(0, 3).map(person), v: dur(longest.duracao)});
+  }
+  $("#awards").innerHTML = A.length ? A.map(a => `<div class="aw"><div class="t">${esc(a.t)}</div><div class="d">${esc(a.d)}</div>
+    <div class="avs">${a.hero ? `<img src="${heroImg(a.hero)}" alt="" style="border-radius:6px;width:64px;height:36px">` : (a.ps || []).slice(0, 3).map(p => `<img src="${esc(p.avatar)}" alt="">`).join("")}</div>
+    <div>${a.ps ? `<b>${a.ps.slice(0, 3).map(p => esc(p.apelido)).join(" & ")}</b>` : ""}<span class="v num">${esc(a.v)}</span></div></div>`).join("")
+    : `<div class="empty" style="grid-column:1/-1">Os prêmios aparecem assim que as primeiras partidas forem contabilizadas.</div>`;
+}
+
+function renderMatches(){
+  if (!S.partidas.length) { $("#matches").innerHTML = `<div class="empty">Nenhuma partida ainda.</div>`; return; }
+  const side = (m, team, rad) => {
+    const won = rad === m.radiantWin;
+    return `<div class="side ${rad ? "r" : "d"} ${won ? "won" : ""}"><h4>${rad ? "Radiant" : "Dire"}${won ? '<span class="win">Venceu</span>' : ""}</h4>
+      ${team.length ? team.map(id => { const p = person(id), pl = m.players[id] || {};
+        return `<div class="pl"><img class="av" src="${esc(p.avatar)}" alt=""><img class="hr" src="${heroImg(pl.hero)}" alt="" ${pl.hero ? `data-tip="${esc(heroName(pl.hero))}"` : 'style="visibility:hidden"'}><span class="nm">${esc(p.apelido)}</span>
+          <span class="kda num">${pl.k != null ? `<span class="k">${pl.k}</span>/<span class="d">${pl.d}</span>/<span class="a">${pl.a}</span>` : ""}</span></div>`; }).join("")
+        : `<div class="others">${m.origem === "mm" ? "Ninguém da LAN deste lado" : "—"}</div>`}
+      ${m.origem === "mm" ? `<div class="others">+ jogadores de fora da LAN</div>` : ""}</div>`;
+  };
+  $("#matches").innerHTML = S.partidas.map(m => `<article class="match">
+    <div class="mh"><span class="tag ${m.origem === "lobby" ? "lobby" : "mm"}">${m.origem === "lobby" ? "Lobby" : "Matchmaking"}</span>
+      <span class="num">${hhmm(m.inicio)}</span>${m.duracao ? `<span class="num">· ${dur(m.duracao)}</span>` : ""}
+      ${m.fonte === "manual" ? '<span class="muted">· resultado registrado pela galera</span>' : ""}
+      ${m.matchId ? `<a href="https://www.opendota.com/matches/${esc(m.matchId)}" target="_blank" rel="noopener">Ver no OpenDota ↗</a>` : ""}</div>
+    <div class="sides">${side(m, m.radiant, true)}${side(m, m.dire, false)}</div></article>`).join("");
+}
+
+function renderPeople(){
+  $("#peopleSub").textContent = `${S.participantes.length} confirmados` + (S.inscricoesPendentes ? ` · ${S.inscricoesPendentes} aguardando o organizador` : "") + ". Cada um entra no placar e no ranking geral da Taverna.";
+  $("#people").innerHTML = S.participantes.length ? S.participantes.map(p => `<div class="person"><img src="${esc(p.avatar)}" alt=""><b>${esc(p.apelido)}</b><small>${esc(medal(p.medalha))}</small>
+      ${p.privado ? '<span class="warnpill" data-tip="Com o histórico privado, as partidas de matchmaking dele não aparecem. Lobbies registrados contam normalmente.">histórico privado</span>' : ""}
+      <a class="muted" style="font-size:12px" href="https://pt.dotabuff.com/players/${p.id}" target="_blank" rel="noopener">Dotabuff ↗</a></div>`).join("")
+    : `<div class="empty" style="grid-column:1/-1">Ninguém confirmado ainda. Seja o primeiro: clique em "Vou na LAN".</div>`;
+}
+
+/* ---------- registro de lobby ---------- */
+const reg = {side:{}, win:null};
+function renderRegForm(){
+  const open = !(now() > S.evento.fim + 12 * 3600);
+  $("#registrar").hidden = !open;
+  const by = $("#regBy"), cur = by.value;
+  by.innerHTML = `<option value="">Escolha seu nome</option>` + S.participantes.map(p => `<option value="${p.id}">${esc(p.apelido)}</option>`).join("");
+  by.value = cur;
+  const lbl = {r:"Radiant", d:"Dire", "":"Fora"};
+  $("#pick").innerHTML = S.participantes.length ? S.participantes.map(p => `<span class="chip" role="button" tabindex="0" data-id="${p.id}" data-s="${reg.side[p.id] || ""}"><img src="${esc(p.avatar)}" alt="">${esc(p.apelido)}<em>${lbl[reg.side[p.id] || ""]}</em></span>`).join("")
+    : '<span class="muted">Os jogadores aparecem aqui depois de confirmados na LAN.</span>';
+  renderPins();
+}
+function renderPins(){
+  const ids = Object.keys(reg.side).filter(k => reg.side[k]).map(Number);
+  const opts = `<option value="">Herói</option>` + Object.values(HEROES).map(h => `<option value="${h.id}">${esc(h.name)}</option>`).join("");
+  const keep = {}; $$(".pin").forEach(r => keep[r.dataset.id] = {hero: r.querySelector("select").value, k: r.querySelector('[data-f="k"]').value, d: r.querySelector('[data-f="d"]').value, a: r.querySelector('[data-f="a"]').value});
+  $("#pins").innerHTML = ids.length ? ids.map(id => { const p = person(id); return `<div class="pin" data-id="${id}"><div class="who"><img src="${esc(p.avatar)}" alt="" style="width:28px;height:28px"><b style="color:var(--${reg.side[id] === "r" ? "rad" : "dire"})">${esc(p.apelido)}</b></div>
+      <select aria-label="Herói de ${esc(p.apelido)}">${opts}</select>
+      <input data-f="k" inputmode="numeric" placeholder="K" aria-label="Abates"><input data-f="d" inputmode="numeric" placeholder="D" aria-label="Mortes"><input data-f="a" inputmode="numeric" placeholder="A" aria-label="Assistências"></div>`; }).join("")
+    : '<span class="muted">Escolha os times primeiro.</span>';
+  $$(".pin").forEach(r => { const k = keep[r.dataset.id]; if (!k) return; r.querySelector("select").value = k.hero; ["k", "d", "a"].forEach(f => r.querySelector(`[data-f="${f}"]`).value = k[f]); });
+}
+$("#pick").addEventListener("click", e => {
+  const c = e.target.closest(".chip"); if (!c) return;
+  const id = +c.dataset.id, next = {"": "r", r: "d", d: ""}[reg.side[id] || ""];
+  const count = s => Object.values(reg.side).filter(x => x === s).length;
+  if (next && count(next) >= 5) { reg.side[id] = next === "r" && count("d") < 5 ? "d" : ""; } else reg.side[id] = next;
+  renderRegForm();
+});
+$("#pick").addEventListener("keydown", e => { if ((e.key === "Enter" || e.key === " ") && e.target.closest(".chip")) { e.preventDefault(); e.target.click(); } });
+$$(".winsel button").forEach(b => b.addEventListener("click", () => { reg.win = b.dataset.w; $$(".winsel button").forEach(x => x.setAttribute("aria-pressed", x === b ? "true" : "false")); }));
+const say = (el, text, kind) => { el.hidden = !text; el.className = "msg " + (kind || ""); el.textContent = text || ""; };
+$("#regForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const msg = $("#regMsg");
+  const radiant = Object.keys(reg.side).filter(k => reg.side[k] === "r").map(Number), dire = Object.keys(reg.side).filter(k => reg.side[k] === "d").map(Number);
+  if (!$("#regBy").value) return say(msg, "Escolha quem está enviando.", "err");
+  if (!radiant.length || !dire.length) return say(msg, "Coloque pelo menos um jogador em cada lado.", "err");
+  if (!reg.win) return say(msg, "Marque quem venceu.", "err");
+  const players = {};
+  $$(".pin").forEach(r => { players[r.dataset.id] = {hero: r.querySelector("select").value, k: r.querySelector('[data-f="k"]').value, d: r.querySelector('[data-f="d"]').value, a: r.querySelector('[data-f="a"]').value}; });
+  $("#regSend").disabled = true; say(msg, "Enviando…");
+  try {
+    const r = await fetch(API("lan_partida.php"), {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({
+      evento: EV || undefined, enviadoPor: +$("#regBy").value, radiant, dire, vencedor: reg.win, matchId: $("#regMatch").value, duracao: $("#regDur").value, players, site: $("#regSite").value})});
+    const j = await r.json().catch(() => ({}));
+    if (r.ok && j.ok) {
+      say(msg, "Resultado enviado! Ele entra no placar assim que o organizador confirmar.", "ok");
+      reg.side = {}; reg.win = null; $("#regMatch").value = ""; $("#regDur").value = ""; $$(".winsel button").forEach(x => x.setAttribute("aria-pressed", "false"));
+      renderRegForm(); load();
+    } else say(msg, j.erro || "Não deu para enviar agora. Tente de novo.", "err");
+  } catch (_) { say(msg, "Não deu para enviar agora. Tente de novo.", "err"); }
+  finally { $("#regSend").disabled = false; }
+});
+
+/* ---------- inscrição ---------- */
+(function join(){
+  const ov = $("#joinOv"), msg = $("#joinMsg"), card = $("#joinCard"), send = $("#joinSend"), nickWrap = $("#joinNickWrap");
+  let found = null;
+  const parseId = raw => {
+    raw = String(raw || "").trim();
+    const m = raw.match(/(?:dotabuff\.com|opendota\.com|stratz\.com)\/players\/(\d+)/i) || raw.match(/steamcommunity\.com\/profiles\/(\d{17})/i);
+    if (m) raw = m[1];
+    if (!/^\d{1,20}$/.test(raw)) return null;
+    if (raw.length === 17 && raw.startsWith("7656119")) return Number(BigInt(raw) - 76561197960265728n);
+    const n = Number(raw); return n > 0 && n < 4294967296 ? n : null;
+  };
+  const reset = () => { found = null; card.hidden = true; nickWrap.hidden = true; send.disabled = true; say(msg, ""); };
+  const open = () => { ov.hidden = false; document.body.style.overflow = "hidden"; $("#joinId").focus(); };
+  const close = () => { ov.hidden = true; document.body.style.overflow = ""; };
+  $("#joinBtn").addEventListener("click", open); $("#joinBtn2").addEventListener("click", open);
+  $("#joinClose").addEventListener("click", close);
+  ov.addEventListener("click", e => { if (e.target === ov) close(); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && !ov.hidden) close(); });
+  $("#joinId").addEventListener("input", reset);
+  async function find(){
+    reset();
+    const id = parseId($("#joinId").value);
+    if (!id) return say(msg, "Não reconheci esse ID. Use o número do Dotabuff/OpenDota ou cole o link do seu perfil.", "err");
+    if (S && S.participantes.some(p => p.id === id)) return say(msg, "Você já está confirmado na LAN.", "warn");
+    $("#joinFind").disabled = true; say(msg, "Buscando a conta…");
+    try {
+      const j = await (await fetch("https://api.opendota.com/api/players/" + id)).json();
+      if (!j || !j.profile) return say(msg, "Não encontrei essa conta. Confira o ID ou o link.", "err");
+      found = {id, name: j.profile.personaname || "", priv: !!j.profile.fh_unavailable};
+      card.hidden = false;
+      card.innerHTML = `<div class="card"><img src="${esc(j.profile.avatarfull || "")}" alt=""><div><b>É você? ${esc(found.name)}</b><div class="muted" style="font-size:13px">${esc(medal(j.rank_tier))} · ID ${id}</div></div></div>`;
+      nickWrap.hidden = false; $("#joinNick").value = found.name.slice(0, 24); send.disabled = false;
+      say(msg, found.priv ? "Seu histórico parece privado: as partidas de matchmaking não vão aparecer (lobbies registrados contam). Para liberar: Dota 2 → Configurações → Opções → Social → “Expor dados públicos de partidas”." : "", found.priv ? "warn" : "");
+    } catch (_) { say(msg, "Não consegui buscar agora. Tente de novo em instantes.", "err"); }
+    finally { $("#joinFind").disabled = false; }
+  }
+  $("#joinFind").addEventListener("click", find);
+  $("#joinId").addEventListener("keydown", e => { if (e.key === "Enter" && !found) { e.preventDefault(); find(); } });
+  $("#joinForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    if (!found) return find();
+    send.disabled = true; say(msg, "Enviando…");
+    try {
+      const r = await fetch(API("lan_inscricao.php"), {method:"POST", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({evento: EV || undefined, id: found.id, apelido: $("#joinNick").value, site: $("#joinSite").value})});
+      const j = await r.json().catch(() => ({}));
+      if (r.ok && j.ok) { say(msg, "Inscrição enviada! Assim que o organizador confirmar, você aparece na galera da LAN.", "ok"); card.hidden = true; nickWrap.hidden = true; $("#joinId").value = ""; found = null; load(); }
+      else { say(msg, j.erro || "Não deu para enviar agora. Tente de novo.", "err"); send.disabled = false; }
+    } catch (_) { say(msg, "Não deu para enviar agora. Tente de novo.", "err"); send.disabled = false; }
+  });
+})();
+
+/* ---------- modo telão ---------- */
+let tvTimer = null, tvIdx = 0;
+const TV = ["placar", "premios", "partidas"];
+function tvShow(){ TV.forEach((id, i) => $("#" + id).classList.toggle("on", i === tvIdx)); }
+$("#tvBtn").addEventListener("click", () => {
+  document.documentElement.classList.add("tv"); tvIdx = 0; tvShow();
+  tvTimer = setInterval(() => { tvIdx = (tvIdx + 1) % TV.length; tvShow(); }, 15000);
+  document.documentElement.requestFullscreen?.().catch(() => {});
+  try { navigator.wakeLock?.request("screen").catch(() => {}); } catch (_) {}
+});
+function tvExit(){ document.documentElement.classList.remove("tv"); clearInterval(tvTimer); TV.forEach(id => $("#" + id).classList.remove("on")); if (document.fullscreenElement) document.exitFullscreen?.(); }
+$("#tvExit").addEventListener("click", tvExit);
+document.addEventListener("keydown", e => { if (e.key === "Escape" && document.documentElement.classList.contains("tv")) tvExit(); });
+
+/* ---------- dica ao passar o mouse ---------- */
+const tip = $("#tip");
+document.addEventListener("mousemove", e => {
+  const t = e.target.closest && e.target.closest("[data-tip]");
+  if (!t) { tip.hidden = true; return; }
+  tip.textContent = t.dataset.tip; tip.hidden = false;
+  tip.style.left = Math.min(e.clientX + 14, innerWidth - tip.offsetWidth - 8) + "px"; tip.style.top = (e.clientY + 16) + "px";
+});
+
+/* ---------- carga e atualização ---------- */
+function render(){
+  const st = stats();
+  $("#tvTitle").textContent = S.evento.nome + " · " + ddmm(S.evento.inicio);
+  renderStatus(); renderKpis(st); renderBoard(st); renderAwards(st); renderMatches(); renderPeople();
+  // não redesenha o formulário enquanto alguém está preenchendo
+  if (!$("#regForm").contains(document.activeElement) || !$("#regBy").options.length || $("#regBy").options.length - 1 !== S.participantes.length) renderRegForm();
+}
+async function load(){
+  try {
+    const r = await fetch(API("lan_estado.php", "t=" + Date.now()));
+    S = await r.json();
+    offset = S.agora - Date.now() / 1000;
+    render();
+  } catch (_) { $("#badge").textContent = "Sem conexão"; }
+}
+(async () => {
+  try { (await (await fetch("herois.json")).json()).forEach(h => HEROES[h.id] = h); } catch (_) {}
+  await load();
+  setInterval(load, 60000);
+  setInterval(() => S && renderStatus(), 15000);
+})();
+})();
+</script>
+</html>

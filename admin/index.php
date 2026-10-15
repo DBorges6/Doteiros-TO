@@ -4,6 +4,7 @@
 // A senha fica guardada só como hash, fora da pasta pública do site.
 require dirname(__DIR__) . '/api/_lib.php';
 require __DIR__ . '/_config.php';
+require dirname(__DIR__) . '/api/_lan.php';
 
 header('X-Frame-Options: DENY');
 header('X-Robots-Tag: noindex, nofollow');
@@ -147,6 +148,38 @@ if (in_array($acao, ['aprovar', 'recusar', 'remover', 'reabrir'], true)) {
     exit;
 }
 
+// ---------- Ações da LAN ----------
+$lanEv = lan_evento();
+if (in_array($acao, ['lan_aprovar', 'lan_recusar', 'lan_remover', 'lan_reabrir'], true)) {
+    check_csrf();
+    $id = (int) ($_POST['id'] ?? 0);
+    $nick = clean_nick($_POST['apelido'] ?? '');
+    with_lock(function () use ($acao, $id, $nick, $lanEv) {
+        if ($acao === 'lan_aprovar') { lan_aprovar($lanEv, $id, $nick); return; }
+        $f = lan_file($lanEv, 'inscricoes');
+        $q = read_json($f, []);
+        foreach ($q as &$p) {
+            if ((int) $p['id'] !== $id) continue;
+            $p['status'] = ['lan_recusar' => 'recusado', 'lan_remover' => 'removido', 'lan_reabrir' => 'pendente'][$acao];
+            $p['decidido'] = time();
+        }
+        unset($p);
+        write_json($f, $q);
+    });
+    header('Location: ./?feito=' . $acao . '#lan');
+    exit;
+}
+if (in_array($acao, ['partida_confirmar', 'partida_recusar', 'partida_excluir', 'partida_reabrir'], true)) {
+    check_csrf();
+    $uid = preg_replace('~[^a-f0-9]~', '', (string) ($_POST['uid'] ?? ''));
+    with_lock(function () use ($acao, $uid, $lanEv) {
+        if ($acao === 'partida_confirmar') lan_confirmar($lanEv, $uid);
+        else lan_set_status_partida($lanEv, $uid, ['partida_recusar' => 'recusada', 'partida_excluir' => 'excluida', 'partida_reabrir' => 'pendente'][$acao]);
+    });
+    header('Location: ./?feito=' . $acao . '#lan-partidas');
+    exit;
+}
+
 // ---------- Painel ----------
 $q = read_json('pedidos.json', []);
 usort($q, fn($a, $b) => ($b['criado'] ?? 0) <=> ($a['criado'] ?? 0));
@@ -162,7 +195,10 @@ $btn = fn($acao, $id, $label, $cls = '') => '<form method="post" class="inline">
 $pend = array_filter($q, fn($p) => $p['status'] === 'pendente');
 $apr = array_filter($q, fn($p) => $p['status'] === 'aprovado');
 $out = array_filter($q, fn($p) => in_array($p['status'], ['recusado', 'removido'], true));
-$feito = ['aprovar' => 'Aprovado. Entra no ranking na próxima atualização.', 'recusar' => 'Pedido recusado.', 'remover' => 'Removido. Sai do ranking na próxima atualização.', 'reabrir' => 'Pedido voltou para a fila.'][$_GET['feito'] ?? ''] ?? '';
+$feito = ['lan_aprovar' => 'Confirmado na LAN (e no ranking geral, na próxima atualização).', 'lan_recusar' => 'Inscrição na LAN recusada.',
+    'lan_remover' => 'Removido da LAN.', 'lan_reabrir' => 'Inscrição voltou para a fila.', 'partida_confirmar' => 'Partida confirmada. Já aparece no placar da LAN.',
+    'partida_recusar' => 'Partida recusada.', 'partida_excluir' => 'Partida excluída do placar.', 'partida_reabrir' => 'Partida voltou para conferência.',
+    'aprovar' => 'Aprovado. Entra no ranking na próxima atualização.', 'recusar' => 'Pedido recusado.', 'remover' => 'Removido. Sai do ranking na próxima atualização.', 'reabrir' => 'Pedido voltou para a fila.'][$_GET['feito'] ?? ''] ?? '';
 
 $html = '<div class="top"><div><h1>Pedidos de entrada</h1><p class="sub">' . count($pend) . ' aguardando · ' . count($apr) . ' aprovados · a atualização diária inclui os aprovados no ranking</p></div>'
     . '<form method="post" class="inline"><input type="hidden" name="csrf" value="' . $csrf . '"><input type="hidden" name="acao" value="sair"><button type="submit">Sair</button></form></div>'
@@ -189,5 +225,61 @@ if ($out) {
     foreach ($out as $p) {
         $html .= '<div class="row">' . $who($p) . '<div class="acts"><span class="tag">' . h($p['status']) . '</span>' . $btn('reabrir', $p['id'], 'Voltar para a fila') . '</div></div>';
     }
+}
+// ---------- LAN Party ----------
+$lanQ = read_json(lan_file($lanEv, 'inscricoes'), []);
+usort($lanQ, fn($a, $b) => ($b['criado'] ?? 0) <=> ($a['criado'] ?? 0));
+$lanPend = array_filter($lanQ, fn($p) => $p['status'] === 'pendente');
+$lanOk = array_filter($lanQ, fn($p) => $p['status'] === 'aprovado');
+$lanOut = array_filter($lanQ, fn($p) => in_array($p['status'], ['recusado', 'removido'], true));
+$nomeLan = [];
+foreach ($lanQ as $p) $nomeLan[(int) $p['id']] = $p['apelido'];
+$heroes = lan_herois();
+$lanBtn = fn($acao, $id, $label, $cls = '') => '<form method="post" class="inline"><input type="hidden" name="csrf" value="' . $csrf . '"><input type="hidden" name="acao" value="' . $acao . '"><input type="hidden" name="id" value="' . (int) $id . '"><button class="' . $cls . '" type="submit">' . $label . '</button></form>';
+
+$html .= '<h2 id="lan" style="margin-top:44px">LAN Party · ' . h(date('d/m', $lanEv['ini'])) . ' · inscrições</h2><p class="sub">'
+    . count($lanOk) . ' confirmados · ' . count($lanPend) . ' aguardando · quem você confirma também entra no ranking geral · página: <a href="/lan/" target="_blank" rel="noopener">doteiros.com.br/lan</a></p>';
+if (!$lanPend) $html .= '<p class="sub">Nenhuma inscrição nova.</p>';
+foreach ($lanPend as $p) {
+    $html .= '<div class="row">' . $who($p) . '<div class="acts">'
+        . '<form method="post" class="inline"><input type="hidden" name="csrf" value="' . $csrf . '"><input type="hidden" name="acao" value="lan_aprovar"><input type="hidden" name="id" value="' . (int) $p['id'] . '">'
+        . '<input type="text" name="apelido" value="' . h($p['apelido']) . '" maxlength="24" size="12" aria-label="Apelido"><button class="ok" type="submit">Confirmar</button></form>'
+        . $lanBtn('lan_recusar', $p['id'], 'Recusar', 'no') . '</div></div>';
+}
+if ($lanOk) {
+    $html .= '<p class="sub" style="margin-top:14px">Confirmados: ' . implode(', ', array_map(fn($p) => h($p['apelido']), $lanOk)) . '</p>';
+    foreach ($lanOk as $p) $html .= '<div class="row">' . $who($p) . '<div class="acts"><span class="tag good">confirmado</span>' . $lanBtn('lan_remover', $p['id'], 'Tirar da LAN', 'no') . '</div></div>';
+}
+foreach ($lanOut as $p) $html .= '<div class="row">' . $who($p) . '<div class="acts"><span class="tag">' . h($p['status']) . '</span>' . $lanBtn('lan_reabrir', $p['id'], 'Voltar para a fila') . '</div></div>';
+
+// partidas de lobby enviadas pelos inscritos
+$parts = read_json(lan_file($lanEv, 'partidas'), []);
+usort($parts, fn($a, $b) => ($b['criado'] ?? 0) <=> ($a['criado'] ?? 0));
+$time = function ($ids, $m) use ($nomeLan, $heroes) {
+    return implode('<br>', array_map(function ($i) use ($nomeLan, $heroes, $m) {
+        $pl = $m['players'][(string) $i] ?? [];
+        $extra = [];
+        if (!empty($pl['hero'])) $extra[] = h($heroes[(int) $pl['hero']] ?? ('herói ' . (int) $pl['hero']));
+        if (isset($pl['k']) && $pl['k'] !== null) $extra[] = (int) $pl['k'] . '/' . (int) ($pl['d'] ?? 0) . '/' . (int) ($pl['a'] ?? 0);
+        return '<b>' . h($nomeLan[(int) $i] ?? ('ID ' . (int) $i)) . '</b>' . ($extra ? ' <span class="sub">' . implode(' · ', $extra) . '</span>' : '');
+    }, (array) $ids));
+};
+$html .= '<h2 id="lan-partidas">LAN Party · partidas de lobby</h2>';
+$visiveis = array_filter($parts, fn($m) => ($m['status'] ?? '') !== 'excluida');
+if (!$visiveis) $html .= '<p class="sub">Nenhuma partida registrada ainda. Os inscritos registram pela página da LAN.</p>';
+foreach ($visiveis as $m) {
+    $st = $m['status'];
+    $win = $m['vencedor'] === 'radiant' ? 'Radiant' : 'Dire';
+    $acts = $st === 'pendente'
+        ? '<form method="post" class="inline"><input type="hidden" name="csrf" value="' . $csrf . '"><input type="hidden" name="acao" value="partida_confirmar"><input type="hidden" name="uid" value="' . h($m['uid']) . '"><button class="ok" type="submit">Confirmar</button></form>'
+          . '<form method="post" class="inline"><input type="hidden" name="csrf" value="' . $csrf . '"><input type="hidden" name="acao" value="partida_recusar"><input type="hidden" name="uid" value="' . h($m['uid']) . '"><button class="no" type="submit">Recusar</button></form>'
+        : '<span class="tag ' . ($st === 'confirmada' ? 'good' : '') . '">' . h($st) . '</span>'
+          . '<form method="post" class="inline"><input type="hidden" name="csrf" value="' . $csrf . '"><input type="hidden" name="acao" value="' . ($st === 'confirmada' ? 'partida_excluir' : 'partida_reabrir') . '"><input type="hidden" name="uid" value="' . h($m['uid']) . '"><button type="submit">' . ($st === 'confirmada' ? 'Excluir do placar' : 'Voltar para conferência') . '</button></form>';
+    $html .= '<div class="card" style="margin-bottom:10px;display:grid;gap:10px">'
+        . '<div class="top"><div><b>Vitória do ' . $win . '</b> <span class="sub">· enviada por ' . h($nomeLan[(int) $m['enviadoPor']] ?? '?') . ' · ' . h(ago($m['criado'] ?? 0))
+        . (!empty($m['matchId']) ? ' · partida ' . (int) $m['matchId'] . ' (<a href="https://www.opendota.com/matches/' . (int) $m['matchId'] . '" target="_blank" rel="noopener noreferrer">OpenDota</a>)' : '')
+        . (!empty($m['od']) ? ' · <span class="tag good">dados do OpenDota</span>' : '') . '</span></div><div class="acts">' . $acts . '</div></div>'
+        . '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div><span class="tag good">Radiant</span><br>' . $time($m['radiant'], $m) . '</div>'
+        . '<div><span class="tag warn">Dire</span><br>' . $time($m['dire'], $m) . '</div></div></div>';
 }
 page('Pedidos', $html);

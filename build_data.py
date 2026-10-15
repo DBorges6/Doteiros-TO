@@ -213,6 +213,10 @@ for s in range(1, 6):
     medals[f"s{s}"] = to_data_uri(fetch(f"https://www.opendota.com/assets/images/dota2/rank_icons/rank_star_{s}.png"), (72, 72), 85)
 medals["t0"] = to_data_uri(fetch("https://www.opendota.com/assets/images/dota2/rank_icons/rank_icon_0.png"), (72, 72), 85)
 
+# Lista de heróis usada pela página da LAN (nome + arquivo de imagem da Valve)
+json.dump(sorted(({"id": h["id"], "name": h["localized_name"], "short": h["name"].replace("npc_dota_hero_", "")} for h in od["heroes"].values()),
+                 key=lambda x: x["name"]), open(os.path.join(ROOT, "lan", "herois.json"), "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
+
 # Lista pública de quem já está no ranking (o formulário de entrada usa para barrar repetidos)
 json.dump([{"id": p["id"], "nick": p["nick"]} for p in players],
           open(os.path.join(ROOT, "doteiros-TO", "data", "roster.json"), "w", encoding="utf-8"), ensure_ascii=False)

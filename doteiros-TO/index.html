@@ -5,13 +5,13 @@
 <meta name="theme-color" content="#0d1112">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230d1112'/%3E%3Cpath d='M14 14h36v10H37v28H27V24H14z' fill='%23f4cd6e'/%3E%3C/svg%3E">
 <!--META-->
-<meta name="description" content="Líder: Lule com 56,96% de vitória. Ranking, prêmios, duelos e duplas da galera. Atualizado em 14/10/2026.">
+<meta name="description" content="Líder: Lule com 56,96% de vitória. Ranking, prêmios, duelos e duplas da galera. Atualizado em 15/10/2026.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Taverna do Ancient">
 <meta property="og:title" content="Taverna do Ancient · Dota 2 da galera">
-<meta property="og:description" content="Líder: Lule com 56,96% de vitória. Ranking, prêmios, duelos e duplas da galera. Atualizado em 14/10/2026.">
+<meta property="og:description" content="Líder: Lule com 56,96% de vitória. Ranking, prêmios, duelos e duplas da galera. Atualizado em 15/10/2026.">
 <meta property="og:url" content="https://doteiros.com.br/">
-<meta property="og:image" content="https://doteiros.com.br/og.png?v=202610141125">
+<meta property="og:image" content="https://doteiros.com.br/og.png?v=202610150834">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -286,6 +286,10 @@ footer{color:var(--mute);font-size:13px;padding-block:30px 50px;border-top:1px s
 footer p{margin:4px 0;max-width:90ch}
 
 /* ---------- Pedido de entrada ---------- */
+.lanpill{display:flex;width:max-content;max-width:100%;margin-top:14px;gap:8px;align-items:center;padding:8px 14px;border-radius:10px;text-decoration:none;color:var(--ink2);font-size:14px;
+  background:linear-gradient(90deg,#63d46b1f,#ff5b451f);border:1px solid var(--line2)}
+.lanpill b{font-family:var(--cond);font-size:16px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink)}
+.lanpill:hover{border-color:var(--gold)}
 .cta{margin-top:18px;display:inline-flex;align-items:center;gap:10px;background:var(--gold);color:#1a1405;border:0;border-radius:10px;padding:11px 18px;font-family:var(--cond);font-weight:700;font-size:16px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;box-shadow:0 6px 20px #e2a93b33}
 .cta:hover{background:var(--gold2)}
 .jover{position:fixed;inset:0;z-index:55;background:#05080acc;display:grid;place-items:center;padding:16px}
@@ -405,6 +409,7 @@ footer p{margin:4px 0;max-width:90ch}
   <div class="wrap">
     <div class="brand">TAVERNA DO ANCIENT<small id="brandCount">DOTA 2</small></div>
     <nav class="nav" aria-label="Seções">
+      <a href="https://doteiros.com.br/lan/" style="color:var(--gold2)">LAN Party</a>
       <a href="#novidades">Novidades</a>
       <a href="#ranking">Ranking</a>
       <a href="#semana">Semana</a>
@@ -426,6 +431,7 @@ footer p{margin:4px 0;max-width:90ch}
       <h1>Quem carrega<br>e quem é <em>carregado</em>.</h1>
       <p class="lede">O placar oficial da galera: partidas, vitórias, medalhas, heróis de estimação e as duplas que dão certo (ou não). Clique em qualquer jogador para abrir a ficha completa.</p>
       <button class="cta" type="button" id="joinBtn" hidden>Quero entrar na Taverna</button>
+      <a class="lanpill" href="https://doteiros.com.br/lan/"><b>LAN Party · 17/10</b> placar ao vivo e inscrições →</a>
     </div>
     <div class="kpis" id="kpis"></div>
   </section>
@@ -641,7 +647,7 @@ footer p{margin:4px 0;max-width:90ch}
   </div>
 </div>
 
-<script src="data/dashboard_data.js?v=1791987918" charset="utf-8"></script>
+<script src="data/dashboard_data.js?v=1792064065" charset="utf-8"></script>
 <script>
 (function(){
 const D = window.DASH, NOW = D.generatedAt, HERO = D.heroes;
