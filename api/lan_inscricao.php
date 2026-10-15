@@ -8,7 +8,7 @@ if (!is_array($in)) $in = $_POST;
 if (!empty($in['site'])) json_out(['ok' => true]);
 
 $ev = lan_evento($in['evento'] ?? null);
-if (time() > $ev['end']) json_out(['erro' => 'As inscrições dessa LAN já foram encerradas.'], 410);
+if (empty($ev['teste']) && time() > $ev['end']) json_out(['erro' => 'As inscrições dessa LAN já foram encerradas.'], 410);
 
 $id = parse_account_id($in['id'] ?? '');
 $nick = clean_nick($in['apelido'] ?? '');
