@@ -1,6 +1,6 @@
 {
  "date": "2026-10-17",
- "t": 1792241322,
+ "t": 1792242581,
  "players": {
   "Dinamite": {
    "total": 1311,
@@ -221,6 +221,16 @@
    "lastMatch": 1792199048,
    "private": true,
    "rankSrc": "db"
+  },
+  "Kurupira": {
+   "total": 5617,
+   "wins": 2831,
+   "rank": "Divine V",
+   "rankVal": 75,
+   "points": 4315,
+   "lastMatch": 1792025554,
+   "private": false,
+   "rankSrc": "od"
   }
  }
 }
