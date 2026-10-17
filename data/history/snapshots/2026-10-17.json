@@ -1,6 +1,6 @@
 {
  "date": "2026-10-17",
- "t": 1792206766,
+ "t": 1792240998,
  "players": {
   "Dinamite": {
    "total": 1311,
@@ -23,22 +23,22 @@
    "rankSrc": "od"
   },
   "Soma": {
-   "total": 1555,
-   "wins": 786,
+   "total": 1557,
+   "wins": 787,
    "rank": "Archon V",
    "rankVal": 45,
    "points": 775,
-   "lastMatch": 1792200857,
+   "lastMatch": 1792209875,
    "private": false,
    "rankSrc": "db"
   },
   "Bahia": {
-   "total": 7129,
-   "wins": 3556,
+   "total": 7131,
+   "wins": 3557,
    "rank": "Crusader IV",
    "rankVal": 34,
    "points": 3195,
-   "lastMatch": 1792199048,
+   "lastMatch": 1792225669,
    "private": false,
    "rankSrc": "od"
   },
@@ -130,7 +130,7 @@
    "points": 765,
    "lastMatch": 1792120623,
    "private": false,
-   "rankSrc": "od"
+   "rankSrc": "db"
   },
   "DBorges": {
    "total": 4417,
@@ -140,7 +140,7 @@
    "points": 3255,
    "lastMatch": 1791947957,
    "private": false,
-   "rankSrc": "od"
+   "rankSrc": "db"
   },
   "BAUA": {
    "total": 4683,
@@ -153,12 +153,12 @@
    "rankSrc": "od"
   },
   "CX": {
-   "total": 6640,
+   "total": 6642,
    "wins": 3395,
    "rank": "Archon III",
    "rankVal": 43,
    "points": 5220,
-   "lastMatch": 1791824830,
+   "lastMatch": 1792212064,
    "private": false,
    "rankSrc": "od"
   },
@@ -211,6 +211,16 @@
    "lastMatch": 1792005311,
    "private": false,
    "rankSrc": "od"
+  },
+  "Sevolc": {
+   "total": 0,
+   "wins": 0,
+   "rank": "Not Calibrated",
+   "rankVal": null,
+   "points": null,
+   "lastMatch": 1792199048,
+   "private": true,
+   "rankSrc": "db"
   }
  }
 }
