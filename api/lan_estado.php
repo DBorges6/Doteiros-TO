@@ -22,19 +22,10 @@ $montar = function () use ($ev, $inscritos, $ids) {
     ];
 };
 
-// Se o cache está velho, atualiza ANTES de responder só na primeira vez (sem dados);
-// nas outras, responde na hora e atualiza depois de enviar a resposta.
-$cache = read_json(lan_file($ev, 'cache'), ['atualizado' => 0]);
-if (empty($cache['atualizado']) && $ids) lan_atualizar_cache($ev, $ids);
-
-$body = json_encode($montar(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-http_response_code(200);
-header('Content-Type: application/json; charset=utf-8');
-header('Cache-Control: no-store');
-header('Content-Length: ' . strlen($body));
-echo $body;
-if (function_exists('litespeed_finish_request')) litespeed_finish_request();
-elseif (function_exists('fastcgi_finish_request')) fastcgi_finish_request();
-else { @ob_end_flush(); flush(); }
+// Atualiza ANTES de responder quando o cache passou de 10 min (a Hostinger encerra o processo
+// logo depois da resposta, então não dá para atualizar em segundo plano). Só uma visita a cada
+// 10 min espera alguns segundos; se outra visita já está atualizando, responde com o que tem.
 ignore_user_abort(true);
+set_time_limit(90);
 if ($ids) lan_atualizar_cache($ev, $ids);
+json_out($montar());
