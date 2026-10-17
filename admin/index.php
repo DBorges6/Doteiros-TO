@@ -266,7 +266,7 @@ $time = function ($ids, $m) use ($nomeLan, $heroes) {
 };
 $html .= '<h2 id="lan-partidas">LAN Party · partidas de lobby</h2>';
 $visiveis = array_filter($parts, fn($m) => ($m['status'] ?? '') !== 'excluida');
-if (!$visiveis) $html .= '<p class="sub">Nenhuma partida registrada ainda. Os inscritos registram pela página da LAN.</p>';
+if (!$visiveis) $html .= '<p class="sub">Nenhuma partida de lobby lançada ainda. Os lançamentos são feitos a partir dos prints do fim de jogo.</p>';
 foreach ($visiveis as $m) {
     $st = $m['status'];
     $win = $m['vencedor'] === 'radiant' ? 'Radiant' : 'Dire';

@@ -141,6 +141,24 @@ function lan_atualizar_cache(array $ev, array $ids): void {
             }
             usleep(250000);
         }
+        // Lobbies registrados com número da partida e ainda sem dados oficiais: tenta buscar no OpenDota
+        // (no máximo 5 por rodada; pede a busca ao OpenDota até 3 vezes por partida).
+        with_lock(function () use ($ev, $now) {
+            $pf = lan_file($ev, 'partidas');
+            $q = read_json($pf, []);
+            $mudou = false; $n = 0;
+            foreach ($q as &$m) {
+                if (empty($m['matchId']) || !empty($m['od']) || ($m['status'] ?? '') !== 'confirmada' || $n >= 5) continue;
+                if ($now - ($m['odTentativa'] ?? 0) < 600) continue;
+                $n++; $mudou = true;
+                $m['odTentativa'] = $now;
+                $d = http_get_json('https://api.opendota.com/api/matches/' . (int) $m['matchId']);
+                if ($d && !empty($d['players'])) $m['od'] = lan_extrair_od($d);
+                elseif (($m['odPedidos'] ?? 0) < 3) { http_post_ok('https://api.opendota.com/api/request/' . (int) $m['matchId']); $m['odPedidos'] = ($m['odPedidos'] ?? 0) + 1; }
+            }
+            unset($m);
+            if ($mudou) write_json($pf, $q);
+        });
         $cache['atualizado'] = time();
         if ($refresh) $cache['refresh'] = $now;
         write_json($f, $cache);
@@ -179,7 +197,7 @@ function lan_partidas(array $ev, array $ids): array {
         }
         if (!empty($m['matchId'])) $vistos[(string) $m['matchId']] = true;
         $out[] = ['uid' => $m['uid'], 'origem' => 'lobby', 'matchId' => $m['matchId'] ?? null,
-            'inicio' => $od['inicio'] ?? ($m['criado'] ?? 0), 'duracao' => $od['duracao'] ?? ($m['duracao'] ?? null),
+            'inicio' => $od['inicio'] ?? ($m['inicioInformado'] ?? ($m['criado'] ?? 0)), 'duracao' => $od['duracao'] ?? ($m['duracao'] ?? null),
             'radiant' => $radiant, 'dire' => $dire, 'radiantWin' => $radiantWin, 'players' => $players, 'fonte' => $od ? 'opendota' : 'manual'];
     }
     $cache = read_json(lan_file($ev, 'cache'), ['jogadores' => []]);

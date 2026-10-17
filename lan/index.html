@@ -139,6 +139,7 @@ tr.p1 td.pos{color:var(--gold)} tr.p2 td.pos{color:#d6dde0} tr.p3 td.pos{color:#
 .pl img.hr{width:50px;height:28px;border-radius:3px;object-fit:cover;background:var(--panel3)}
 .pl .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .side .others{font-size:12.5px;color:var(--mute)}
+.mvp{font-family:var(--disp);font-size:15px;letter-spacing:.08em;color:#1b1404;background:var(--gold);padding:0 6px;border-radius:4px;vertical-align:1px}
 
 /* ---------- participantes ---------- */
 .people{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
@@ -220,7 +221,7 @@ html.tv .matches .match:nth-child(n+3){display:none}
 <header class="wrap top">
   <a class="back" href="/">← Ranking geral da Taverna</a>
   <nav aria-label="Seções">
-    <a href="#placar">Placar</a><a href="#premios">Prêmios</a><a href="#partidas">Partidas</a><a href="#participantes">Galera</a><a href="#registrar">Registrar partida</a>
+    <a href="#placar">Placar</a><a href="#premios">Prêmios</a><a href="#partidas">Partidas</a><a href="#participantes">Galera</a>
     <button class="tvbtn" type="button" id="tvBtn">Modo telão</button>
   </nav>
 </header>
@@ -230,7 +231,7 @@ html.tv .matches .match:nth-child(n+3){display:none}
     <div>
       <div class="kicker"><span class="r">Radiant</span>×<span class="d">Dire</span>· Doteiros</div>
       <h1 id="title">LAN Party<br><span class="vs">17 · 10</span></h1>
-      <p class="lede" id="lede">Placar só desse dia e só de quem está na LAN: lobbies entre a galera e partidas de matchmaking em grupo.</p>
+      <p class="lede" id="lede">Placar só desse dia e só de quem está na LAN: lobbies entre a galera (lançados a partir do print do fim de jogo) e partidas de matchmaking, que entram sozinhas.</p>
     </div>
     <div class="status" id="statusBox">
       <span class="badge soon" id="badge">Carregando…</span>
@@ -238,7 +239,6 @@ html.tv .matches .match:nth-child(n+3){display:none}
       <div class="sub" id="window"></div>
       <div style="display:flex;gap:10px;flex-wrap:wrap">
         <button class="cta" type="button" id="joinBtn">Vou na LAN</button>
-        <a class="cta ghost" href="#registrar" id="regLink">Registrar partida</a>
       </div>
       <div class="sub" id="updated"></div>
     </div>
@@ -258,7 +258,7 @@ html.tv .matches .match:nth-child(n+3){display:none}
   </section>
 
   <section class="block" id="partidas">
-    <div class="sh"><div><h2>Partidas</h2><p>Da mais recente para a mais antiga. Lobbies aparecem depois que o organizador confirma o resultado.</p></div></div>
+    <div class="sh"><div><h2>Partidas</h2><p>Da mais recente para a mais antiga. Matchmaking entra sozinho (OpenDota). Lobby entra quando o organizador lança o print da tela de fim de jogo. MVP: melhor K/D/A do time vencedor.</p></div></div>
     <div class="matches" id="matches"></div>
   </section>
 
@@ -267,36 +267,10 @@ html.tv .matches .match:nth-child(n+3){display:none}
     <div class="people" id="people"></div>
   </section>
 
-  <section class="block" id="registrar">
-    <div class="sh"><div><h2>Registrar partida de lobby</h2><p>Terminou um lobby entre a galera? Marque quem jogou em cada lado e quem venceu. O resultado entra no placar depois que o organizador confirmar. Partidas de matchmaking entram sozinhas.</p></div></div>
-    <form class="panel" id="regForm" autocomplete="off">
-      <div class="grid2">
-        <label class="fl" for="regBy">Quem está enviando
-          <select id="regBy" required><option value="">Escolha seu nome</option></select>
-        </label>
-        <label class="fl" for="regMatch">ID da partida (opcional)
-          <input type="text" id="regMatch" inputmode="numeric" placeholder="Fica no fim do jogo / histórico">
-        </label>
-        <label class="fl" for="regDur">Duração em minutos (opcional)
-          <input type="text" id="regDur" inputmode="numeric" placeholder="ex.: 38">
-        </label>
-      </div>
-      <div class="fl" style="margin-top:18px">Quem jogou · toque no nome para trocar: Radiant → Dire → fora</div>
-      <div class="pick" id="pick"></div>
-      <div class="fl" style="margin-top:18px">Quem venceu</div>
-      <div class="winsel"><button type="button" class="r" data-w="radiant" aria-pressed="false">Radiant venceu</button><button type="button" class="d" data-w="dire" aria-pressed="false">Dire venceu</button></div>
-      <details style="margin-top:16px"><summary style="cursor:pointer;color:var(--ink2)">Heróis e K/D/A de cada um (opcional, deixa os prêmios mais completos)</summary>
-        <div class="pins" id="pins"></div>
-      </details>
-      <div class="hp" aria-hidden="true"><label for="regSite">Site</label><input type="text" id="regSite" tabindex="-1"></div>
-      <div id="regMsg" hidden></div>
-      <div class="foot"><button class="cta" type="submit" id="regSend">Enviar resultado</button></div>
-    </form>
-  </section>
 </main>
 
 <footer class="wrap">
-  <p>Matchmaking: dados do OpenDota (só de quem tem "Expor dados públicos de partidas" ligado no Dota 2), atualizados a cada ~10 minutos durante a LAN (o OpenDota leva alguns minutos para registrar cada partida). Lobbies: registrados pela galera e confirmados pelo organizador.</p>
+  <p>Matchmaking: dados do OpenDota (só de quem tem "Expor dados públicos de partidas" ligado no Dota 2), atualizados a cada ~10 minutos durante a LAN (o OpenDota leva alguns minutos para registrar cada partida). Lobbies: lançados pelo organizador a partir do print do fim de jogo; quando o OpenDota consegue buscar a partida pelo número, os dados oficiais completam o lançamento.</p>
   <p><a href="/">Voltar para o ranking geral</a></p>
 </footer>
 
@@ -437,7 +411,8 @@ function renderBoard(st){
 function renderAwards(st){
   const L = st.list.filter(s => s.n), A = [];
   const best = (arr, f, min = false) => { const v = arr.filter(s => f(s) != null); if (!v.length) return null; const val = min ? Math.min(...v.map(f)) : Math.max(...v.map(f)); return {ps: v.filter(s => f(s) === val).map(s => s.p), val}; };
-  const add = (t, d, r, v, ok = true) => { if (r && ok) A.push({t, d, ps: r.ps, v: v(r.val)}); };
+  const add = (t, d, r, v, ok = true) => { if (r && ok && r.ps.length <= 4) A.push({t, d, ps: r.ps, v: v(r.val)}); };
+  const names = ps => ps.length <= 2 ? ps.map(p => esc(p.apelido)).join(" & ") : `${esc(ps[0].apelido)}, ${esc(ps[1].apelido)} e mais ${ps.length - 2}`;
   if (L.length) {
     add("Rei da LAN", "Mais vitórias no dia", best(L, s => s.w), v => v + " vitórias");
     const inv = L.filter(s => s.n >= 3 && s.l === 0); if (inv.length) A.push({t:"Invicto", d:"3 ou mais partidas sem perder", ps: inv.map(s => s.p), v: inv[0].w + " × 0"});
@@ -458,17 +433,22 @@ function renderAwards(st){
   }
   $("#awards").innerHTML = A.length ? A.map(a => `<div class="aw"><div class="t">${esc(a.t)}</div><div class="d">${esc(a.d)}</div>
     <div class="avs">${a.hero ? `<img src="${heroImg(a.hero)}" alt="" style="border-radius:6px;width:64px;height:36px">` : (a.ps || []).slice(0, 3).map(p => `<img src="${esc(p.avatar)}" alt="">`).join("")}</div>
-    <div>${a.ps ? `<b>${a.ps.slice(0, 3).map(p => esc(p.apelido)).join(" & ")}</b>` : ""}<span class="v num">${esc(a.v)}</span></div></div>`).join("")
+    <div>${a.ps ? `<b>${names(a.ps)}</b>` : ""}<span class="v num">${esc(a.v)}</span></div></div>`).join("")
     : `<div class="empty" style="grid-column:1/-1">Os prêmios aparecem assim que as primeiras partidas forem contabilizadas.</div>`;
 }
 
 function renderMatches(){
   if (!S.partidas.length) { $("#matches").innerHTML = `<div class="empty">Nenhuma partida ainda.</div>`; return; }
+  const mvpOf = m => {
+    const win = m.radiantWin ? m.radiant : m.dire; let best = null, bs = -1;
+    for (const id of win) { const p = m.players[id]; if (!p || p.k == null) continue; const sc = (p.k + (p.a || 0)) / Math.max(1, p.d) + p.k * .05; if (sc > bs) { bs = sc; best = id; } }
+    return best;
+  };
   const side = (m, team, rad) => {
-    const won = rad === m.radiantWin;
+    const won = rad === m.radiantWin, mvp = mvpOf(m);
     return `<div class="side ${rad ? "r" : "d"} ${won ? "won" : ""}"><h4>${rad ? "Radiant" : "Dire"}${won ? '<span class="win">Venceu</span>' : ""}</h4>
       ${team.length ? team.map(id => { const p = person(id), pl = m.players[id] || {};
-        return `<div class="pl"><img class="av" src="${esc(p.avatar)}" alt=""><img class="hr" src="${heroImg(pl.hero)}" alt="" ${pl.hero ? `data-tip="${esc(heroName(pl.hero))}"` : 'style="visibility:hidden"'}><span class="nm">${esc(p.apelido)}</span>
+        return `<div class="pl"><img class="av" src="${esc(p.avatar)}" alt=""><img class="hr" src="${heroImg(pl.hero)}" alt="" ${pl.hero ? `data-tip="${esc(heroName(pl.hero))}"` : 'style="visibility:hidden"'}><span class="nm">${esc(p.apelido)}${id === mvp ? ' <span class="mvp">MVP</span>' : ""}</span>
           <span class="kda num">${pl.k != null ? `<span class="k">${pl.k}</span>/<span class="d">${pl.d}</span>/<span class="a">${pl.a}</span>` : ""}</span></div>`; }).join("")
         : `<div class="others">${m.origem === "mm" ? "Ninguém da LAN deste lado" : "—"}</div>`}
       ${m.origem === "mm" ? `<div class="others">+ jogadores de fora da LAN</div>` : ""}</div>`;
@@ -476,7 +456,7 @@ function renderMatches(){
   $("#matches").innerHTML = S.partidas.map(m => `<article class="match">
     <div class="mh"><span class="tag ${m.origem === "lobby" ? "lobby" : "mm"}">${m.origem === "lobby" ? "Lobby" : "Matchmaking"}</span>
       <span class="num">${hhmm(m.inicio)}</span>${m.duracao ? `<span class="num">· ${dur(m.duracao)}</span>` : ""}
-      ${m.fonte === "manual" ? '<span class="muted">· resultado registrado pela galera</span>' : ""}
+      ${m.fonte === "manual" ? '<span class="muted">· placar do print</span>' : '<span class="muted">· dados oficiais</span>'}
       ${m.matchId ? `<a href="https://www.opendota.com/matches/${esc(m.matchId)}" target="_blank" rel="noopener">Ver no OpenDota ↗</a>` : ""}</div>
     <div class="sides">${side(m, m.radiant, true)}${side(m, m.dire, false)}</div></article>`).join("");
 }
@@ -489,61 +469,7 @@ function renderPeople(){
     : `<div class="empty" style="grid-column:1/-1">Ninguém confirmado ainda. Seja o primeiro: clique em "Vou na LAN".</div>`;
 }
 
-/* ---------- registro de lobby ---------- */
-const reg = {side:{}, win:null};
-function renderRegForm(){
-  const open = !(now() > S.evento.fim + 12 * 3600);
-  $("#registrar").hidden = !open;
-  const by = $("#regBy"), cur = by.value;
-  by.innerHTML = `<option value="">Escolha seu nome</option>` + S.participantes.map(p => `<option value="${p.id}">${esc(p.apelido)}</option>`).join("");
-  by.value = cur;
-  const lbl = {r:"Radiant", d:"Dire", "":"Fora"};
-  $("#pick").innerHTML = S.participantes.length ? S.participantes.map(p => `<span class="chip" role="button" tabindex="0" data-id="${p.id}" data-s="${reg.side[p.id] || ""}"><img src="${esc(p.avatar)}" alt="">${esc(p.apelido)}<em>${lbl[reg.side[p.id] || ""]}</em></span>`).join("")
-    : '<span class="muted">Os jogadores aparecem aqui depois de confirmados na LAN.</span>';
-  renderPins();
-}
-function renderPins(){
-  const ids = Object.keys(reg.side).filter(k => reg.side[k]).map(Number);
-  const opts = `<option value="">Herói</option>` + Object.values(HEROES).map(h => `<option value="${h.id}">${esc(h.name)}</option>`).join("");
-  const keep = {}; $$(".pin").forEach(r => keep[r.dataset.id] = {hero: r.querySelector("select").value, k: r.querySelector('[data-f="k"]').value, d: r.querySelector('[data-f="d"]').value, a: r.querySelector('[data-f="a"]').value});
-  $("#pins").innerHTML = ids.length ? ids.map(id => { const p = person(id); return `<div class="pin" data-id="${id}"><div class="who"><img src="${esc(p.avatar)}" alt="" style="width:28px;height:28px"><b style="color:var(--${reg.side[id] === "r" ? "rad" : "dire"})">${esc(p.apelido)}</b></div>
-      <select aria-label="Herói de ${esc(p.apelido)}">${opts}</select>
-      <input data-f="k" inputmode="numeric" placeholder="K" aria-label="Abates"><input data-f="d" inputmode="numeric" placeholder="D" aria-label="Mortes"><input data-f="a" inputmode="numeric" placeholder="A" aria-label="Assistências"></div>`; }).join("")
-    : '<span class="muted">Escolha os times primeiro.</span>';
-  $$(".pin").forEach(r => { const k = keep[r.dataset.id]; if (!k) return; r.querySelector("select").value = k.hero; ["k", "d", "a"].forEach(f => r.querySelector(`[data-f="${f}"]`).value = k[f]); });
-}
-$("#pick").addEventListener("click", e => {
-  const c = e.target.closest(".chip"); if (!c) return;
-  const id = +c.dataset.id, next = {"": "r", r: "d", d: ""}[reg.side[id] || ""];
-  const count = s => Object.values(reg.side).filter(x => x === s).length;
-  if (next && count(next) >= 5) { reg.side[id] = next === "r" && count("d") < 5 ? "d" : ""; } else reg.side[id] = next;
-  renderRegForm();
-});
-$("#pick").addEventListener("keydown", e => { if ((e.key === "Enter" || e.key === " ") && e.target.closest(".chip")) { e.preventDefault(); e.target.click(); } });
-$$(".winsel button").forEach(b => b.addEventListener("click", () => { reg.win = b.dataset.w; $$(".winsel button").forEach(x => x.setAttribute("aria-pressed", x === b ? "true" : "false")); }));
 const say = (el, text, kind) => { el.hidden = !text; el.className = "msg " + (kind || ""); el.textContent = text || ""; };
-$("#regForm").addEventListener("submit", async e => {
-  e.preventDefault();
-  const msg = $("#regMsg");
-  const radiant = Object.keys(reg.side).filter(k => reg.side[k] === "r").map(Number), dire = Object.keys(reg.side).filter(k => reg.side[k] === "d").map(Number);
-  if (!$("#regBy").value) return say(msg, "Escolha quem está enviando.", "err");
-  if (!radiant.length || !dire.length) return say(msg, "Coloque pelo menos um jogador em cada lado.", "err");
-  if (!reg.win) return say(msg, "Marque quem venceu.", "err");
-  const players = {};
-  $$(".pin").forEach(r => { players[r.dataset.id] = {hero: r.querySelector("select").value, k: r.querySelector('[data-f="k"]').value, d: r.querySelector('[data-f="d"]').value, a: r.querySelector('[data-f="a"]').value}; });
-  $("#regSend").disabled = true; say(msg, "Enviando…");
-  try {
-    const r = await fetch(API("lan_partida.php"), {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({
-      evento: EV || undefined, enviadoPor: +$("#regBy").value, radiant, dire, vencedor: reg.win, matchId: $("#regMatch").value, duracao: $("#regDur").value, players, site: $("#regSite").value})});
-    const j = await r.json().catch(() => ({}));
-    if (r.ok && j.ok) {
-      say(msg, "Resultado enviado! Ele entra no placar assim que o organizador confirmar.", "ok");
-      reg.side = {}; reg.win = null; $("#regMatch").value = ""; $("#regDur").value = ""; $$(".winsel button").forEach(x => x.setAttribute("aria-pressed", "false"));
-      renderRegForm(); load();
-    } else say(msg, j.erro || "Não deu para enviar agora. Tente de novo.", "err");
-  } catch (_) { say(msg, "Não deu para enviar agora. Tente de novo.", "err"); }
-  finally { $("#regSend").disabled = false; }
-});
 
 /* ---------- inscrição ---------- */
 (function join(){
@@ -628,8 +554,7 @@ function render(){
   $("#title").innerHTML = `LAN Party<br><span class="vs">${ddmm(S.evento.inicio).replace("/", " · ")}</span>`;
   document.title = S.evento.nome + " · " + ddmm(S.evento.inicio);
   renderStatus(); renderKpis(st); renderBoard(st); renderAwards(st); renderMatches(); renderPeople();
-  // não redesenha o formulário enquanto alguém está preenchendo
-  if (!$("#regForm").contains(document.activeElement) || !$("#regBy").options.length || $("#regBy").options.length - 1 !== S.participantes.length) renderRegForm();
+
 }
 async function load(){
   try {

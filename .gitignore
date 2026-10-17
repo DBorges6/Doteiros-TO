@@ -6,3 +6,6 @@ data/raw.json
 
 # código do primeiro acesso ao /admin (só no PC)
 ADMIN_SETUP_CODE.txt
+
+# chave do organizador da LAN (só no PC)
+LAN_TOKEN.txt
