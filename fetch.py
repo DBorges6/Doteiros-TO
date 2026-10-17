@@ -32,10 +32,24 @@ for _, pid in PLAYERS.items():
 raw = {"heroes": get("/constants/heroes"), "fetched": int(time.time()), "players": {}}
 if raw["heroes"]:
     json.dump(raw["heroes"], open(os.path.join(os.path.dirname(OUT), "heroes.json"), "w", encoding="utf-8"), ensure_ascii=False)
+# Dados da rodada anterior: se a rede cair no meio, quem falhar fica com o que já tínhamos.
+try:
+    old = json.load(open(OUT, encoding="utf-8")).get("players", {})
+except Exception:
+    old = {}
+falhas = []
 for name, pid in PLAYERS.items():
-    raw["players"][name] = {"id": pid, "profile": get(f"/players/{pid}"),
-        "matches": get(f"/players/{pid}/matches?significant=0&{proj}")}
-    print("ok", name, len(raw["players"][name]["matches"] or []), flush=True)
+    prof = get(f"/players/{pid}")
+    matches = get(f"/players/{pid}/matches?significant=0&{proj}")
+    prev = old.get(name) or {}
+    if prof is None or matches is None:
+        falhas.append(name)
+        prof = prof if prof is not None else prev.get("profile")
+        matches = matches if matches is not None else prev.get("matches")
+    raw["players"][name] = {"id": pid, "profile": prof, "matches": matches}
+    print("ok", name, len(matches or []), flush=True)
+if falhas:
+    print("OpenDota falhou para:", ", ".join(falhas), "(mantidos os dados anteriores)", flush=True)
 if sum(len(p["matches"] or []) for p in raw["players"].values()) == 0:
     sys.exit("OpenDota não retornou nada; mantendo raw.json anterior")
 json.dump(raw, open(OUT,"w"))
