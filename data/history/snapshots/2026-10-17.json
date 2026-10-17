@@ -1,6 +1,6 @@
 {
  "date": "2026-10-17",
- "t": 1792240998,
+ "t": 1792241223,
  "players": {
   "Dinamite": {
    "total": 1311,
@@ -130,7 +130,7 @@
    "points": 765,
    "lastMatch": 1792120623,
    "private": false,
-   "rankSrc": "db"
+   "rankSrc": "od"
   },
   "DBorges": {
    "total": 4417,
@@ -140,7 +140,7 @@
    "points": 3255,
    "lastMatch": 1791947957,
    "private": false,
-   "rankSrc": "db"
+   "rankSrc": "od"
   },
   "BAUA": {
    "total": 4683,
