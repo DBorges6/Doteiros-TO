@@ -1,0 +1,236 @@
+{
+ "date": "2026-10-18",
+ "t": 1792328690,
+ "players": {
+  "Dinamite": {
+   "total": 1314,
+   "wins": 640,
+   "rank": "Not Calibrated",
+   "rankVal": null,
+   "points": 75,
+   "lastMatch": 1792280743,
+   "private": false,
+   "rankSrc": "db"
+  },
+  "Ghost": {
+   "total": 4476,
+   "wins": 2189,
+   "rank": "Legend I",
+   "rankVal": 51,
+   "points": 2930,
+   "lastMatch": 1792035771,
+   "private": false,
+   "rankSrc": "od"
+  },
+  "Soma": {
+   "total": 1557,
+   "wins": 787,
+   "rank": "Archon V",
+   "rankVal": 45,
+   "points": 775,
+   "lastMatch": 1792209875,
+   "private": false,
+   "rankSrc": "db"
+  },
+  "Bahia": {
+   "total": 7131,
+   "wins": 3557,
+   "rank": "Crusader IV",
+   "rankVal": 34,
+   "points": 3195,
+   "lastMatch": 1792225669,
+   "private": false,
+   "rankSrc": "od"
+  },
+  "Dr. Sem Doutorado": {
+   "total": 4914,
+   "wins": 2505,
+   "rank": "Legend I",
+   "rankVal": 51,
+   "points": 3315,
+   "lastMatch": 1792200857,
+   "private": false,
+   "rankSrc": "od"
+  },
+  "El Desperuanizador": {
+   "total": 2,
+   "wins": 1,
+   "rank": "Archon III",
+   "rankVal": 43,
+   "points": null,
+   "lastMatch": 1787883709,
+   "private": true,
+   "rankSrc": "db"
+  },
+  "Kaus": {
+   "total": 660,
+   "wins": 313,
+   "rank": "Not Calibrated",
+   "rankVal": null,
+   "points": 245,
+   "lastMatch": 1792200857,
+   "private": false,
+   "rankSrc": "db"
+  },
+  "Lestat": {
+   "total": 3,
+   "wins": 0,
+   "rank": "Not Calibrated",
+   "rankVal": null,
+   "points": null,
+   "lastMatch": 1701993066,
+   "private": true,
+   "rankSrc": "db"
+  },
+  "Neo": {
+   "total": 2280,
+   "wins": 1151,
+   "rank": "Archon III",
+   "rankVal": 43,
+   "points": null,
+   "lastMatch": 1792163598,
+   "private": true,
+   "rankSrc": "od"
+  },
+  "Pesadelo": {
+   "total": 3516,
+   "wins": 1732,
+   "rank": "Crusader IV",
+   "rankVal": 34,
+   "points": 2300,
+   "lastMatch": 1792195726,
+   "private": false,
+   "rankSrc": "od"
+  },
+  "Panda": {
+   "total": 11322,
+   "wins": 5548,
+   "rank": "Archon II",
+   "rankVal": 42,
+   "points": 6740,
+   "lastMatch": 1745285719,
+   "private": false,
+   "rankSrc": "od"
+  },
+  "Tanner": {
+   "total": 6460,
+   "wins": 3278,
+   "rank": "Legend II",
+   "rankVal": 52,
+   "points": 3235,
+   "lastMatch": 1791946348,
+   "private": false,
+   "rankSrc": "od"
+  },
+  "VacaPower": {
+   "total": 1486,
+   "wins": 720,
+   "rank": "Crusader III",
+   "rankVal": 33,
+   "points": 765,
+   "lastMatch": 1792120623,
+   "private": false,
+   "rankSrc": "od"
+  },
+  "DBorges": {
+   "total": 4417,
+   "wins": 2214,
+   "rank": "Legend IV",
+   "rankVal": 54,
+   "points": 3255,
+   "lastMatch": 1791947957,
+   "private": false,
+   "rankSrc": "od"
+  },
+  "BAUA": {
+   "total": 4683,
+   "wins": 2344,
+   "rank": "Ancient II",
+   "rankVal": 62,
+   "points": 3615,
+   "lastMatch": 1791848705,
+   "private": false,
+   "rankSrc": "od"
+  },
+  "CX": {
+   "total": 6642,
+   "wins": 3395,
+   "rank": "Archon III",
+   "rankVal": 43,
+   "points": 5220,
+   "lastMatch": 1792212064,
+   "private": false,
+   "rankSrc": "od"
+  },
+  "Lule": {
+   "total": 230,
+   "wins": 131,
+   "rank": "Not Calibrated",
+   "rankVal": null,
+   "points": 375,
+   "lastMatch": 1780888148,
+   "private": false,
+   "rankSrc": "db"
+  },
+  "MotherBoard": {
+   "total": 12,
+   "wins": 8,
+   "rank": "Not Calibrated",
+   "rankVal": null,
+   "points": null,
+   "lastMatch": 1765585235,
+   "private": true,
+   "rankSrc": "db"
+  },
+  "Milan Buzano Diporra": {
+   "total": 4193,
+   "wins": 2123,
+   "rank": "Archon I",
+   "rankVal": 41,
+   "points": 4785,
+   "lastMatch": 1792096665,
+   "private": false,
+   "rankSrc": "od"
+  },
+  "AzAfApower": {
+   "total": 176,
+   "wins": 80,
+   "rank": "Archon I",
+   "rankVal": 41,
+   "points": 620,
+   "lastMatch": 1792172399,
+   "private": false,
+   "rankSrc": "od"
+  },
+  "PATIXA": {
+   "total": 1852,
+   "wins": 923,
+   "rank": "Ancient III",
+   "rankVal": 63,
+   "points": 2105,
+   "lastMatch": 1792005311,
+   "private": false,
+   "rankSrc": "od"
+  },
+  "Sevolc": {
+   "total": 0,
+   "wins": 0,
+   "rank": "Not Calibrated",
+   "rankVal": null,
+   "points": null,
+   "lastMatch": 1792199048,
+   "private": true,
+   "rankSrc": "db"
+  },
+  "Kurupira": {
+   "total": 5617,
+   "wins": 2831,
+   "rank": "Divine V",
+   "rankVal": 75,
+   "points": 4315,
+   "lastMatch": 1792025554,
+   "private": false,
+   "rankSrc": "od"
+  }
+ }
+}
