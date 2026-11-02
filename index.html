@@ -11,7 +11,7 @@
 <meta property="og:title" content="Taverna do Ancient · Dota 2 da galera">
 <meta property="og:description" content="Líder: Lule com 56,96% de vitória. Ranking, prêmios, duelos e duplas da galera. Atualizado em 01/11/2026.">
 <meta property="og:url" content="https://doteiros.com.br/">
-<meta property="og:image" content="https://doteiros.com.br/og.png?v=202611011252">
+<meta property="og:image" content="https://doteiros.com.br/og.png?v=202611012151">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -79,6 +79,25 @@ h1 em{font-style:normal;color:var(--gold2)}
 .kpi b{display:block;font-family:var(--cond);font-size:30px;font-weight:700;line-height:1.05}
 .kpi span{font-family:var(--cond);text-transform:uppercase;letter-spacing:.12em;font-size:11.5px;color:var(--mute);font-weight:600}
 .kpi i{font-style:normal;color:var(--ink2);font-size:13px;display:block;margin-top:2px}
+.kpis.strip{grid-template-columns:repeat(4,minmax(0,1fr));margin-top:8px}
+.monthcard{margin:0;padding-bottom:0}
+.monthcard .podhead{margin-bottom:22px}
+.monthcard .step .av{width:62px;height:62px}
+.monthcard .step.s1 .av{width:84px;height:84px}
+.monthcard .step .nm{font-size:15px}
+.monthcard .step.s1 .nm{font-size:18px}
+.monthcard .step .val{font-size:16px}
+.monthcard .step.s1 .val{font-size:20px}
+.monthcard .s1 .pedestal{height:120px}
+.monthcard .s2 .pedestal{height:88px}
+.monthcard .s3 .pedestal{height:66px}
+.monthcard .pedestal .n{font-size:34px}
+.mfacts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line2);margin:0 -18px;border-top:1px solid var(--line2)}
+.mfacts>div{background:var(--panel);padding:10px 12px;min-width:0;font-size:13px;color:var(--ink2)}
+.mfacts>div[data-nick]{cursor:pointer}
+.mfacts>div[data-nick]:hover{background:var(--panel2)}
+.mfacts span{display:block;font-family:var(--cond);text-transform:uppercase;letter-spacing:.12em;font-size:11px;color:var(--mute);font-weight:600}
+.mfacts b{display:block;font-family:var(--cond);font-size:16px;color:var(--ink);line-height:1.2}
 
 /* ---------- Sections ---------- */
 section.block{padding-block:34px}
@@ -375,6 +394,7 @@ footer p{margin:4px 0;max-width:90ch}
 
 @media (max-width:900px){
   .hero{grid-template-columns:1fr;padding-top:28px}
+  .kpis.strip{grid-template-columns:repeat(2,minmax(0,1fr))}
   .brand small{display:none}
   .match{grid-template-columns:56px minmax(0,1fr) 80px;}
   .match .hide-m{display:none}
@@ -431,10 +451,17 @@ footer p{margin:4px 0;max-width:90ch}
       <h1>Quem carrega<br>e quem é <em>carregado</em>.</h1>
       <p class="lede">O placar oficial da galera: partidas, vitórias, medalhas, heróis de estimação e as duplas que dão certo (ou não). Clique em qualquer jogador para abrir a ficha completa.</p>
       <button class="cta" type="button" id="joinBtn" hidden>Quero entrar na Taverna</button>
-      <a class="lanpill" href="https://doteiros.com.br/lan/"><b>LAN Party · 17/10</b> placar ao vivo e inscrições →</a>
     </div>
-    <div class="kpis" id="kpis"></div>
+    <div class="podwrap monthcard" id="monthCard">
+      <div class="podhead">
+        <div><div class="eyebrow" id="mEyebrow">Pódio do mês</div><div class="podtitle" id="mTitle"></div></div>
+        <label class="podpick" for="mSel">Por <select class="sel" id="mSel"></select></label>
+      </div>
+      <div class="podium" id="mPodium"></div>
+      <div class="mfacts" id="mFacts"></div>
+    </div>
   </section>
+  <div class="kpis strip" id="kpis"></div>
 
   <section class="block" id="novidades" style="padding-top:10px">
     <div class="sec-head">
@@ -647,7 +674,7 @@ footer p{margin:4px 0;max-width:90ch}
   </div>
 </div>
 
-<script src="doteiros-TO/data/dashboard_data.js?v=1793548357" charset="utf-8"></script>
+<script src="doteiros-TO/data/dashboard_data.js?v=1793580680" charset="utf-8"></script>
 <script>
 (function(){
 const D = window.DASH, NOW = D.generatedAt, HERO = D.heroes;
@@ -800,7 +827,6 @@ const COLS = [
   {k:"rankVal", l:"Medalha", cell:p => `<div class="medal-wrap">${medal(p)}<small>${esc(rankLabel(p))}</small></div>`},
   {k:"total", l:"Partidas", cell:p => `<span class="big num">${fmt(p.total)}</span>${partialChip(p)}${period === "career" ? officialChip(p) : ""}`},
   {k:"wins", l:"Vitórias", cell:p => `<span class="big num w">${fmt(p.wins)}</span>`},
-  {k:"losses", l:"Derrotas", cell:p => `<span class="big num l">${fmt(p.losses)}</span>`},
   {k:"wr", l:"Taxa de vitória", cell:p => `<div class="wrcell"><span class="big num">${pct(p.wr,2)}</span><div class="wrbar"><i style="width:${p.wr||0}%"></i></div></div>`},
   {k:"rankedWr", l:"Ranqueada", cell:p => p.rankedWr == null ? `<span class="sub">—</span>` : `<span class="big num">${pct(p.rankedWr)}</span><div class="sub">${fmt(p.rankedN)} partidas</div>`},
   {k:"featured", l:"Destaques", cell:p => p.featured != null ? `<span class="big num">${fmt(p.featured)}</span>` : missingOfficial},
@@ -871,21 +897,64 @@ let podK = "wr";
 $("#podSel").innerHTML = POD.map(m => `<option value="${m.k}">${m.l}</option>`).join("");
 $("#podSel").addEventListener("change", e => { podK = e.target.value; renderTable(); });
 const CROWN = `<svg class="crown" viewBox="0 0 42 30" aria-hidden="true"><path d="M3 25 L6 8 L14 16 L21 3 L28 16 L36 8 L39 25 Z" style="fill:#f4cd6e;stroke:#8a6414;stroke-width:1.6;stroke-linejoin:round"/><rect x="3" y="24" width="36" height="5" rx="1.5" style="fill:#e2a93b;stroke:#8a6414;stroke-width:1.2"/><circle cx="21" cy="14" r="2.4" style="fill:#d4523e"/></svg>`;
+function podSteps(ranked, f){
+  const step = i => { const p = ranked[i], cls = "step s" + (i + 1);
+    if (!p) return `<div class="${cls} empty"><div class="who"><div class="nm">—</div></div><div class="pedestal"><span class="n">${i + 1}</span></div></div>`;
+    return `<div class="${cls}" data-nick="${esc(p.nick)}" tabindex="0" role="button" aria-label="${i + 1}º lugar: ${esc(p.nick)}, ${esc(f(p))}">
+      <div class="who"><div class="avwrap">${i === 0 ? CROWN : ""}<img class="av" src="${p.avatar || ""}" alt=""></div>
+        <div class="nm">${esc(p.nick)}</div><div class="val num">${esc(f(p))}</div></div>
+      <div class="pedestal"><span class="n">${i + 1}</span><span class="t">${["Campeão", "Vice", "Terceiro"][i]}</span></div></div>`; };
+  return step(1) + step(0) + step(2);
+}
 function renderPodium(list){
   const m = POD.find(x => x.k === podK);
   const ranked = list.filter(p => p.qualified && p[m.k] != null && (!m.ok || m.ok(p)))
     .sort((a,b) => m.low ? a[m.k] - b[m.k] : b[m.k] - a[m.k]);
   $("#podTitle").textContent = m.l + periodLabel();
-  const step = i => { const p = ranked[i], cls = "step s" + (i + 1);
-    if (!p) return `<div class="${cls} empty"><div class="who"><div class="nm">—</div></div><div class="pedestal"><span class="n">${i + 1}</span></div></div>`;
-    return `<div class="${cls}" data-nick="${esc(p.nick)}" tabindex="0" role="button" aria-label="${i + 1}º lugar: ${esc(p.nick)}, ${esc(m.f(p))}">
-      <div class="who"><div class="avwrap">${i === 0 ? CROWN : ""}<img class="av" src="${p.avatar || ""}" alt=""></div>
-        <div class="nm">${esc(p.nick)}</div><div class="val num">${esc(m.f(p))}</div></div>
-      <div class="pedestal"><span class="n">${i + 1}</span><span class="t">${["Campeão", "Vice", "Terceiro"][i]}</span></div></div>`; };
-  $("#podium").innerHTML = step(1) + step(0) + step(2);
+  $("#podium").innerHTML = podSteps(ranked, m.f);
   $("#podRest").innerHTML = ranked.slice(3, 6).map((p, j) => `<div class="rest" data-nick="${esc(p.nick)}" tabindex="0" role="button"><img src="${p.avatar || ""}" alt=""><b>${j + 4}º</b>${esc(p.nick)}<span class="sub num">${esc(m.f(p))}</span></div>`).join("")
     || `<span class="sub">Ninguém mais se qualificou para este critério.</span>`;
 }
+/* ---------- Pódio do mês (capa) ---------- */
+const M_MIN = 5;  // mínimo de partidas no mês para concorrer
+const monthBounds = off => {
+  const b = new Date((NOW - 3 * 3600) * 1000), y = b.getUTCFullYear(), m = b.getUTCMonth() + off;  // mês no horário de Brasília
+  const name = new Date(Date.UTC(y, m, 1)).toLocaleDateString("pt-BR", {month:"long", timeZone:"UTC"});
+  return {from: Date.UTC(y, m, 1) / 1000 + 3 * 3600, to: Date.UTC(y, m + 1, 1) / 1000 + 3 * 3600, name: name[0].toUpperCase() + name.slice(1)};
+};
+const monthStats = mb => pub.map(p => {
+  const i = pIndex.get(p.nick), r = HROWS.filter(x => x.pi === i && x.t >= mb.from && x.t < mb.to), n = r.length;
+  const w = r.reduce((s, m) => s + m.won, 0), K = r.reduce((s, m) => s + m.k, 0), De = r.reduce((s, m) => s + m.d, 0), A = r.reduce((s, m) => s + m.a, 0);
+  return {...p, mN: n, mW: w, mWr: n ? w / n * 100 : null, mKda: n ? (K + A) / Math.max(1, De) : null, rows: r, mOk: n >= M_MIN};
+});
+let MB = monthBounds(0), MS = monthStats(MB), mClosed = false;
+if (MS.filter(p => p.mOk).length < 3) { MB = monthBounds(-1); MS = monthStats(MB); mClosed = true; }  // começo do mês: mostra o mês fechado
+const MPOD = [
+  {k:"mWr", l:"Maior taxa de vitória", f:p => pct(p.mWr, 1) + " · " + p.mW + "V em " + p.mN},
+  {k:"mW", l:"Mais vitórias", f:p => fmt(p.mW) + " vitórias"},
+  {k:"mN", l:"Mais partidas", f:p => fmt(p.mN) + " partidas"},
+  {k:"mKda", l:"Melhor KDA", f:p => fmt(p.mKda, 2) + " de KDA"},
+];
+let mK = "mWr";
+$("#mSel").innerHTML = MPOD.map(m => `<option value="${m.k}">${m.l}</option>`).join("");
+function renderMonth(){
+  const m = MPOD.find(x => x.k === mK);
+  const ranked = MS.filter(p => p.mOk).sort((a, b) => b[m.k] - a[m.k] || b.mN - a.mN);
+  $("#mEyebrow").textContent = "Pódio do mês" + (mClosed ? " · mês fechado" : " · até agora");
+  $("#mTitle").textContent = MB.name + " · " + m.l;
+  $("#mPodium").innerHTML = podSteps(ranked, m.f);
+  const all = MS.flatMap(p => p.rows.map(r => ({...r, nick: p.nick}))), hc = {};
+  all.forEach(r => { const h = hc[r.slug] ||= {slug:r.slug, n:0, w:0}; h.n++; h.w += r.won; });
+  const hero = Object.values(hc).sort((a, b) => b.n - a.n)[0], bm = all.length ? all.reduce((b, r) => scoreM(r) > scoreM(b) ? r : b) : null;
+  const wins = all.reduce((s, r) => s + r.won, 0);
+  $("#mFacts").innerHTML = all.length ? `<div><span>Partidas da galera</span><b>${fmt(all.length)} · ${pct(wins / all.length * 100, 0)} de vitória</b></div>`
+    + (hero ? `<div><span>Herói do mês</span><b>${esc(heroName(hero.slug))} · ${hero.n}x</b></div>` : "")
+    + (bm ? `<div data-nick="${esc(bm.nick)}"><span>Partida do mês</span><b>${esc(bm.nick)} · ${bm.k}/${bm.d}/${bm.a} de ${esc(heroName(bm.slug))}</b></div>` : "") : "";
+}
+$("#mSel").addEventListener("change", e => { mK = e.target.value; renderMonth(); });
+["#mPodium", "#mFacts"].forEach(sel => $(sel).addEventListener("click", e => { const d = e.target.closest("[data-nick]"); if (d) openPlayer(d.dataset.nick); }));
+renderMonth();
+
 $("#rankTable").addEventListener("click", e => {
   const th = e.target.closest("th.sortable");
   if (th) { const k = th.dataset.k; if (k === sortK) sortDir *= -1; else { sortK = k; sortDir = (k === "nick" || k === "daysAway") ? 1 : -1; }
