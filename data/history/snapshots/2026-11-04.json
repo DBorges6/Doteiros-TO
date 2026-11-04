@@ -1,6 +1,6 @@
 {
  "date": "2026-11-04",
- "t": 1793822743,
+ "t": 1793811500,
  "players": {
   "Dinamite": {
    "total": 1363,
@@ -200,7 +200,7 @@
    "points": 620,
    "lastMatch": 1792172399,
    "private": false,
-   "rankSrc": "od"
+   "rankSrc": "db"
   },
   "PATIXA": {
    "total": 1852,
