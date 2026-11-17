@@ -1,6 +1,6 @@
 {
  "date": "2026-11-16",
- "t": 1794856917,
+ "t": 1794875569,
  "players": {
   "Dinamite": {
    "total": 1363,
@@ -205,8 +205,8 @@
   "PATIXA": {
    "total": 1852,
    "wins": 923,
-   "rank": "Ancient III",
-   "rankVal": 63,
+   "rank": "Ancient II",
+   "rankVal": 62,
    "points": 2105,
    "lastMatch": 1792005311,
    "private": false,
